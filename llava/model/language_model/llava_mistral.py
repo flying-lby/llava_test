@@ -59,10 +59,8 @@ class mis_mlp(nn.Module):
         self.linear1 = nn.Linear(input_dim, hidden_dim)
         self.relu = nn.ReLU()
         self.linear2 = nn.Linear(hidden_dim, output_dim)
-        self.norm = nn.LayerNorm(input_dim)
 
     def forward(self, x):
-        x = self.norm(x)
         x = self.linear1(x)
         x = self.relu(x)
         x = self.linear2(x)
@@ -82,8 +80,8 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
         self.mis_mlp = None
         self.ncls_token_id = ncls_token_id
-        self.ncls_count = 8  # 可以根据需要调整
-
+        self.ncls_count = 4  # 可以根据需要调整
+        self.cross_attention = None
         # Initialize weights and apply final processing
         self.post_init()
     
@@ -93,8 +91,11 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             self.mis_mlp = mis_mlp(input_dim=4096, hidden_dim=1024, output_dim=512)
             # 注册到模块列表中
             self.add_module("mis_mlp", self.mis_mlp)
-            # for param in self.mis_mlp.parameters():
-            #     param.requires_grad = True
+            self.mis_mlp.train()
+            # self.cross_attention = nn.MultiheadAttention(embed_dim=self.config.hidden_size, num_heads=8)
+            # self.add_module("cross_attention", self.cross_attention)
+            for param in self.mis_mlp.parameters():
+                param.requires_grad = True
                 
     def update_tensor(self, batch_size, tensor, ncls_tensor):
     # 直接在序列末尾追加 ncls 标记

@@ -1112,12 +1112,8 @@ class MistralForCausalLM(MistralPreTrainedModel):
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
         self.classifier = nn.Linear(config.hidden_size, self.num_labels)
         self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size, self.padding_idx)
-        # self.mis_mlp = nn.Sequential(
-        #     nn.Linear(4096, 1024),
-        #     nn.GELU(),
-        #     nn.Linear(1024, 4096)
-        # )
-        # Initialize weights and apply final processing
+        self.ncls_count = 4 
+
         self.post_init()
 
     def get_input_embeddings(self):
@@ -1214,17 +1210,23 @@ class MistralForCausalLM(MistralPreTrainedModel):
         logits = logits.float()
         last_hidden_state = outputs[0]
         attention_mask = attention_mask.bool()  # 确保是布尔类型
-        batch_size, seq_len, hidden_dim = last_hidden_state.shape
-        ncls_count = 8
+       
         # 创建一个用于存储 ncls 特征的张量
         ncls_features = []
         
         # ncls_features = torch.stack(ncls_features)  # (B, 8, 4096)
-        ncls_features = last_hidden_state[:, -8:, :]
-        ncls_features = ncls_features.mean(dim=1)
+        global_ncls_features = last_hidden_state[:, -self.ncls_count:, :]
+        global_ncls_features = global_ncls_features.mean(dim=1)
     
-        ncls_features = self.mis_mlp(ncls_features)  # 通过MLP投影 (B, 4096)
-        # 提取文本特征
+        # global_ncls_features = self.mis_mlp(global_ncls_features)  # 通过MLP投影 (B, 4096)
+        
+        # 提取 ncls 标记对应的局部 image特征
+        local_ncls_features = last_hidden_state[:, :-self.ncls_count, :]  # (B, seq_len - ncls_count, hidden_dim)
+        local_ncls_features = local_ncls_features.mean(dim=1) 
+        
+        # local_ncls_features = self.mis_mlp(local_ncls_features)  
+        
+        # Step 2: 提取文本特征
         txt_output = self.model(
             input_ids=txt_input_ids,
             attention_mask=txt_attention_mask,
@@ -1237,41 +1239,66 @@ class MistralForCausalLM(MistralPreTrainedModel):
             return_dict=return_dict,
         )
        
-       # Step 2: 提取文本特征
+        # 提取文本全局特征
         txt_last_hidden_state = txt_output[0] # 获取 last_hidden_state
         txt_attention_mask = txt_attention_mask.bool()  # 确保是布尔类型
-        txt_batch_size, txt_seq_len, txt_hidden_dim = txt_last_hidden_state.shape
 
         # 创建一个用于存储文本 ncls 特征的张量
         txt_ncls_features = []
-        txt_ncls_features = txt_last_hidden_state[:, -8:, :]
+        
+        global_txt_ncls_features = txt_last_hidden_state[:, -self.ncls_count:, :]
+        global_txt_ncls_features = global_txt_ncls_features.mean(dim=1)
+        # global_txt_ncls_features = self.mis_mlp(global_txt_ncls_features)  # 最终特征维度为 (B, 4096)
+        
+        # 提取 ncls 标记对应的局部 文本特征
+        local_txt_ncls_features = txt_last_hidden_state[:, :-self.ncls_count, :]  # (B, seq_len - ncls_count, hidden_dim)
+        local_txt_ncls_features = local_txt_ncls_features.mean(dim=1) 
+        
+        # local_txt_ncls_features = self.mis_mlp(local_txt_ncls_features)  
+        
 
-        # 对文本的 ncls 特征进行池化操作，采用最大池化
-        txt_ncls_features = txt_ncls_features.mean(dim=1)
-        # 将池化后的特征通过 MLP 映射
-        txt_ncls_features = self.mis_mlp(txt_ncls_features)  # 最终特征维度为 (B, 4096)
-
-         # Step 1: 归一化特征向量到单位球面上
-        ncls_features = F.normalize(ncls_features, p=2, dim=-1)  # (B, 512)
-        txt_ncls_features = F.normalize(txt_ncls_features, p=2, dim=-1)  # (B, 512)
+         # Step 3: 归一化特征向量到单位球面上
+        global_ncls_features = F.normalize(global_ncls_features, p=2, dim=-1)  # (B, 512)
+        local_ncls_features = F.normalize(local_ncls_features, p=2, dim=-1)  # (B, 512)
+        
+        global_txt_ncls_features = F.normalize(global_txt_ncls_features, p=2, dim=-1)  # (B, 512)
+        local_txt_ncls_features = F.normalize(local_txt_ncls_features, p=2, dim=-1)
+        
        
-        # Step 2: 计算相似度矩阵（余弦相似度）
-        temperature = 0.07
-        similarity_matrix = torch.matmul(ncls_features, txt_ncls_features.T) / temperature  # (B, B)
+        #  Step 4: 计算全局特征loss
+        temperature = 0.05
+        similarity_matrix = torch.matmul(local_ncls_features, local_txt_ncls_features.T) / temperature  # (B, B)
        
-        # Step 3: 生成标签，正样本是对角线上的元素（同索引处的样本是正样本）
+        # 生成标签，正样本是对角线上的元素（同索引处的样本是正样本）
         labels = torch.arange(similarity_matrix.size(0), device=similarity_matrix.device)
         
-        # Step 4: 计算 InfoNCE 损失（两个方向：img->txt 和 txt->img）
+        # 计算 InfoNCE 损失（两个方向：img->txt 和 txt->img）
         img_to_txt_loss = F.cross_entropy(similarity_matrix, labels)
         txt_to_img_loss = F.cross_entropy(similarity_matrix.T, labels)
         
-        # Step 5: 取两个方向损失的平均值
-        info_nce_loss = (img_to_txt_loss + txt_to_img_loss) / 2
+        # 取两个方向损失的平均值
+        global_loss = (img_to_txt_loss + txt_to_img_loss) / 2
         
-
+        # 计算局部特征的loss
+        temperature = 0.05
+        similarity_matrix = torch.matmul(global_ncls_features, global_txt_ncls_features.T) / temperature  # (B, B)
+       
+        # 生成标签，正样本是对角线上的元素（同索引处的样本是正样本）
+        labels = torch.arange(similarity_matrix.size(0), device=similarity_matrix.device)
+        
+        # 计算 InfoNCE 损失（两个方向：img->txt 和 txt->img）
+        img_to_txt_loss = F.cross_entropy(similarity_matrix, labels)
+        txt_to_img_loss = F.cross_entropy(similarity_matrix.T, labels)
+        
+        # 取两个方向损失的平均值
+        local_loss = (img_to_txt_loss + txt_to_img_loss) / 2
+        
+        a = 0.4
+        total_loss = a * global_loss + (1 - a) * local_loss
+        # print("global_loss: ", global_loss)
+        # print("local_loss: ", local_loss)
         return CausalLMOutputWithPast(
-            loss=info_nce_loss,
+            loss=total_loss,
             # logits=logits,
             past_key_values=outputs.past_key_values,
             hidden_states=outputs.hidden_states,
