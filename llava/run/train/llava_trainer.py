@@ -318,6 +318,10 @@ class LLaVATrainer(Trainer):
                 if hasattr(opt_model, 'mis_mlp'):   
                     for param in opt_model.mis_mlp.parameters():
                         param.requires_grad = True
+                        
+                # if hasattr(opt_model, 'cross_attention'):   
+                #     for param in opt_model.cross_attention.parameters():
+                #         param.requires_grad = True
                         # print(f"Unfreezing mis_mlp parameter: {param}")
                         
             decay_parameters = get_parameter_names(opt_model, ALL_LAYERNORM_LAYERS)

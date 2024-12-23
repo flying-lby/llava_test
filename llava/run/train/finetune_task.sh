@@ -20,10 +20,11 @@ deepspeed train/train_mem.py \
     --image_aspect_ratio pad \
     --group_by_modality_length True \
     --bf16 True \
+    --mis_mlp_lr 5e-4 \
     --output_dir ./checkpoints/llava-lora-new-clip-version6 \
     --num_train_epochs 1 \
-    --per_device_train_batch_size 1 \
-    --per_device_eval_batch_size 1 \
+    --per_device_train_batch_size 32 \
+    --per_device_eval_batch_size 32 \
     --gradient_accumulation_steps 1 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
@@ -39,7 +40,7 @@ deepspeed train/train_mem.py \
     --gradient_checkpointing True \
     --dataloader_num_workers 2 \
     --lazy_preprocess True \
-    --report_to none
+    --report_to wandb
 
 
 # deepspeed train/train_mem.py \

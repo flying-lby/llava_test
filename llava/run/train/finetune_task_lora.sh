@@ -11,7 +11,7 @@ deepspeed train/train_mem.py \
     --deepspeed train/zero3.json \
     --model_name_or_path /srv/lby/llava_med/llava-med-v1.5-mistral-7b \
     --version v1 \
-    --data_path ./data/train/sft_data/classify_mimic_file_clip.json \
+    --data_path ./data/train/sft_data/new_classify_mimic_file_clip.json \
     --image_folder /srv/lby/physionet.org/files/mimic-cxr-jpg/2.0.0/files \
     --vision_tower openai/clip-vit-large-patch14-336 \
     --mm_projector_type mlp2x_gelu \
@@ -41,7 +41,7 @@ deepspeed train/train_mem.py \
     --gradient_checkpointing True \
     --dataloader_num_workers 2 \
     --lazy_preprocess True \
-    --report_to none
+    --report_to wandb
     
 
 # --image_folder /srv/lby/physionet.org/files/mimic-cxr-jpg/2.0.0/files \
