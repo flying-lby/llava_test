@@ -173,7 +173,7 @@ def eval_model(args):
 
     # 初始化准确率列表
     accuracies = []
-
+    result_metrics = {}
 
     # 计算每个类别的准确率
     for i in range(all_labels.shape[1]):
@@ -194,14 +194,6 @@ def eval_model(args):
         accuracy = (all_predictions_binary == all_labels[:, i]).mean()
         accuracies.append(accuracy)
 
-    # 计算所有类别的平均准确率
-    mean_accuracy = np.mean(accuracies)
-
-    # 输出结果
-    print(f'Mean Accuracy: {mean_accuracy:.4f}')
-    for i, accuracy in enumerate(accuracies):
-        print(f'Accuracy for class {i}: {accuracy:.4f}')
-
     # 计算 AUC（逐类计算 AUC）
     auc_scores = []
     for i in range(all_labels.shape[1]):  # 对每个类别计算 AUC
@@ -212,20 +204,12 @@ def eval_model(args):
             # 如果该类别的标签都为0或1，roc_auc_score会抛出 ValueError
             auc_scores.append(np.nan)
 
-    # 打印每个类别的 AUC 和平均 AUC
-    print(f'AUC scores per class: {auc_scores}')
-    print(f'Mean AUC: {np.nanmean(auc_scores):.4f}')
-
     # 计算 AUPRC（逐类计算 AUPRC）
     auprc_scores = []
     for i in range(all_labels.shape[1]):  # 对每个类别计算 AUPRC
         precision, recall, _ = precision_recall_curve(all_labels[:, i], all_probs[:, i])
         auprc_score = auc(recall, precision)  # 计算 AUPRC
         auprc_scores.append(auprc_score)
-
-    # 打印每个类别的 AUPRC 和平均 AUPRC
-    print(f'AUPRC scores per class: {auprc_scores}')
-    print(f'Mean AUPRC: {np.mean(auprc_scores):.4f}')
 
     # 计算每个类别的精确度、召回率和 F1 分数
     f1_scores = []
@@ -245,11 +229,34 @@ def eval_model(args):
 
         # 记录精确度
         precision_scores.append(precision[np.argmax(f1)])
+        
+        
+    result_metrics["mean_accuracy"] = np.mean(accuracies)
+    result_metrics["mean_auc"] = np.nanmean(auc_scores)
+    result_metrics["mean_f1"] = np.mean(f1_scores)
+    result_metrics["mean_auprc"] = np.mean(auprc_scores)
+    result_metrics["mean_recall"] = np.mean(recall_scores)
+    result_metrics["mean_precision"] = np.mean(precision_scores)
+    
+    result_metrics["accuracies_per_class"] = accuracies
+    result_metrics["auc_scores_per_class"] = auc_scores
+    result_metrics["auprc_scores_per_class"] = auprc_scores
+    result_metrics["f1_scores_per_class"] = f1_scores
+    result_metrics["recall_scores_per_class"] = recall_scores
+    result_metrics["precision_scores_per_class"] = precision_scores
 
-    # 打印 F1 分数、精确度和召回率
-    print(f'Mean F1: {np.mean(f1_scores):.4f}')
-    print(f'Mean Recall: {np.mean(recall_scores):.4f}')
-    print(f'Mean Precision: {np.mean(precision_scores):.4f}')
+    # 检查目录并创建
+    result_dir = os.path.dirname(args.result_file)  # 提取文件路径的目录部分
+    if result_dir and not os.path.exists(result_dir):  # 如果目录不存在
+        os.makedirs(result_dir, exist_ok=True)  # 创建目录
+
+    # 写入文件
+    with open(args.result_file, 'w') as f:
+        for key, value in result_metrics.items():
+            f.write(f"{key}: {value}\n")
+
+    print(f"Results saved to {args.result_file}")
+
 
 
 
@@ -375,6 +382,7 @@ if __name__ == "__main__":
     parser.add_argument("--model-path", type=str, default="/srv/lby/llava_med/llava-med-v1.5-mistral-7b")
     parser.add_argument("--model-base", type=str, default=None)
     parser.add_argument("--image-folder", type=str, default="")
+    parser.add_argument("--result-file", type=str, default="./result/chest_xray/Chest-X-ray_classify.json")
     parser.add_argument("--question-file", type=str, default="./data/chest_xray/Chest-X-ray_llava_val.jsonl")
     parser.add_argument("--conv-mode", type=str, default="llava_v1")
     parser.add_argument("--num-chunks", type=int, default=1)
