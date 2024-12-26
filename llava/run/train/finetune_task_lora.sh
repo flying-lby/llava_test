@@ -21,8 +21,8 @@ deepspeed train/train_mem.py \
     --image_aspect_ratio pad \
     --group_by_modality_length True \
     --bf16 True \
-    --mis_mlp_lr 5e-4 \
-    --output_dir ./checkpoints/llava-lora-new-clip-version9 \
+    --mis_mlp_lr 5e-5 \
+    --output_dir ./checkpoints/llava-lora-new-clip-version10 \
     --num_train_epochs 1 \
     --per_device_train_batch_size 8 \
     --per_device_eval_batch_size 8 \

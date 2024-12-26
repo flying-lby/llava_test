@@ -20,7 +20,7 @@ from llava.mm_utils import (
     get_model_name_from_path,
     process_images,
     tokenizer_image_token,
-    eval_tokenizer_image_token,
+    # eval_tokenizer_image_token,
 )
 from llava.model.builder import load_pretrained_model
 from llava.utils import disable_torch_init
@@ -49,7 +49,7 @@ def eval_model(args):
     tokenizer, model, image_processor, context_len = load_pretrained_model(
         model_path, args.model_base, model_name, device_map='cuda:0'
     )
- 
+    
     # 加载类别数据
     with open('/home/lby/llava_med/LLaVA-Med/llava/run/data/eval/Chest-X-ray_classes.json', 'r') as f:
         classes = json.load(f)
@@ -93,7 +93,7 @@ def eval_model(args):
         json.loads(q) for q in open(os.path.expanduser(args.question_file), "r")
     ]
     questions = get_chunk(questions, args.num_chunks, args.chunk_idx)
-    questions = random.sample(questions, min(1000, len(questions)))
+    # questions = random.sample(questions, min(1000, len(questions)))
 
     # 存储真实标签和预测结果
     all_labels = []  # 真实标签
