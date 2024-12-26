@@ -180,7 +180,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
 
     kwargs = {}
     
-     # 如果设备不是 CUDA，设置设备映射
+    # 如果设备不是 CUDA，设置设备映射
     if device != "cuda":
         kwargs['device_map'] = {"": device}
     else:
@@ -237,7 +237,9 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 ncls_token_id=ncls_token_id,
                 **kwargs
             )
-
+            ## 将新增模块添加到模型中，实现权重的正确合并
+            model.initialize_mis_mlp()
+    
             # 检查嵌入层初始化
             if hasattr(model, 'model') and hasattr(model.model, 'embed_tokens'):
                 embed_tokens_weight = model.model.embed_tokens.weight
@@ -272,7 +274,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
             # 再次检查嵌入层权重，确保加载的训练权重已正确更新
             embed_tokens_weight_after_loading = model.model.embed_tokens.weight
             print(f"Embed tokens weight after loading LLaVA weights: mean={embed_tokens_weight_after_loading.mean().item()}, std={embed_tokens_weight_after_loading.std().item()}")
-
+            
             from peft import PeftModel
             print('Loading LoRA weights...')
             model = PeftModel.from_pretrained(model, model_path)
@@ -283,6 +285,8 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
             final_embed_tokens_weight = model.model.embed_tokens.weight
             print(f"Final embed tokens weight statistics: mean={final_embed_tokens_weight.mean().item()}, std={final_embed_tokens_weight.std().item()}")
 
+           
+                        
             print('Model is loaded...')
         elif model_base is not None:
             # this may be mm projector only

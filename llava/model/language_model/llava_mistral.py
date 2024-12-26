@@ -88,10 +88,10 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
     def initialize_mis_mlp(self):
         """确保 mis_mlp 的初始化在模型权重加载后完成"""
         if self.mis_mlp is None:
-            self.mis_mlp = mis_mlp(input_dim=4096, hidden_dim=1024, output_dim=512)
+            self.mis_mlp = mis_mlp(input_dim=4096, hidden_dim=1024, output_dim=4096)
             # 注册到模块列表中
             self.add_module("mis_mlp", self.mis_mlp)
-            self.mis_mlp.train()
+            # self.mis_mlp.train()
             # self.cross_attention = nn.MultiheadAttention(embed_dim=self.config.hidden_size, num_heads=8)
             # self.add_module("cross_attention", self.cross_attention)
             for param in self.mis_mlp.parameters():
@@ -242,11 +242,10 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             return_emb = True,
             return_dict=True
         )
-        # print('------------')
-        # print(image_output)
-        image_embedding = image_output.hidden_states[-1][:, -self.ncls_count:]
-        image_embedding = torch.max(image_embedding, dim=1).values  # 使用最大池化
 
+        image_embedding = image_output.hidden_states[-1][:, -self.ncls_count:]
+        # image_embedding = torch.max(image_embedding, dim=1).values  # 使用最大池化
+        image_embedding = torch.mean(image_embedding, dim=1)  # 使用最大池化
         # 步骤2: 对图像特征和类别特征进行L2归一化
         image_embedding = F.normalize(image_embedding, p=2, dim=-1)
         category_embeddings_cache = F.normalize(category_embeddings_cache, p=2, dim=-1)
@@ -257,8 +256,6 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         # 步骤4: 将相似度矩阵转换为概率分布 (如果需要的话)
         similarity_probs = similarity_matrix.softmax(dim=-1)
 
-        # 步骤5: 获取相似度最高的 top-k 类别
-        # topk_values, topk_indices = similarity_probs.topk(5, dim=-1)
 
         # 返回结果
         return similarity_probs
