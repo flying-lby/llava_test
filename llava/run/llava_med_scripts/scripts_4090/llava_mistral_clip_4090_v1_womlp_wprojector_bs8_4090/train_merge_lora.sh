@@ -2,9 +2,14 @@
 ###
  # @Author: fly
  # @Date: 2024-08-24 14:44:49
- # @FilePath: /llava_med/LLaVA-Med/llava/run/train/finetune_task_lora.sh
+ # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/scripts_4090/llava_mistral_clip_4090_v1_womlp_wprojector_bs8_4090/train_merge_lora.sh
  # @Description: 
 ### 
+
+# ========================
+# Training
+# ========================
+echo "Starting training process..."
 
 deepspeed train/train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 5e-5 \
@@ -42,7 +47,29 @@ deepspeed train/train_mem.py \
     --dataloader_num_workers 2 \
     --lazy_preprocess True \
     --report_to wandb
-    
+
+if [ $? -ne 0 ]; then
+    echo "Training failed. Exiting..."
+    exit 1
+fi
+echo "Training completed successfully."
+
+# ========================
+# Merge LoRA
+# ========================
+echo "Starting merge process..."
+
+python -m llava.run.train.merge_lora_weights \
+    --model-path /home/lby/llava_med/LLaVA-Med/llava/run/checkpoints/llava-lora-new-clip-version10 \
+    --model-base /srv/lby/llava_med/llava-med-v1.5-mistral-7b \
+    --save-model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_ft10
+
+
+if [ $? -ne 0 ]; then
+    echo "Merge failed. Exiting..."
+    exit 1
+fi
+echo "Merge completed successfully."
 
 # --image_folder /srv/lby/physionet.org/files/mimic-cxr-jpg/2.0.0/files \
 

@@ -51,7 +51,7 @@ def eval_model(args):
     )
     
     # 加载类别数据
-    with open('/home/lby/llava_med/LLaVA-Med/llava/run/data/eval/Chest-X-ray_classes.json', 'r') as f:
+    with open('./data/chest_xray/Chest-X-ray_classes.json', 'r') as f:
         classes = json.load(f)
 
     # 确保类别数据是一个列表
@@ -375,8 +375,7 @@ if __name__ == "__main__":
     parser.add_argument("--model-path", type=str, default="/srv/lby/llava_med/llava-med-v1.5-mistral-7b")
     parser.add_argument("--model-base", type=str, default=None)
     parser.add_argument("--image-folder", type=str, default="")
-    parser.add_argument("--question-file", type=str, default="./data/eval/test_prompt/Chest-X-ray_llava_val.jsonl")
-    parser.add_argument("--answers-file", type=str, default="./data/eval/test_prompt/Chest-X-ray_llava_val_ans.jsonl")
+    parser.add_argument("--question-file", type=str, default="./data/chest_xray/Chest-X-ray_llava_val.jsonl")
     parser.add_argument("--conv-mode", type=str, default="llava_v1")
     parser.add_argument("--num-chunks", type=int, default=1)
     parser.add_argument("--chunk-idx", type=int, default=0)

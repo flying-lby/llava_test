@@ -2,7 +2,7 @@
 ###
  # @Author: fly
  # @Date: 2024-12-26 16:50:23
- # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/scripts_A100/train_merge_lora_model/llava_clip_womlp_wprojector_bs64_2A100.sh
+ # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/scripts_A100/llava_mistral_clip_A100_v1_womlp_wprojector_bs64_2A100/train_merge_lora.sh
  # @Description: 
 ### 
 
@@ -16,7 +16,7 @@ deepspeed train/train_mem.py \
     --deepspeed train/zero3.json \
     --model_name_or_path /mnt/nlp-ali/usr/huangwenxuan/home/official_llava_med/llava-med-v1.5-mistral-7b \
     --version v1 \
-    --data_path ./data/new_classify_mimic_file_clip.json \
+    --data_path ./data/chest_xray/new_classify_mimic_file_clip.json \
     --image_folder /mnt/nlp-ali/usr/huangwenxuan/home/dataset/srv/lby/physionet.org/files/mimic-cxr-jpg/2.0.0/files \
     --vision_tower openai/clip-vit-large-patch14-336 \
     --mm_projector_type mlp2x_gelu \
