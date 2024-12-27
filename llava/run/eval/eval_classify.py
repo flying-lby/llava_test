@@ -61,7 +61,7 @@ def eval_model(args):
     encoded_categories = [tokenizer(category, return_tensors="pt") for category in categories]
     category_ids = pad_sequence([item.input_ids.squeeze(0) for item in encoded_categories], batch_first=True).to(device)
     category_attention_mask = pad_sequence([item.attention_mask.squeeze(0) for item in encoded_categories], batch_first=True).to(device)
-    print(model)
+    
     # 类别特征向量存储, 只需要计算一次
     category_embeddings_cache = []
     for i in range(category_ids.size(0)):
@@ -93,7 +93,7 @@ def eval_model(args):
         json.loads(q) for q in open(os.path.expanduser(args.question_file), "r")
     ]
     questions = get_chunk(questions, args.num_chunks, args.chunk_idx)
-    questions = random.sample(questions, min(1000, len(questions)))
+    # questions = random.sample(questions, min(1000, len(questions)))
 
     # 存储真实标签和预测结果
     all_labels = []  # 真实标签
