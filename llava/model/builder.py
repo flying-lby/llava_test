@@ -237,8 +237,6 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 ncls_token_id=ncls_token_id,
                 **kwargs
             )
-            ## 将新增模块添加到模型中，实现权重的正确合并
-            model.initialize_mis_mlp()
     
             # 检查嵌入层初始化
             if hasattr(model, 'model') and hasattr(model.model, 'embed_tokens'):
@@ -321,14 +319,15 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
 
                 # 获取并输出 ncls_token 的 ID
                 ncls_token_id = tokenizer.convert_tokens_to_ids(ncls_token)
+                 
                 model = LlavaMistralForCausalLM.from_pretrained(
                     model_path,
                     ncls_token_id=ncls_token_id,
                     low_cpu_mem_usage=True,
                     **kwargs
                 )
-               
-                
+           
+              
             else:
                 tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
                 # model = LlavaLlamaForCausalLM.from_pretrained(

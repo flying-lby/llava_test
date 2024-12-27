@@ -78,7 +78,7 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         self.padding_idx = config.pad_token_id
 
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
-        self.mis_mlp = None
+        self.mis_mlp = mis_mlp(input_dim=config.hidden_size, hidden_dim=1024, output_dim=4096)
         self.ncls_token_id = ncls_token_id
         self.ncls_count = 4  # 可以根据需要调整
         self.cross_attention = None
@@ -87,15 +87,12 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
     
     def initialize_mis_mlp(self):
         """确保 mis_mlp 的初始化在模型权重加载后完成"""
-        if self.mis_mlp is None:
-            self.mis_mlp = mis_mlp(input_dim=4096, hidden_dim=1024, output_dim=4096)
-            # 注册到模块列表中
-            self.add_module("mis_mlp", self.mis_mlp)
-            # self.mis_mlp.train()
-            # self.cross_attention = nn.MultiheadAttention(embed_dim=self.config.hidden_size, num_heads=8)
-            # self.add_module("cross_attention", self.cross_attention)
-            for param in self.mis_mlp.parameters():
-                param.requires_grad = True
+        # if self.mis_mlp is None:
+        self.mis_mlp = mis_mlp(input_dim=4096, hidden_dim=1024, output_dim=512)
+        # 注册到模块列表中
+        self.add_module("mis_mlp", self.mis_mlp)
+        for param in self.mis_mlp.parameters():
+            param.requires_grad = True
                 
     def update_tensor(self, batch_size, tensor, ncls_tensor):
     # 直接在序列末尾追加 ncls 标记
@@ -246,10 +243,13 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         image_embedding = image_output.hidden_states[-1][:, -self.ncls_count:]
         # image_embedding = torch.max(image_embedding, dim=1).values  # 使用最大池化
         image_embedding = torch.mean(image_embedding, dim=1)  # 使用最大池化
+        image_embedding = self.mis_mlp(image_embedding)
+        
         # 步骤2: 对图像特征和类别特征进行L2归一化
         image_embedding = F.normalize(image_embedding, p=2, dim=-1)
         category_embeddings_cache = F.normalize(category_embeddings_cache, p=2, dim=-1)
 
+        
         # 步骤3: 计算余弦相似度矩阵
         similarity_matrix = torch.matmul(image_embedding, category_embeddings_cache.T)  # 计算余弦相似度
 
