@@ -117,6 +117,21 @@ class TrainingArguments(transformers.TrainingArguments):
     group_by_modality_length: bool = field(default=False)
     mis_mlp_lr: float = 5e-5
 
+# ----------------------------------------------------------#
+@dataclass
+class SparseArguments:
+    ncls_count: int = 4
+    hidden_dim: int = 1024
+    output_dim: int = 512
+    mlp_type: int = 0
+    loss_threshold: float = 0.5
+    temperature: float = 0.05
+    use_local_loss: bool = True
+    
+    
+# ----------------------------------------------------------#
+
+
 def maybe_zero_3(param, ignore_status=False, name=None):
     from deepspeed import zero
     from deepspeed.runtime.zero.partition_parameters import ZeroParamStatus
@@ -870,8 +885,8 @@ def train(attn_implementation=None):
     global local_rank
 
     parser = transformers.HfArgumentParser(
-        (ModelArguments, DataArguments, TrainingArguments))
-    model_args, data_args, training_args = parser.parse_args_into_dataclasses()
+        (ModelArguments, DataArguments, TrainingArguments, SparseArguments))
+    model_args, data_args, training_args, sparse_args  = parser.parse_args_into_dataclasses()
     local_rank = training_args.local_rank
     compute_dtype = (torch.float16 if training_args.fp16 else (torch.bfloat16 if training_args.bf16 else torch.float32))
 
@@ -929,8 +944,23 @@ def train(attn_implementation=None):
                 **bnb_model_from_pretrained_args
             )
         else:
+            
+            # model = LlavaMistralForCausalLM.from_pretrained(
+            #     model_args.model_name_or_path,
+            #     cache_dir=training_args.cache_dir,
+            #     attn_implementation=attn_implementation,
+            #     torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
+            #     ncls_token_id=ncls_token_id,
+            #     **bnb_model_from_pretrained_args,
+            #     # ignore_mismatched_sizes=True
+            # )
+            # ----------------------------------------------------------#
+            from llava.model.language_model.llava_mistral import LlavaMistralConfig
+            config = LlavaMistralConfig.from_pretrained(model_args.model_name_or_path)
+            config.sparse_config = vars(sparse_args)
             model = LlavaMistralForCausalLM.from_pretrained(
                 model_args.model_name_or_path,
+                config = config,
                 cache_dir=training_args.cache_dir,
                 attn_implementation=attn_implementation,
                 torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
@@ -938,6 +968,9 @@ def train(attn_implementation=None):
                 **bnb_model_from_pretrained_args,
                 # ignore_mismatched_sizes=True
             )
+            
+            # ----------------------------------------------------------#
+            
 
     else:
         model = transformers.LlamaForCausalLM.from_pretrained(
@@ -956,12 +989,7 @@ def train(attn_implementation=None):
    
     if model_args.freeze_backbone:
         model.model.requires_grad_(False)
-    # if model_args.freeze_backbone:
-    #     for name, param in model.model.named_parameters():
-    #         if "mis_mlp" not in name:  # 排除 mis_mlp 参数
-    #             param.requires_grad = False  # 冻结模型其他部分
-    #         else:
-    #             param.requires_grad = True  # 解冻 mis_mlp 参数
+
 
     if training_args.bits in [4, 8]:
         from peft import prepare_model_for_kbit_training

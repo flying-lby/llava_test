@@ -46,7 +46,14 @@ deepspeed train/train_mem.py \
     --gradient_checkpointing True \
     --dataloader_num_workers 2 \
     --lazy_preprocess True \
-    --report_to none
+    --report_to none \
+    --ncls_count 4 \
+    --hidden_dim 1024 \
+    --output_dim 512 \
+    --mlp_type 3 \
+    --loss_threshold 0.4 \
+    --temperature 0.05 \
+    --use_local_loss False 
 
 if [ $? -ne 0 ]; then
     echo "Training failed. Exiting..."

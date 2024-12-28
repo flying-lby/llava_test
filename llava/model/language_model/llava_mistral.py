@@ -53,19 +53,55 @@ class linea_layer(nn.Module):
     def forward(self, x):
         return self.linear(x)  
           
+# class mis_mlp(nn.Module):
+#     def __init__(self, input_dim, hidden_dim, output_dim):
+#         super(mis_mlp, self).__init__()
+#         self.linear1 = nn.Linear(input_dim, hidden_dim)
+#         self.relu = nn.ReLU()
+#         self.linear2 = nn.Linear(hidden_dim, output_dim)
+
+#     def forward(self, x):
+#         x = self.linear1(x)
+#         x = self.relu(x)
+#         x = self.linear2(x)
+#         return x 
+
 class mis_mlp(nn.Module):
-    def __init__(self, input_dim, hidden_dim, output_dim):
-        super(mis_mlp, self).__init__()
-        self.linear1 = nn.Linear(input_dim, hidden_dim)
-        self.relu = nn.ReLU()
-        self.linear2 = nn.Linear(hidden_dim, output_dim)
+    def __init__(self, input_dim, hidden_dim, output_dim, mlp_type):
+        super().__init__()
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
+        self.output_dim = output_dim
+        self.mlp_type = mlp_type
+        
+        if(self.mlp_type == 1):
+            self.out_mlp = nn.Sequential(
+                nn.LayerNorm(self.input_dim),
+                nn.Linear(self.input_dim, self.hidden_dim),
+                nn.GELU(),
+                nn.Linear(self.hidden_dim, self.output_dim)
+            )
+        elif(self.mlp_type == 2):
+            self.out_mlp = nn.Sequential(
+                nn.LayerNorm(self.input_dim),
+                nn.Linear(self.input_dim , self.hidden_dim),
+                nn.ReLU(),
+                nn.Linear(self.hidden_dim, self.output_dim)
+            )
+        elif(self.mlp_type == 3):
+            self.out_mlp = nn.Sequential(
+                nn.LayerNorm(self.input_dim),
+                nn.Linear(self.input_dim, self.input_dim // 2),
+                nn.GELU(),
+                nn.Linear(self.input_dim // 2, self.hidden_dim),
+                nn.GELU(),
+                nn.Linear(self.hidden_dim, self.output_dim)
+            )
+      
 
     def forward(self, x):
-        x = self.linear1(x)
-        x = self.relu(x)
-        x = self.linear2(x)
-        return x 
-
+        out = self.out_mlp(x)
+        return out 
 
 class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
     config_class = LlavaMistralConfig
@@ -76,19 +112,35 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         self.model = LlavaMistralModel(config)
         # self.tokenizer = tokenizer
         self.padding_idx = config.pad_token_id
-
-        self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
-        self.mis_mlp = mis_mlp(input_dim=config.hidden_size, hidden_dim=1024, output_dim=4096)
+        
+        self.config = config 
         self.ncls_token_id = ncls_token_id
-        self.ncls_count = 4  # 可以根据需要调整
+        
+        #----------------------------------------------------------#
+        
+        self.ncls_count = config.sparse_config["ncls_count"]  
+        self.hidden_dim = config.sparse_config["hidden_dim"]
+        self.output_dim = config.sparse_config["output_dim"]
+        self.mlp_type = config.sparse_config["mlp_type"]
+        self.loss_threshold = config.sparse_config["loss_threshold"]
+        self.temperature = config.sparse_config["temperature"]
+        self.use_local_loss = config.sparse_config["use_local_loss"]
+        
+        #----------------------------------------------------------#
+        
+        
+        self.mis_mlp = mis_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, mlp_type = self.mlp_type)
+        self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
+        
         self.cross_attention = None
         # Initialize weights and apply final processing
         self.post_init()
     
     def initialize_mis_mlp(self):
         """确保 mis_mlp 的初始化在模型权重加载后完成"""
-        # if self.mis_mlp is None:
-        self.mis_mlp = mis_mlp(input_dim=4096, hidden_dim=1024, output_dim=512)
+        
+        self.mis_mlp = mis_mlp(input_dim = self.config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, mlp_type = self.mlp_type)
+    
         # 注册到模块列表中
         self.add_module("mis_mlp", self.mis_mlp)
         for param in self.mis_mlp.parameters():

@@ -1104,16 +1104,13 @@ class MistralModel(MistralPreTrainedModel):
 class MistralForCausalLM(MistralPreTrainedModel):
     _tied_weights_keys = ["lm_head.weight"]
 
-    def __init__(self, config):
+    def __init__(self, config: MistralConfig):
         super().__init__(config)
         self.model = MistralModel(config)
         self.vocab_size = config.vocab_size
-        self.num_labels = 13
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
-        self.classifier = nn.Linear(config.hidden_size, self.num_labels)
         self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size, self.padding_idx)
-        self.ncls_count = 4 
-
+        
         self.post_init()
 
     def get_input_embeddings(self):
@@ -1205,6 +1202,7 @@ class MistralForCausalLM(MistralPreTrainedModel):
         if return_emb:
            return outputs
         # Step 1: 提取 ncls 标记对应的全局 image特征
+    
         hidden_states = outputs[0]
         logits = self.lm_head(hidden_states)
         logits = logits.float()
@@ -1266,8 +1264,8 @@ class MistralForCausalLM(MistralPreTrainedModel):
         
        
         #  Step 4: 计算全局特征loss
-        temperature = 0.05
-        similarity_matrix = torch.matmul(local_ncls_features, local_txt_ncls_features.T) / temperature  # (B, B)
+        temperature = self.temperature
+        similarity_matrix = torch.matmul(global_ncls_features, global_txt_ncls_features.T) / temperature  # (B, B)
        
         # 生成标签，正样本是对角线上的元素（同索引处的样本是正样本）
         labels = torch.arange(similarity_matrix.size(0), device=similarity_matrix.device)
@@ -1279,24 +1277,28 @@ class MistralForCausalLM(MistralPreTrainedModel):
         # 取两个方向损失的平均值
         global_loss = (img_to_txt_loss + txt_to_img_loss) / 2
         
-        # 计算局部特征的loss
-        temperature = 0.05
-        similarity_matrix = torch.matmul(global_ncls_features, global_txt_ncls_features.T) / temperature  # (B, B)
-       
-        # 生成标签，正样本是对角线上的元素（同索引处的样本是正样本）
-        labels = torch.arange(similarity_matrix.size(0), device=similarity_matrix.device)
+        # 使用局部特征loss
+        if self.use_local_loss:
+            temperature = self.temperature
+            similarity_matrix = torch.matmul(local_ncls_features, local_txt_ncls_features.T) / temperature  # (B, B)
         
-        # 计算 InfoNCE 损失（两个方向：img->txt 和 txt->img）
-        img_to_txt_loss = F.cross_entropy(similarity_matrix, labels)
-        txt_to_img_loss = F.cross_entropy(similarity_matrix.T, labels)
+            # 生成标签，正样本是对角线上的元素（同索引处的样本是正样本）
+            labels = torch.arange(similarity_matrix.size(0), device=similarity_matrix.device)
+            
+            # 计算 InfoNCE 损失（两个方向：img->txt 和 txt->img）
+            img_to_txt_loss = F.cross_entropy(similarity_matrix, labels)
+            txt_to_img_loss = F.cross_entropy(similarity_matrix.T, labels)
+            
+            # 取两个方向损失的平均值
+            local_loss = (img_to_txt_loss + txt_to_img_loss) / 2
+            
+            a = self.loss_threshold
+            print("use local loss a: ", a)
+            total_loss = a * global_loss + (1 - a) * local_loss
+        else:
+            total_loss = global_loss
+            
         
-        # 取两个方向损失的平均值
-        local_loss = (img_to_txt_loss + txt_to_img_loss) / 2
-        
-        a = 0.4
-        total_loss = a * global_loss + (1 - a) * local_loss
-        # print("global_loss: ", global_loss)
-        # print("local_loss: ", local_loss)
         return CausalLMOutputWithPast(
             loss=total_loss,
             # logits=logits,
