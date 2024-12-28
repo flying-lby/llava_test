@@ -24,8 +24,20 @@ from llava.mm_utils import (
 )
 from llava.model.builder import load_pretrained_model
 from llava.utils import disable_torch_init
-
+from dataclasses import dataclass
+import argparse
+from transformers import HfArgumentParser
 from sklearn.metrics import accuracy_score, auc, precision_recall_curve, recall_score, f1_score, roc_auc_score
+
+@dataclass
+class SparseArguments:
+    ncls_count: int = 4
+    hidden_dim: int = 1024
+    output_dim: int = 512
+    mlp_type: int = 0
+    loss_threshold: float = 0.5
+    temperature: float = 0.05
+    use_local_loss: bool = True
 
 def split_list(lst, n):
     """Split a list into n (roughly) equal-sized chunks"""
@@ -37,9 +49,7 @@ def get_chunk(lst, n, k):
     chunks = split_list(lst, n)
     return chunks[k]
 
-
-
-def eval_model(args):
+def eval_model(args, sparse_args):
     # Model
     # disable_torch_init()
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -47,7 +57,7 @@ def eval_model(args):
     model_name = get_model_name_from_path(model_path)
 
     tokenizer, model, image_processor, context_len = load_pretrained_model(
-        model_path, args.model_base, model_name, device_map='cuda:0'
+        model_path, args.model_base, model_name, sparse_args, device_map='cuda:0'
     )
     
     # 加载类别数据
@@ -81,7 +91,7 @@ def eval_model(args):
         category_embedding = category_output.hidden_states[-1][:, -4:].mean(dim=1)
         category_embedding = model.mis_mlp(category_embedding)
         category_embeddings_cache.append(category_embedding)
-
+    print(model)
     # 将类别特征向量拼接成 (N, C) 的矩阵，其中N是类别数量，C是特征维度
     category_embeddings_cache = torch.cat(category_embeddings_cache, dim=0).to(device)
 
@@ -387,10 +397,13 @@ if __name__ == "__main__":
     parser.add_argument("--conv-mode", type=str, default="llava_v1")
     parser.add_argument("--num-chunks", type=int, default=1)
     parser.add_argument("--chunk-idx", type=int, default=0)
-    parser.add_argument("--temperature", type=float, default=0.2)
     parser.add_argument("--top_p", type=float, default=None)
     parser.add_argument("--num_beams", type=int, default=1)
-    args = parser.parse_args()
+    args, remaining_args = parser.parse_known_args()
+    
+    # Use HfArgumentParser for SparseArguments
+    hf_parser = HfArgumentParser(SparseArguments)
+    sparse_args, = hf_parser.parse_args_into_dataclasses(remaining_args)
 
-    eval_model(args)
+    eval_model(args, sparse_args)
     # get_acc()

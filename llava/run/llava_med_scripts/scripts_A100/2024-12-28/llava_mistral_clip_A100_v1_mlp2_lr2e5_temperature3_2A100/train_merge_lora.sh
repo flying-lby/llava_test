@@ -2,7 +2,7 @@
 ###
  # @Author: fly
  # @Date: 2024-12-26 16:50:23
- # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/scripts_A100/2024-12-28/llava_mistral_clip_A100_v1_mlp2_lr2e5_temperature3_2A100 copy/train_merge_lora.sh
+ # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/scripts_A100/2024-12-28/llava_mistral_clip_A100_v1_mlp2_lr2e5_temperature3_2A100/train_merge_lora.sh
  # @Description: 
 ### 
 
@@ -71,7 +71,14 @@ echo "Starting merge process..."
 python -m llava.run.train.merge_lora_weights \
     --model-path ./checkpoints/llava-lora-new-clip-A100-version9_12_28 \
     --model-base /mnt/nlp-ali/usr/huangwenxuan/home/official_llava_med/llava-med-v1.5-mistral-7b \
-    --save-model-path ./checkpoints/llava_mistral_new_clip_a100_version9_12_28
+    --save-model-path ./checkpoints/llava_mistral_new_clip_a100_version9_12_28 \
+    --ncls_count 4 \
+    --hidden_dim 1024 \
+    --output_dim 4096 \
+    --mlp_type 2 \
+    --loss_threshold 0.4 \
+    --temperature 0.03 \
+    --use_local_loss True 
 
 if [ $? -ne 0 ]; then
     echo "Merge failed. Exiting..."

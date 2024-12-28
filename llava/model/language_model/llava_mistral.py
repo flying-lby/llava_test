@@ -100,8 +100,7 @@ class mis_mlp(nn.Module):
       
 
     def forward(self, x):
-        out = self.out_mlp(x)
-        return out 
+        return self.out_mlp(x) 
 
 class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
     config_class = LlavaMistralConfig

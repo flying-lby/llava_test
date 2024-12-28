@@ -15,7 +15,13 @@ python -m llava.run.eval.eval_classify \
     --result-file ./result/A100/llava_mistral_clip_A100_v1_mlp2_lr2e5_temperature3_2A100/Chest_Xray_classify.txt \
     --question-file ./data/chest_xray/Chest-X-ray_llava_val.jsonl \
     --image-folder /mnt/nlp-ali/usr/zhaizijie/huangwx_ali/zijie_ali \
-    --temperature 0 \
-    --conv-mode vicuna_v1
+    --conv-mode vicuna_v1 \
+    --ncls_count 4 \
+    --hidden_dim 1024 \
+    --output_dim 4096 \
+    --mlp_type 2 \
+    --loss_threshold 0.4 \
+    --temperature 0.03 \
+    --use_local_loss True 
 
 

@@ -71,7 +71,14 @@ echo "Starting merge process..."
 python -m llava.run.train.merge_lora_weights \
     --model-path ./checkpoints/llava-lora-new-clip-A100-version5_12_28 \
     --model-base /mnt/nlp-ali/usr/huangwenxuan/home/official_llava_med/llava-med-v1.5-mistral-7b \
-    --save-model-path ./checkpoints/llava_mistral_new_clip_a100_version5_12_28
+    --save-model-path ./checkpoints/llava_mistral_new_clip_a100_version5_12_28 \
+    --ncls_count 8 \
+    --hidden_dim 1024 \
+    --output_dim 4096 \
+    --mlp_type 2 \
+    --loss_threshold 0.4 \
+    --temperature 0.05 \
+    --use_local_loss True 
 
 if [ $? -ne 0 ]; then
     echo "Merge failed. Exiting..."
