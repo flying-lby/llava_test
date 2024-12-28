@@ -26,6 +26,7 @@ from llava.model.builder import load_pretrained_model
 from llava.utils import disable_torch_init
 from dataclasses import dataclass
 import argparse
+from dataclasses import asdict
 from transformers import HfArgumentParser
 from sklearn.metrics import accuracy_score, auc, precision_recall_curve, recall_score, f1_score, roc_auc_score
 
@@ -87,11 +88,11 @@ def eval_model(args, sparse_args):
             return_dict=True
         )
         # 获取类别特征的最后一个隐藏层并计算均值
-        
-        category_embedding = category_output.hidden_states[-1][:, -4:].mean(dim=1)
+        sparse_args_dict = asdict(sparse_args)
+        category_embedding = category_output.hidden_states[-1][:, -sparse_args_dict["ncls_count"]:].mean(dim=1)
         category_embedding = model.mis_mlp(category_embedding)
         category_embeddings_cache.append(category_embedding)
-    print(model)
+    
     # 将类别特征向量拼接成 (N, C) 的矩阵，其中N是类别数量，C是特征维度
     category_embeddings_cache = torch.cat(category_embeddings_cache, dim=0).to(device)
 
