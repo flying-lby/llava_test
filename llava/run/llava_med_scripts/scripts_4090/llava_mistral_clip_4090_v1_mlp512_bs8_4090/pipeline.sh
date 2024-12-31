@@ -52,7 +52,7 @@ deepspeed train/train_mem.py \
     --output_dim 512 \
     --mlp_type 1 \
     --loss_threshold 0.2 \
-    --temperature 0.07 \
+    --temperature 0.06 \
     --use_local_loss True 
 
 if [ $? -ne 0 ]; then
