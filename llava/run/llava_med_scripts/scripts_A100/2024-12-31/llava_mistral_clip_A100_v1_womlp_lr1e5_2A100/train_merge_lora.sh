@@ -2,13 +2,13 @@
 ###
  # @Author: fly
  # @Date: 2024-12-26 16:50:23
- # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/scripts_A100/2024-12-28/llava_mistral_clip_A100_v1_mlp2_lr2e5_loss_threshold2_2A100/train_merge_lora.sh
+ # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/scripts_A100/2024-12-31/llava_mistral_clip_A100_v1_womlp_lr2e5_2A100/train_merge_lora.sh
  # @Description: 
 ### 
 
 # ========================
 # Training 
-# mlp add LayerNorm
+# mlp 3
 # ========================
 echo "Starting training process..."
 
@@ -19,7 +19,7 @@ deepspeed train/train_mem.py \
     --version v1 \
     --data_path ./data/chest_xray/new_classify_mimic_file_clip.json \
     --image_folder /mnt/nlp-ali/usr/huangwenxuan/home/dataset/srv/lby/physionet.org/files/mimic-cxr-jpg/2.0.0/files \
-    --vision_tower /srv/lby/clip-vit-large-patch14-336 \
+    --vision_tower openai/clip-vit-large-patch14-336 \
     --mm_projector_type mlp2x_gelu \
     --mm_vision_select_layer -2 \
     --mm_use_im_start_end False \
@@ -28,7 +28,7 @@ deepspeed train/train_mem.py \
     --group_by_modality_length True \
     --bf16 True \
     --mis_mlp_lr 2e-5 \
-    --output_dir ./checkpoints/llava-lora-new-clip-A100-version11_12_28 \
+    --output_dir ./checkpoints/llava-lora-new-clip-A100-version1_12_31 \
     --num_train_epochs 1 \
     --per_device_train_batch_size 64 \
     --per_device_eval_batch_size 64 \
@@ -51,10 +51,11 @@ deepspeed train/train_mem.py \
     --ncls_count 4 \
     --hidden_dim 1024 \
     --output_dim 4096 \
-    --mlp_type 2 \
-    --loss_threshold 0.2 \
+    --mlp_type 1 \
+    --loss_threshold 0.4 \
     --temperature 0.05 \
-    --use_local_loss True 
+    --use_local_loss True \
+    --feature_layer 1
     
 
 if [ $? -ne 0 ]; then
@@ -69,16 +70,17 @@ echo "Training completed successfully."
 echo "Starting merge process..."
 
 python -m llava.run.train.merge_lora_weights \
-    --model-path ./checkpoints/llava-lora-new-clip-A100-version11_12_28 \
+    --model-path ./checkpoints/llava-lora-new-clip-A100-version1_12_31 \
     --model-base /mnt/nlp-ali/usr/huangwenxuan/home/official_llava_med/llava-med-v1.5-mistral-7b \
-    --save-model-path ./checkpoints/llava_mistral_new_clip_a100_version11_12_28 \
+    --save-model-path ./checkpoints/llava_mistral_new_clip_a100_version1_12_31 \
     --ncls_count 4 \
     --hidden_dim 1024 \
     --output_dim 4096 \
-    --mlp_type 2 \
-    --loss_threshold 0.2 \
+    --mlp_type 1 \
+    --loss_threshold 0.4 \
     --temperature 0.05 \
-    --use_local_loss True 
+    --use_local_loss True \
+    --feature_layer 1
 
 if [ $? -ne 0 ]; then
     echo "Merge failed. Exiting..."

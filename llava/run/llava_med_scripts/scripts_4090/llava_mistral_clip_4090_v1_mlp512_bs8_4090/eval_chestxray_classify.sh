@@ -10,10 +10,10 @@ python -m llava.run.eval.eval_classify \
     --question-file ./data/chest_xray/Chest-X-ray_llava_val.jsonl \
     --image-folder "/srv/lby" \
     --conv-mode vicuna_v1 \
-    --ncls_count 4 \
+    --ncls_count 8 \
     --hidden_dim 1024 \
     --output_dim 4096 \
-    --mlp_type 1 \
+    --mlp_type 3 \
     --loss_threshold 0.4 \
     --temperature 0.05 \
-    --use_local_loss False 
+    --use_local_loss True 

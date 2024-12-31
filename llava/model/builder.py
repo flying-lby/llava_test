@@ -13,12 +13,30 @@ from llava.model import LlavaMistralForCausalLM
 from llava.model import *
 from llava.constants import DEFAULT_IMAGE_PATCH_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
 
+from dataclasses import dataclass
 
+# 定义 SparseArguments 数据类
+@dataclass
+class SparseArguments:
+    ncls_count: int = 4
+    hidden_dim: int = 1024
+    output_dim: int = 512
+    mlp_type: int = 1
+    loss_threshold: float = 0.5
+    temperature: float = 0.05
+    use_local_loss: bool = True
 
+# 全局定义 add_sparse 参数
+default_sparse_args = SparseArguments()
 
 # torch.cuda.set_device(1)
 def load_pretrained_model(model_path, model_base, model_name, add_sparse=None, load_8bit=False, load_4bit=False, device_map="auto", device="cuda:0", use_flash_attn=False):
+    
+    # 如果没有传递 add_sparse，则使用全局定义的默认值
+    if not add_sparse:
+        add_sparse = default_sparse_args
 
+        
     kwargs = {}
     
     # 如果设备不是 CUDA，设置设备映射
@@ -151,10 +169,12 @@ def load_pretrained_model(model_path, model_base, model_name, add_sparse=None, l
                 ncls_token_id = tokenizer.convert_tokens_to_ids(ncls_token)
                 
                 #-----------------------调参-------------------------------------------------#
-            
+             
+              
                 from llava.model.language_model.llava_mistral import LlavaMistralConfig
                 config = LlavaMistralConfig.from_pretrained(model_path)
-                config.sparse_config = vars(add_sparse)
+                if add_sparse:
+                    config.sparse_config = vars(add_sparse)
                
                 #------------------------------------------------------------------------#
                 

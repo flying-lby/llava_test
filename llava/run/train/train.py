@@ -123,10 +123,11 @@ class SparseArguments:
     ncls_count: int = 4
     hidden_dim: int = 1024
     output_dim: int = 512
-    mlp_type: int = 0
+    mlp_type: int = 1
     loss_threshold: float = 0.5
     temperature: float = 0.05
     use_local_loss: bool = True
+    feature_layer: int = 1
     
     
 # ----------------------------------------------------------#

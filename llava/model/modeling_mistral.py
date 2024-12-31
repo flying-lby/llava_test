@@ -1203,26 +1203,27 @@ class MistralForCausalLM(MistralPreTrainedModel):
            return outputs
         # Step 1: 提取 ncls 标记对应的全局 image特征
     
-        hidden_states = outputs[0]
-        logits = self.lm_head(hidden_states)
-        logits = logits.float()
-        last_hidden_state = outputs[0]
+        # hidden_states = outputs[0]
+        # logits = self.lm_head(hidden_states)
+        # logits = logits.float()
+        # last_hidden_state = outputs[0]
+        hidden_states = outputs.hidden_states[-self.feature_layer] if output_hidden_states else outputs[0]
         attention_mask = attention_mask.bool()  # 确保是布尔类型
        
         # 创建一个用于存储 ncls 特征的张量
         ncls_features = []
         
         # ncls_features = torch.stack(ncls_features)  # (B, 8, 4096)
-        global_ncls_features = last_hidden_state[:, -self.ncls_count:, :]
+        global_ncls_features = hidden_states[:, -self.ncls_count:, :]
         global_ncls_features = global_ncls_features.mean(dim=1)
     
-        global_ncls_features = self.mis_mlp(global_ncls_features)  # 通过MLP投影 (B, 4096)
+        # global_ncls_features = self.mis_mlp(global_ncls_features)  # 通过MLP投影 (B, 4096)
         
         # 提取 ncls 标记对应的局部 image特征
-        local_ncls_features = last_hidden_state[:, :-self.ncls_count, :]  # (B, seq_len - ncls_count, hidden_dim)
+        local_ncls_features = hidden_states[:, :-self.ncls_count, :]  # (B, seq_len - ncls_count, hidden_dim)
         local_ncls_features = local_ncls_features.mean(dim=1) 
         
-        local_ncls_features = self.mis_mlp(local_ncls_features)  
+        # local_ncls_features = self.mis_mlp(local_ncls_features)  
         
         # Step 2: 提取文本特征
         txt_output = self.model(
@@ -1238,21 +1239,22 @@ class MistralForCausalLM(MistralPreTrainedModel):
         )
        
         # 提取文本全局特征
-        txt_last_hidden_state = txt_output[0] # 获取 last_hidden_state
+
+        txt_hidden_states = txt_output.hidden_states[-self.feature_layer] if output_hidden_states else txt_output[0]
         txt_attention_mask = txt_attention_mask.bool()  # 确保是布尔类型
 
         # 创建一个用于存储文本 ncls 特征的张量
         txt_ncls_features = []
         
-        global_txt_ncls_features = txt_last_hidden_state[:, -self.ncls_count:, :]
+        global_txt_ncls_features = txt_hidden_states[:, -self.ncls_count:, :]
         global_txt_ncls_features = global_txt_ncls_features.mean(dim=1)
-        global_txt_ncls_features = self.mis_mlp(global_txt_ncls_features)  # 最终特征维度为 (B, 4096)
+        # global_txt_ncls_features = self.mis_mlp(global_txt_ncls_features)  # 最终特征维度为 (B, 4096)
         
         # 提取 ncls 标记对应的局部 文本特征
-        local_txt_ncls_features = txt_last_hidden_state[:, :-self.ncls_count, :]  # (B, seq_len - ncls_count, hidden_dim)
+        local_txt_ncls_features = txt_hidden_states[:, :-self.ncls_count, :]  # (B, seq_len - ncls_count, hidden_dim)
         local_txt_ncls_features = local_txt_ncls_features.mean(dim=1) 
         
-        local_txt_ncls_features = self.mis_mlp(local_txt_ncls_features)  
+        # local_txt_ncls_features = self.mis_mlp(local_txt_ncls_features)  
         
 
          # Step 3: 归一化特征向量到单位球面上
@@ -1293,7 +1295,7 @@ class MistralForCausalLM(MistralPreTrainedModel):
             local_loss = (img_to_txt_loss + txt_to_img_loss) / 2
             
             a = self.loss_threshold
-            print("use local loss a: ", a)
+          
             total_loss = a * global_loss + (1 - a) * local_loss
         else:
             total_loss = global_loss

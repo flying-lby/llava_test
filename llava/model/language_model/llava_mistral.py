@@ -116,15 +116,15 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         self.ncls_token_id = ncls_token_id
         
         #----------------------------------------------------------#
-        
-        self.ncls_count = config.sparse_config["ncls_count"]  
-        self.hidden_dim = config.sparse_config["hidden_dim"]
-        self.output_dim = config.sparse_config["output_dim"]
-        self.mlp_type = config.sparse_config["mlp_type"]
-        self.loss_threshold = config.sparse_config["loss_threshold"]
-        self.temperature = config.sparse_config["temperature"]
-        self.use_local_loss = config.sparse_config["use_local_loss"]
-        
+        if hasattr(config, "sparse_config") and config.sparse_config is not None:
+            self.ncls_count = config.sparse_config["ncls_count"]  
+            self.hidden_dim = config.sparse_config["hidden_dim"]
+            self.output_dim = config.sparse_config["output_dim"]
+            self.mlp_type = config.sparse_config["mlp_type"]
+            self.loss_threshold = config.sparse_config["loss_threshold"]
+            self.temperature = config.sparse_config["temperature"]
+            self.use_local_loss = config.sparse_config["use_local_loss"]
+            self.feature_layer = config.sparse_config["feature_layer"]
         #----------------------------------------------------------#
         
         
@@ -291,10 +291,10 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             return_dict=True
         )
 
-        image_embedding = image_output.hidden_states[-1][:, -self.ncls_count:]
+        image_embedding = image_output.hidden_states[-self.feature_layer][:, -self.ncls_count:]
         # image_embedding = torch.max(image_embedding, dim=1).values  # 使用最大池化
         image_embedding = torch.mean(image_embedding, dim=1)  # 使用最大池化
-        image_embedding = self.mis_mlp(image_embedding)
+        # image_embedding = self.mis_mlp(image_embedding)
         
         # 步骤2: 对图像特征和类别特征进行L2归一化
         image_embedding = F.normalize(image_embedding, p=2, dim=-1)
