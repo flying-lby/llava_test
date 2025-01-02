@@ -313,11 +313,11 @@ class LLaVATrainer(Trainer):
             #             "lr": 2e-4,  # 设置新模块的学习率
             #         },
             #     ]
-            if self.optimizer is None:
-                # 显式解冻 mis_mlp 参数
-                if hasattr(opt_model, 'mis_mlp'):   
-                    for param in opt_model.mis_mlp.parameters():
-                        param.requires_grad = True
+      
+            # 显式解冻 mis_mlp 参数
+            if hasattr(opt_model, 'mis_mlp'):   
+                for param in opt_model.mis_mlp.parameters():
+                    param.requires_grad = True
                         
                 # if hasattr(opt_model, 'cross_attention'):   
                 #     for param in opt_model.cross_attention.parameters():

@@ -90,7 +90,7 @@ def eval_model(args, sparse_args):
         )
         # 获取类别特征的最后一个隐藏层并计算均值
         sparse_args_dict = asdict(sparse_args)
-        category_embedding = category_output.hidden_states[-1][:, -sparse_args_dict["ncls_count"]:].mean(dim=1)
+        category_embedding = category_output.hidden_states[-sparse_args_dict["feature_layer"]][:, -sparse_args_dict["ncls_count"]:].mean(dim=1)
         # category_embedding = model.mis_mlp(category_embedding)
         category_embeddings_cache.append(category_embedding)
     

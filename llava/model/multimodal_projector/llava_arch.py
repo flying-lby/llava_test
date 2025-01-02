@@ -83,6 +83,8 @@ class LlavaMetaModel:
         # self.config.img_size = model_args.img_size
         # self.config.vision_backbone = model_args.vision_backbone
         # self.config.segtok_posembed = model_args.segtok_posembed
+        
+        ## 调整了mm_projector的requires_grad
 
         if getattr(self, 'mm_projector', None) is None:
             self.mm_projector = build_vision_projector(self.config)

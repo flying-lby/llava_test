@@ -106,7 +106,7 @@ def load_pretrained_model(model_path, model_base, model_name, add_sparse=None, l
             
             # 调整词汇表大小，并确保只新增标记的权重被初始化
             model.resize_token_embeddings(len(tokenizer))
-
+           
             # 加载训练后的权重
             print('Loading additional LLaVA weights...')
             if os.path.exists(os.path.join(model_path, 'non_lora_trainables.bin')):
