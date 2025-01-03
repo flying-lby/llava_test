@@ -2,7 +2,7 @@
 ###
  # @Author: fly
  # @Date: 2024-08-24 14:44:49
- # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/scripts_4090/llava_mistral_clip_4090_v1_mlp512_bs8_4090/pipeline.sh
+ # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/scripts_4090/llava_mistral_clip_4090_v1_mlp512_tmlp_4090/pipeline.sh
  # @Description: 
 ### 
 
@@ -27,7 +27,7 @@ deepspeed train/train_mem.py \
     --group_by_modality_length True \
     --bf16 True \
     --mis_mlp_lr 5e-4 \
-    --output_dir ./checkpoints/llava-lora-new-clip-v1 \
+    --output_dir ./checkpoints/llava-lora-new-clip-v2 \
     --num_train_epochs 1 \
     --per_device_train_batch_size 8 \
     --per_device_eval_batch_size 8 \
@@ -46,15 +46,16 @@ deepspeed train/train_mem.py \
     --gradient_checkpointing True \
     --dataloader_num_workers 2 \
     --lazy_preprocess True \
-    --report_to none \
+    --report_to wandb \
     --ncls_count 6 \
     --hidden_dim 1024 \
-    --output_dim 512 \
-    --mlp_type 4 \
+    --output_dim 4096 \
+    --mlp_type 1 \
     --loss_threshold 0.6 \
     --temperature 0.06 \
     --use_local_loss True \
-    --special_tokens_mlp_type 2
+    --feature_layer 1 \
+    --special_tokens_mlp_type 1
 
 if [ $? -ne 0 ]; then
     echo "Training failed. Exiting..."
@@ -68,16 +69,18 @@ echo "Training completed successfully."
 echo "Starting merge process..."
 
 python -m llava.run.train.merge_lora_weights \
-    --model-path ./checkpoints/llava-lora-new-clip-v1 \
+    --model-path ./checkpoints/llava-lora-new-clip-v2 \
     --model-base /srv/lby/llava_med/llava-med-v1.5-mistral-7b \
-    --save-model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v1 \
+    --save-model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v2 \
     --ncls_count 6 \
     --hidden_dim 1024 \
-    --output_dim 512 \
+    --output_dim 4096 \
     --mlp_type 1 \
     --loss_threshold 0.6 \
     --temperature 0.06 \
-    --use_local_loss True 
+    --use_local_loss True \
+    --feature_layer 1 \
+    --special_tokens_mlp_type 1
 
 
 if [ $? -ne 0 ]; then
@@ -87,15 +90,17 @@ fi
 echo "Merge completed successfully."
 
 python -m llava.run.eval.eval_classify \
-    --model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v1 \
-    --result-file ./result/R4090/llava-mistral_new_clip_v1/Chest_Xray_classify.txt \
+    --model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v2 \
+    --result-file ./result/R4090/llava-mistral_new_clip_v2/Chest_Xray_classify.txt \
     --question-file ./data/chest_xray/Chest-X-ray_llava_val.jsonl \
     --image-folder "/srv/lby" \
     --conv-mode vicuna_v1 \
     --ncls_count 6 \
     --hidden_dim 1024 \
-    --output_dim 512 \
+    --output_dim 4096 \
     --mlp_type 1 \
     --loss_threshold 0.6 \
     --temperature 0.06 \
-    --use_local_loss True 
+    --use_local_loss True \
+    --feature_layer 1 \
+    --special_tokens_mlp_type 1

@@ -97,9 +97,21 @@ class mis_mlp(nn.Module):
                 nn.GELU(),
                 nn.Linear(self.hidden_dim, self.output_dim)
             )
+        elif(self.mlp_type == 4):
+            self.out_mlp = nn.Sequential(
+                nn.LayerNorm(self.input_dim),
+                nn.Dropout(0.5),
+                nn.Linear(self.input_dim, self.output_dim),
+            )
+        else:
+            # When mlp_type is 0, set self.out_mlp to None
+            self.out_mlp = None
       
 
     def forward(self, x):
+        if self.out_mlp is None:
+            # If mlp_type is 0, return x directly
+            return x
         return self.out_mlp(x) 
 
 class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
@@ -114,7 +126,11 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         
         self.config = config 
         self.ncls_token_id = ncls_token_id
-        
+        self.special_token_mlp = nn.Sequential(
+            nn.Linear(config.hidden_size, config.hidden_size // 4),
+            nn.GELU(),
+            nn.Linear(config.hidden_size // 4, config.hidden_size)
+        )
         #----------------------------------------------------------#
         if hasattr(config, "sparse_config") and config.sparse_config is not None:
             self.ncls_count = config.sparse_config["ncls_count"]  
@@ -125,8 +141,17 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             self.temperature = config.sparse_config["temperature"]
             self.use_local_loss = config.sparse_config["use_local_loss"]
             self.feature_layer = config.sparse_config["feature_layer"]
+            self.special_tokens_mlp_type = config.sparse_config["special_tokens_mlp_type"]
         #----------------------------------------------------------#
-        
+        if self.special_tokens_mlp_type == 1:
+            self.special_token_mlp = nn.Sequential(
+                nn.Linear(config.hidden_size, config.hidden_size // 4),
+                nn.GELU(),
+                nn.Linear(config.hidden_size // 4, config.hidden_size)
+            )
+        elif self.special_tokens_mlp_type == 2:
+            self.special_token_mlp = nn.Linear(config.hidden_size, config.hidden_size)
+     
         
         self.mis_mlp = mis_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, mlp_type = self.mlp_type)
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
@@ -139,12 +164,25 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         """确保 mis_mlp 的初始化在模型权重加载后完成"""
         
         self.mis_mlp = mis_mlp(input_dim = self.config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, mlp_type = self.mlp_type)
-    
+       
+        if self.special_tokens_mlp_type == 1:
+            self.special_token_mlp = nn.Sequential(
+                nn.Linear(self.config.hidden_size, self.config.hidden_size // 4),
+                nn.GELU(),
+                nn.Linear(self.config.hidden_size // 4, self.config.hidden_size)
+            )
+        elif self.special_tokens_mlp_type == 2:
+            self.special_token_mlp = nn.Linear(self.config.hidden_size, self.config.hidden_size)
+            
         # 注册到模块列表中
         self.add_module("mis_mlp", self.mis_mlp)
+        self.add_module("special_token_mlp", self.special_token_mlp)
+        
         for param in self.mis_mlp.parameters():
             param.requires_grad = True
-                
+        for param in self.special_token_mlp.parameters():
+            param.requires_grad = True
+        
     def update_tensor(self, batch_size, tensor, ncls_tensor):
     # 直接在序列末尾追加 ncls 标记
         updated_tensors = []
@@ -178,92 +216,204 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         return_dict: Optional[bool] = None
     ) -> Union[Tuple, CausalLMOutputWithPast]:
         
-        if input_ids is not None and attention_mask is not None:
-            batch_size = input_ids.size(0)
-
-            # 创建 ncls 标记
-            ncls_token_ids = torch.full((batch_size, self.ncls_count), self.ncls_token_id, dtype=input_ids.dtype, device=input_ids.device)
-            ncls_attention_mask = torch.ones((batch_size, self.ncls_count), dtype=attention_mask.dtype, device=attention_mask.device)
-
-            # 直接在序列末尾添加 ncls 标记
-            input_ids = self.update_tensor(batch_size, input_ids, ncls_token_ids)
-            attention_mask = self.update_tensor(batch_size, attention_mask, ncls_attention_mask)
-
-            # 更新 position_ids
-            if position_ids is None:
-                position_ids = torch.arange(input_ids.size(1), dtype=torch.long, device=input_ids.device).unsqueeze(0).expand(batch_size, -1)
-            else:
-                # 添加位置标记到末尾
-                ncls_position_ids = torch.arange(position_ids.size(1), position_ids.size(1) + self.ncls_count, device=position_ids.device).unsqueeze(0).expand(batch_size, -1)
-                position_ids = self.update_tensor(batch_size, position_ids, ncls_position_ids)
-
-            # 更新 labels
-            if labels is not None:
-                ncls_labels = torch.full((batch_size, self.ncls_count), -100, dtype=labels.dtype, device=labels.device)  # -100 用于忽略 ncls 部分
-                labels = self.update_tensor(batch_size, labels, ncls_labels)
-
-            ###更新文本部分 填充ncls标记
-            # txt_input_ids = input_ids.clone() 
-            # txt_attention_mask = attention_mask.clone()
-            # txt_past_key_values = past_key_values
-            # txt_labels = labels
-        
-        # 更新类别输入
-        if category_ids is not None and category_attention_mask is not None:
-            category_valid_lengths = category_attention_mask.sum(dim=1).long()
-            category_ncls_token_ids = torch.full((batch_size, self.ncls_count), self.ncls_token_id, dtype=category_ids.dtype, device=category_ids.device)
-            category_ncls_attention_mask = torch.ones((batch_size, self.ncls_count), dtype=category_attention_mask.dtype, device=category_attention_mask.device)
-            
-            # 直接在类别输入的序列末尾添加 ncls 标记
-            category_ids = self.update_tensor(batch_size, category_ids.squeeze(1), category_ncls_token_ids)
-            category_attention_mask = self.update_tensor(batch_size, category_attention_mask.squeeze(1), category_ncls_attention_mask)
-        
         # 推理时处理所有类别矩阵
         if return_emb:
             txt_input_ids = input_ids.clone() 
             txt_attention_mask = attention_mask.clone()
             txt_past_key_values = past_key_values
         else:
-            txt_input_ids = category_ids
-            txt_attention_mask = category_attention_mask
+            txt_input_ids = category_ids.squeeze(1)
+            txt_attention_mask = category_attention_mask.squeeze(1)
             txt_past_key_values = past_key_values
-      
-            
+        
         # 如果仅有图像输入，则使用图像的多模态预处理
         if inputs_embeds is None and images is not None:
-            input_ids, position_ids, attention_mask, past_key_values, inputs_embeds, labels = self.prepare_inputs_labels_for_multimodal(
-                input_ids, position_ids, attention_mask, past_key_values, labels, images, image_sizes
+            (
+                input_ids,
+                position_ids,
+                attention_mask,
+                past_key_values,
+                inputs_embeds,
+                labels
+            ) = self.prepare_inputs_labels_for_multimodal(
+                input_ids=input_ids,
+                position_ids=position_ids,
+                attention_mask=attention_mask,
+                past_key_values=past_key_values,
+                labels=labels,
+                images=images,
+                image_sizes=image_sizes
             )
-        
+
         # 如果仅有类别输入，则处理类别文本的嵌入
         if txt_input_ids is not None:
-            txt_input_ids, txt_position_ids, txt_attention_mask, txt_past_key_values, txt_inputs_embeds = self.prepare_inputs_txt_labels_for_multimodal(
-                txt_input_ids, txt_position_ids, txt_attention_mask, txt_past_key_values
+            (
+                txt_input_ids,
+                txt_position_ids,
+                txt_attention_mask,
+                txt_past_key_values,
+                txt_inputs_embeds
+            ) = self.prepare_inputs_txt_labels_for_multimodal(
+                input_ids=txt_input_ids,
+                position_ids=txt_position_ids,  
+                attention_mask=txt_attention_mask,
+                past_key_values=txt_past_key_values
+            )
+
+        # 添加 ncls 特殊标记逻辑到 inputs_embeds 和 txt_inputs_embeds
+        if inputs_embeds is not None:
+            ncls_embeddings = self.special_token_mlp(
+                torch.randn(
+                    inputs_embeds.size(0),
+                    self.ncls_count,
+                    inputs_embeds.size(-1),
+                    device=inputs_embeds.device,
+                    dtype=inputs_embeds.dtype
                 )
+            )
+            ncls_attention_mask = torch.ones(
+                (inputs_embeds.size(0), self.ncls_count), dtype=attention_mask.dtype, device=attention_mask.device
+            )
+
+            # 更新 inputs_embeds 和 attention_mask
+            inputs_embeds = self.update_tensor(inputs_embeds.size(0), inputs_embeds, ncls_embeddings)
+            attention_mask = self.update_tensor(inputs_embeds.size(0), attention_mask, ncls_attention_mask)
+
+        if txt_inputs_embeds is not None:
+            category_ncls_embeddings = self.special_token_mlp(
+                torch.randn(
+                    txt_inputs_embeds.size(0),
+                    self.ncls_count,
+                    txt_inputs_embeds.size(-1),
+                    device=txt_inputs_embeds.device,
+                    dtype=txt_inputs_embeds.dtype
+                )
+            )
+            category_ncls_attention_mask = torch.ones(
+                (txt_inputs_embeds.size(0), self.ncls_count), dtype=txt_attention_mask.dtype, device=txt_attention_mask.device
+            )
+
+            # 更新 txt_inputs_embeds 和 txt_attention_mask
+            txt_inputs_embeds = self.update_tensor(txt_inputs_embeds.size(0), txt_inputs_embeds, category_ncls_embeddings)
+            txt_attention_mask = self.update_tensor(txt_inputs_embeds.size(0), txt_attention_mask, category_ncls_attention_mask)
         
         
-        # 获取模型的文本输出
+        # 添加特殊标记逻辑
+        if position_ids is not None:
+            ncls_position_ids = torch.arange(
+                position_ids.size(-1), position_ids.size(-1) + self.ncls_count,
+                dtype=position_ids.dtype, device=position_ids.device
+            ).unsqueeze(0).expand(position_ids.size(0), -1)
+            position_ids = self.update_tensor(position_ids.size(0), position_ids, ncls_position_ids)
+
+        if labels is not None:
+            ncls_labels = torch.full(
+                (labels.size(0), self.ncls_count), fill_value=-100,  # 视情况替换忽略标记
+                dtype=labels.dtype, device=labels.device
+            )
+            labels = self.update_tensor(labels.size(0), labels, ncls_labels)
+
+        
+        # 获取模型输出
         outputs = super().forward(
-            input_ids=input_ids,
+            input_ids=input_ids,  
+            inputs_embeds=inputs_embeds,
             attention_mask=attention_mask,
             position_ids=position_ids,
             past_key_values=past_key_values,
-            inputs_embeds=inputs_embeds,
             labels=labels,
             use_cache=use_cache,
             output_attentions=output_attentions,
             output_hidden_states=output_hidden_states,
             return_dict=return_dict,
-            txt_input_ids=txt_input_ids,
-            txt_position_ids=txt_position_ids,
-            txt_attention_mask=txt_attention_mask,
-            txt_past_key_values=txt_past_key_values,
+            txt_input_ids=txt_input_ids, 
             txt_inputs_embeds=txt_inputs_embeds,
+            txt_attention_mask=txt_attention_mask,
             return_emb=return_emb
         )
-        
 
         return outputs
+        # if input_ids is not None and attention_mask is not None:
+        #     batch_size = input_ids.size(0)
+
+        #     # 创建 ncls 标记
+        #     ncls_token_ids = torch.full((batch_size, self.ncls_count), self.ncls_token_id, dtype=input_ids.dtype, device=input_ids.device)
+        #     ncls_attention_mask = torch.ones((batch_size, self.ncls_count), dtype=attention_mask.dtype, device=attention_mask.device)
+
+        #     # 直接在序列末尾添加 ncls 标记
+        #     input_ids = self.update_tensor(batch_size, input_ids, ncls_token_ids)
+        #     attention_mask = self.update_tensor(batch_size, attention_mask, ncls_attention_mask)
+
+        #     # 更新 position_ids
+        #     if position_ids is None:
+        #         position_ids = torch.arange(input_ids.size(1), dtype=torch.long, device=input_ids.device).unsqueeze(0).expand(batch_size, -1)
+        #     else:
+        #         # 添加位置标记到末尾
+        #         ncls_position_ids = torch.arange(position_ids.size(1), position_ids.size(1) + self.ncls_count, device=position_ids.device).unsqueeze(0).expand(batch_size, -1)
+        #         position_ids = self.update_tensor(batch_size, position_ids, ncls_position_ids)
+
+        #     # 更新 labels
+        #     if labels is not None:
+        #         ncls_labels = torch.full((batch_size, self.ncls_count), -100, dtype=labels.dtype, device=labels.device)  # -100 用于忽略 ncls 部分
+        #         labels = self.update_tensor(batch_size, labels, ncls_labels)
+
+        
+        # # 更新类别输入
+        # if category_ids is not None and category_attention_mask is not None:
+        #     category_valid_lengths = category_attention_mask.sum(dim=1).long()
+        #     category_ncls_token_ids = torch.full((batch_size, self.ncls_count), self.ncls_token_id, dtype=category_ids.dtype, device=category_ids.device)
+        #     category_ncls_attention_mask = torch.ones((batch_size, self.ncls_count), dtype=category_attention_mask.dtype, device=category_attention_mask.device)
+            
+        #     # 直接在类别输入的序列末尾添加 ncls 标记
+        #     category_ids = self.update_tensor(batch_size, category_ids.squeeze(1), category_ncls_token_ids)
+        #     category_attention_mask = self.update_tensor(batch_size, category_attention_mask.squeeze(1), category_ncls_attention_mask)
+        
+        # # 推理时处理所有类别矩阵
+        # if return_emb:
+        #     txt_input_ids = input_ids.clone() 
+        #     txt_attention_mask = attention_mask.clone()
+        #     txt_past_key_values = past_key_values
+        # else:
+        #     txt_input_ids = category_ids
+        #     txt_attention_mask = category_attention_mask
+        #     txt_past_key_values = past_key_values
+      
+            
+        # # 如果仅有图像输入，则使用图像的多模态预处理
+        # if inputs_embeds is None and images is not None:
+        #     input_ids, position_ids, attention_mask, past_key_values, inputs_embeds, labels = self.prepare_inputs_labels_for_multimodal(
+        #         input_ids, position_ids, attention_mask, past_key_values, labels, images, image_sizes
+        #     )
+        
+        # # 如果仅有类别输入，则处理类别文本的嵌入
+        # if txt_input_ids is not None:
+        #     txt_input_ids, txt_position_ids, txt_attention_mask, txt_past_key_values, txt_inputs_embeds = self.prepare_inputs_txt_labels_for_multimodal(
+        #         txt_input_ids, txt_position_ids, txt_attention_mask, txt_past_key_values
+        #         )
+        
+        
+        # # 获取模型的文本输出
+        # outputs = super().forward(
+        #     input_ids=input_ids,
+        #     attention_mask=attention_mask,
+        #     position_ids=position_ids,
+        #     past_key_values=past_key_values,
+        #     inputs_embeds=inputs_embeds,
+        #     labels=labels,
+        #     use_cache=use_cache,
+        #     output_attentions=output_attentions,
+        #     output_hidden_states=output_hidden_states,
+        #     return_dict=return_dict,
+        #     txt_input_ids=txt_input_ids,
+        #     txt_position_ids=txt_position_ids,
+        #     txt_attention_mask=txt_attention_mask,
+        #     txt_past_key_values=txt_past_key_values,
+        #     txt_inputs_embeds=txt_inputs_embeds,
+        #     return_emb=return_emb
+        # )
+        
+
+        # return outputs
 
     def get_model(self):
         # 假设你返回一个基础模型或者相关的模型实例
@@ -294,7 +444,7 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         image_embedding = image_output.hidden_states[-self.feature_layer][:, -self.ncls_count:]
         # image_embedding = torch.max(image_embedding, dim=1).values  # 使用最大池化
         image_embedding = torch.mean(image_embedding, dim=1)  # 使用最大池化
-        # image_embedding = self.mis_mlp(image_embedding)
+        image_embedding = self.mis_mlp(image_embedding)
         
         # 步骤2: 对图像特征和类别特征进行L2归一化
         image_embedding = F.normalize(image_embedding, p=2, dim=-1)

@@ -40,6 +40,7 @@ class SparseArguments:
     temperature: float = 0.05
     use_local_loss: bool = True
     feature_layer: int = 1
+    special_tokens_mlp_type: int = 1
 
 def split_list(lst, n):
     """Split a list into n (roughly) equal-sized chunks"""
@@ -91,7 +92,7 @@ def eval_model(args, sparse_args):
         # 获取类别特征的最后一个隐藏层并计算均值
         sparse_args_dict = asdict(sparse_args)
         category_embedding = category_output.hidden_states[-sparse_args_dict["feature_layer"]][:, -sparse_args_dict["ncls_count"]:].mean(dim=1)
-        # category_embedding = model.mis_mlp(category_embedding)
+        category_embedding = model.mis_mlp(category_embedding)
         category_embeddings_cache.append(category_embedding)
     
     # 将类别特征向量拼接成 (N, C) 的矩阵，其中N是类别数量，C是特征维度

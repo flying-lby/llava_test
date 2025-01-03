@@ -1217,13 +1217,13 @@ class MistralForCausalLM(MistralPreTrainedModel):
         global_ncls_features = hidden_states[:, -self.ncls_count:, :]
         global_ncls_features = global_ncls_features.mean(dim=1)
     
-        # global_ncls_features = self.mis_mlp(global_ncls_features)  # 通过MLP投影 (B, 4096)
+        global_ncls_features = self.mis_mlp(global_ncls_features)  # 通过MLP投影 (B, 4096)
         
         # 提取 ncls 标记对应的局部 image特征
         local_ncls_features = hidden_states[:, :-self.ncls_count, :]  # (B, seq_len - ncls_count, hidden_dim)
         local_ncls_features = local_ncls_features.mean(dim=1) 
         
-        # local_ncls_features = self.mis_mlp(local_ncls_features)  
+        local_ncls_features = self.mis_mlp(local_ncls_features)  
         
         # Step 2: 提取文本特征
         txt_output = self.model(
@@ -1248,13 +1248,13 @@ class MistralForCausalLM(MistralPreTrainedModel):
         
         global_txt_ncls_features = txt_hidden_states[:, -self.ncls_count:, :]
         global_txt_ncls_features = global_txt_ncls_features.mean(dim=1)
-        # global_txt_ncls_features = self.mis_mlp(global_txt_ncls_features)  # 最终特征维度为 (B, 4096)
+        global_txt_ncls_features = self.mis_mlp(global_txt_ncls_features)  # 最终特征维度为 (B, 4096)
         
         # 提取 ncls 标记对应的局部 文本特征
         local_txt_ncls_features = txt_hidden_states[:, :-self.ncls_count, :]  # (B, seq_len - ncls_count, hidden_dim)
         local_txt_ncls_features = local_txt_ncls_features.mean(dim=1) 
         
-        # local_txt_ncls_features = self.mis_mlp(local_txt_ncls_features)  
+        local_txt_ncls_features = self.mis_mlp(local_txt_ncls_features)  
         
 
          # Step 3: 归一化特征向量到单位球面上

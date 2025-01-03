@@ -22,6 +22,7 @@ class SparseArguments:
     temperature: float = 0.05
     use_local_loss: bool = True
     feature_layer: int = 1
+    special_tokens_mlp_type: int = 1
     
 
 def merge_lora(args, sparse_args):
