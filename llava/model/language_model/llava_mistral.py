@@ -126,11 +126,7 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         
         self.config = config 
         self.ncls_token_id = ncls_token_id
-        self.special_token_mlp = nn.Sequential(
-            nn.Linear(config.hidden_size, config.hidden_size // 4),
-            nn.GELU(),
-            nn.Linear(config.hidden_size // 4, config.hidden_size)
-        )
+        
         #----------------------------------------------------------#
         if hasattr(config, "sparse_config") and config.sparse_config is not None:
             self.ncls_count = config.sparse_config["ncls_count"]  
@@ -150,7 +146,29 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
                 nn.Linear(config.hidden_size // 4, config.hidden_size)
             )
         elif self.special_tokens_mlp_type == 2:
-            self.special_token_mlp = nn.Linear(config.hidden_size, config.hidden_size)
+            self.special_token_mlp = nn.Sequential(
+                nn.LayerNorm(config.hidden_size),
+                nn.Dropout(0.3),
+                nn.Linear(config.hidden_size, config.hidden_size // 4),
+                nn.GELU(),
+                nn.Linear(config.hidden_size // 4, config.hidden_size)
+            )
+        elif self.special_tokens_mlp_type == 3:
+            self.special_token_mlp = nn.Sequential(
+                nn.LayerNorm(config.hidden_size),
+                nn.Linear(config.hidden_size, config.hidden_size // 4),
+                nn.GELU(),
+                nn.Linear(config.hidden_size // 4, config.hidden_size)
+            )
+        elif self.special_tokens_mlp_type == 4:
+            self.special_token_mlp = nn.Sequential(
+                nn.LayerNorm(config.hidden_size),
+                nn.Linear(config.hidden_size, config.hidden_size // 2),
+                nn.GELU(),
+                nn.Linear(config.hidden_size // 2, config.hidden_size // 4),
+                nn.GELU(),
+                nn.Linear(config.hidden_size // 4, config.hidden_size)
+            )
      
         
         self.mis_mlp = mis_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, mlp_type = self.mlp_type)
@@ -172,7 +190,29 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
                 nn.Linear(self.config.hidden_size // 4, self.config.hidden_size)
             )
         elif self.special_tokens_mlp_type == 2:
-            self.special_token_mlp = nn.Linear(self.config.hidden_size, self.config.hidden_size)
+            self.special_token_mlp = nn.Sequential(
+                nn.LayerNorm(self.config.hidden_size),
+                nn.Dropout(0.3),
+                nn.Linear(self.config.hidden_size, self.config.hidden_size // 4),
+                nn.GELU(),
+                nn.Linear(self.config.hidden_size // 4, self.config.hidden_size)
+            )
+        elif self.special_tokens_mlp_type == 3:
+            self.special_token_mlp = nn.Sequential(
+                nn.LayerNorm(self.config.hidden_size),
+                nn.Linear(self.config.hidden_size, self.config.hidden_size // 4),
+                nn.GELU(),
+                nn.Linear(self.config.hidden_size // 4, self.config.hidden_size)
+            )
+        elif self.special_tokens_mlp_type == 4:
+            self.special_token_mlp = nn.Sequential(
+                nn.LayerNorm(self.config.hidden_size),
+                nn.Linear(self.config.hidden_size, self.config.hidden_size // 2),
+                nn.GELU(),
+                nn.Linear(self.config.hidden_size // 2, self.config.hidden_size // 4),
+                nn.GELU(),
+                nn.Linear(self.config.hidden_size // 4, self.config.hidden_size)
+            )
             
         # 注册到模块列表中
         self.add_module("mis_mlp", self.mis_mlp)
