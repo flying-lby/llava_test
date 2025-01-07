@@ -24,9 +24,11 @@ class SparseArguments:
     mlp_type: int = 1
     loss_threshold: float = 0.5
     temperature: float = 0.05
-    use_local_loss: bool = True
+    use_local_loss: bool = False
     feature_layer: int = 1
     special_tokens_mlp_type: int = 1
+    use_ca_loss: bool = True
+    inference_type: int = 2
 
 # 全局定义 add_sparse 参数
 default_sparse_args = SparseArguments()

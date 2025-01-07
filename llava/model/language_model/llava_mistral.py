@@ -124,6 +124,30 @@ class mis_mlp(nn.Module):
             # If mlp_type is 0, return x directly
             return x
         return self.out_mlp(x) 
+    
+    
+
+class CrossAttentionModule(nn.Module):
+    def __init__(self, hidden_size, num_heads=32, dropout=0.1):
+        super().__init__()
+        self.attention = nn.MultiheadAttention(embed_dim=hidden_size, num_heads=num_heads, dropout=dropout)
+    
+    def forward(self, query_features, key_value_features):
+        # query_features: (B, 4096)
+        # key_value_features: (B, seq_len, 4096)
+        
+        query = query_features.unsqueeze(0)  # (1, B, hidden_size)
+        key_value = key_value_features.unsqueeze(0)  # (1, B, hidden_size)
+        
+        # MultiheadAttention 输入必须为 (seq_len, batch_size, embed_dim)
+        attn_output, attn_weights = self.attention(query, key_value, key_value)  # (1, B, hidden_size), (B, 1, 1)
+        
+        # 返回输出到 (B, hidden_size)
+        attn_output = attn_output.squeeze(0)  # (B, hidden_size)
+        
+        return attn_output, attn_weights
+    
+    
 
 class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
     config_class = LlavaMistralConfig
@@ -149,6 +173,8 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             self.use_local_loss = config.sparse_config["use_local_loss"]
             self.feature_layer = config.sparse_config["feature_layer"]
             self.special_tokens_mlp_type = config.sparse_config["special_tokens_mlp_type"]
+            self.use_ca_loss = config.sparse_config["use_ca_loss"]
+            self.inference_type = config.sparse_config["inference_type"]
         #----------------------------------------------------------#
         if self.special_tokens_mlp_type == 1:
             self.special_token_mlp = nn.Sequential(
@@ -165,6 +191,7 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
                 nn.Linear(config.hidden_size // 4, config.hidden_size)
             )
      
+        self.cross_attention_module = CrossAttentionModule(hidden_size=config.hidden_size)
         
         self.mis_mlp = mis_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, mlp_type = self.mlp_type)
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
@@ -177,7 +204,8 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         """确保 mis_mlp 的初始化在模型权重加载后完成"""
         
         self.mis_mlp = mis_mlp(input_dim = self.config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, mlp_type = self.mlp_type)
-       
+        self.cross_attention_module = CrossAttentionModule(hidden_size = self.config.hidden_size)
+        
         if self.special_tokens_mlp_type == 1:
             self.special_token_mlp = nn.Sequential(
                 nn.Linear(self.config.hidden_size, self.config.hidden_size // 4),
@@ -196,10 +224,13 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         # 注册到模块列表中
         self.add_module("mis_mlp", self.mis_mlp)
         self.add_module("special_token_mlp", self.special_token_mlp)
+        self.add_module("cross_attention_module", self.cross_attention_module)
         
         for param in self.mis_mlp.parameters():
             param.requires_grad = True
         for param in self.special_token_mlp.parameters():
+            param.requires_grad = True
+        for param in self.cross_attention_module.parameters():
             param.requires_grad = True
         
     def update_tensor(self, batch_size, tensor, ncls_tensor):
@@ -444,7 +475,8 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         self,
         input_ids: torch.LongTensor,
         attention_mask: Optional[torch.Tensor],
-        category_embeddings_cache: torch.Tensor,  # 新增参数，用于传递类别特征向量
+        global_category_embeddings_cache: torch.Tensor,  # 新增参数，用于传递全局类别特征向量
+        # local_category_embeddings_cache: torch.Tensor,
         images: Optional[torch.Tensor] = None,
         image_sizes: Optional[torch.Tensor] = None,
         **kwargs,
@@ -459,23 +491,48 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             return_emb = True,
             return_dict=True
         )
-
-        image_embedding = image_output.hidden_states[-self.feature_layer][:, -self.ncls_count:]
+        global_image_embedding = image_output.hidden_states[-self.feature_layer][:, -self.ncls_count:, :].mean(dim=1)  # 使用平均池化
+        # local_image_embedding = image_output.hidden_states[-self.feature_layer][:, :-self.ncls_count, :].mean(dim=1)
         # image_embedding = torch.max(image_embedding, dim=1).values  # 使用最大池化
-        image_embedding = torch.mean(image_embedding, dim=1)  # 使用最大池化
-        image_embedding = self.mis_mlp(image_embedding)
+        
+        global_image_embedding = self.mis_mlp(global_image_embedding)
+        # local_image_embedding = self.mis_mlp(local_image_embedding)
         
         # 步骤2: 对图像特征和类别特征进行L2归一化
-        image_embedding = F.normalize(image_embedding, p=2, dim=-1)
-        category_embeddings_cache = F.normalize(category_embeddings_cache, p=2, dim=-1)
-
+        norm_global_image_embedding = F.normalize(global_image_embedding, p=2, dim=-1)
+        # norm_local_image_embedding = F.normalize(local_image_embedding, p=2, dim=-1)
         
-        # 步骤3: 计算余弦相似度矩阵
-        similarity_matrix = torch.matmul(image_embedding, category_embeddings_cache.T) / self.temperature  # 计算余弦相似度
-
-        # 步骤4: 将相似度矩阵转换为概率分布 (如果需要的话)
+        norm_global_category_embeddings_cache = F.normalize(global_category_embeddings_cache, p=2, dim=-1)
+        # norm_local_category_embeddings_cache = F.normalize(local_category_embeddings_cache, p=2, dim=-1)
+        
+        similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) / self.temperature  # 计算余弦相似度
+        # 将相似度矩阵转换为概率分布 
         similarity_probs = similarity_matrix.softmax(dim=-1)
+        # if self.inference_type == 1:
+        #     # 计算余弦相似度矩阵
+        #     similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) / self.temperature  # 计算余弦相似度
+        #     # 将相似度矩阵转换为概率分布 
+        #     similarity_probs = similarity_matrix.softmax(dim=-1)
+        # elif self.inference_type == 2:
+        #     # 图像全局特征作为查询，文本局部特征作为键和值进行注意力计算
+        #     global_image_embedding = global_image_embedding.repeat(local_category_embeddings_cache.size(0), 1)  # (seq_len, hidden_size)
+        #     image_to_text_features, _ = self.cross_attention_module(global_image_embedding, local_category_embeddings_cache)
+        #     # 文本全局特征作为查询，图像局部特征作为键和值进行注意力计算
+        #     local_image_embedding = local_image_embedding.repeat(global_category_embeddings_cache.size(0), 1)  # (seq_len, hidden_size)
+        #     text_to_image_features, _ = self.cross_attention_module(global_category_embeddings_cache, local_image_embedding)
+        #     # 归一化特征向量到单位球面
+        #     image_to_text_features = F.normalize(image_to_text_features, p=2, dim=-1)  # (B, 4096)
+        #     text_to_image_features = F.normalize(text_to_image_features, p=2, dim=-1)  # (B, 4096)
 
+        #     # Step 1: 图像到文本的 similarity_matrix
+        #     similarity_matrix_image_to_text = torch.matmul(image_to_text_features, norm_global_category_embeddings_cache.T) / self.temperature  # (B, B)
+    
+        #     # Step 2: 文本到图像的 similarity_matrix
+        #     similarity_matrix_text_to_image = torch.matmul(text_to_image_features, norm_global_image_embedding.T) / self.temperature  # (B, B)
+            
+        #     similarity_matrix = (similarity_matrix_image_to_text + similarity_matrix_text_to_image) / 2  # (B, B)
+        #     similarity_probs = similarity_matrix.softmax(dim=-1)
+        #     print(similarity_probs)
 
         # 返回结果
         return similarity_probs

@@ -1258,16 +1258,16 @@ class MistralForCausalLM(MistralPreTrainedModel):
         
 
          # Step 3: 归一化特征向量到单位球面上
-        global_ncls_features = F.normalize(global_ncls_features, p=2, dim=-1)  # (B, 512)
-        local_ncls_features = F.normalize(local_ncls_features, p=2, dim=-1)  # (B, 512)
+        norm_global_ncls_features = F.normalize(global_ncls_features, p=2, dim=-1)  # (B, 512)
+        norm_local_ncls_features = F.normalize(local_ncls_features, p=2, dim=-1)  # (B, 512)
         
-        global_txt_ncls_features = F.normalize(global_txt_ncls_features, p=2, dim=-1)  # (B, 512)
-        local_txt_ncls_features = F.normalize(local_txt_ncls_features, p=2, dim=-1)
+        norm_global_txt_ncls_features = F.normalize(global_txt_ncls_features, p=2, dim=-1)  # (B, 512)
+        norm_local_txt_ncls_features = F.normalize(local_txt_ncls_features, p=2, dim=-1)
         
        
         #  Step 4: 计算全局特征loss
         temperature = self.temperature
-        similarity_matrix = torch.matmul(global_ncls_features, global_txt_ncls_features.T) / temperature  # (B, B)
+        similarity_matrix = torch.matmul(norm_global_ncls_features, norm_global_txt_ncls_features.T) / temperature  # (B, B)
        
         # 生成标签，正样本是对角线上的元素（同索引处的样本是正样本）
         labels = torch.arange(similarity_matrix.size(0), device=similarity_matrix.device)
@@ -1282,7 +1282,7 @@ class MistralForCausalLM(MistralPreTrainedModel):
         # 使用局部特征loss
         if self.use_local_loss:
             temperature = self.temperature
-            similarity_matrix = torch.matmul(local_ncls_features, local_txt_ncls_features.T) / temperature  # (B, B)
+            similarity_matrix = torch.matmul(norm_local_ncls_features, norm_local_txt_ncls_features.T) / temperature  # (B, B)
         
             # 生成标签，正样本是对角线上的元素（同索引处的样本是正样本）
             labels = torch.arange(similarity_matrix.size(0), device=similarity_matrix.device)
@@ -1297,18 +1297,39 @@ class MistralForCausalLM(MistralPreTrainedModel):
             a = self.loss_threshold
           
             total_loss = a * global_loss + (1 - a) * local_loss
+            
         else:
-            total_loss = global_loss
-            # if self.use_ca_loss:
-            #     # 使用交叉注意力机制，计算info nce loss
-            #     cross_attention_output = self.cross_attention(
-            #         query=ncls_features,  # 图像特征作为查询
-            #         key=txt_ncls_features,  # 文本特征作为键
-            #         value=txt_ncls_features  # 文本特征作为值
-            #     )
-            #     total_loss = global_loss
-            # else:
-            #     total_loss = global_loss
+            if self.use_ca_loss:
+                # 图像全局特征作为查询，文本局部特征作为键和值进行注意力计算
+                image_to_text_features, _ = self.cross_attention_module(global_ncls_features, local_txt_ncls_features)
+                # 文本全局特征作为查询，图像局部特征作为键和值进行注意力计算
+                text_to_image_features, _ = self.cross_attention_module(global_txt_ncls_features, local_ncls_features)
+                # 归一化特征向量到单位球面
+                image_to_text_features = F.normalize(image_to_text_features, p=2, dim=-1)  # (B, 4096)
+                text_to_image_features = F.normalize(text_to_image_features, p=2, dim=-1)  # (B, 4096)
+
+                # Step 1: 图像到文本的 InfoNCE 损失
+                similarity_matrix_image_to_text = torch.matmul(image_to_text_features, norm_global_txt_ncls_features.T) / self.temperature  # (B, B)
+                labels_image_to_text = torch.arange(similarity_matrix_image_to_text.size(0), device=similarity_matrix_image_to_text.device)
+
+                img_to_txt_loss = F.cross_entropy(similarity_matrix_image_to_text, labels_image_to_text)
+
+                # Step 2: 文本到图像的 InfoNCE 损失
+                similarity_matrix_text_to_image = torch.matmul(text_to_image_features, norm_global_ncls_features.T) / self.temperature  # (B, B)
+                labels_text_to_image = torch.arange(similarity_matrix_text_to_image.size(0), device=similarity_matrix_text_to_image.device)
+
+                txt_to_img_loss = F.cross_entropy(similarity_matrix_text_to_image, labels_text_to_image)
+
+                # 取两个方向损失的平均值
+                ca_loss = (img_to_txt_loss + txt_to_img_loss) / 2
+                
+                a = self.loss_threshold
+          
+                total_loss = a * global_loss + (1 - a) * ca_loss
+                
+            else:
+                total_loss = global_loss
+          
             
         
         return CausalLMOutputWithPast(
@@ -1319,6 +1340,16 @@ class MistralForCausalLM(MistralPreTrainedModel):
             attentions=outputs.attentions,
         )
       
+        # if self.use_ca_loss:
+            #     # 使用交叉注意力机制，计算info nce loss
+            #     cross_attention_output = self.cross_attention(
+            #         query=ncls_features,  # 图像特征作为查询
+            #         key=txt_ncls_features,  # 文本特征作为键
+            #         value=txt_ncls_features  # 文本特征作为值
+            #     )
+            #     total_loss = global_loss
+            # else:
+            #     total_loss = global_loss
         # # print(outputs.last_hidden_state)
         # # 定义mlp 映射 分类特征
         # hidden_states = outputs[0]

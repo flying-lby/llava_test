@@ -41,6 +41,8 @@ class SparseArguments:
     use_local_loss: bool = True
     feature_layer: int = 1
     special_tokens_mlp_type: int = 1
+    use_ca_loss: bool = True
+    inference_type: int = 2
 
 def split_list(lst, n):
     """Split a list into n (roughly) equal-sized chunks"""
@@ -76,7 +78,8 @@ def eval_model(args, sparse_args):
     category_attention_mask = pad_sequence([item.attention_mask.squeeze(0) for item in encoded_categories], batch_first=True).to(device)
     
     # 类别特征向量存储, 只需要计算一次
-    category_embeddings_cache = []
+    global_category_embeddings_cache = []
+    local_category_embeddings_cache = []
     for i in range(category_ids.size(0)):
         category_input_ids = category_ids[i].unsqueeze(0)
         category_attention = category_attention_mask[i].unsqueeze(0)
@@ -91,16 +94,21 @@ def eval_model(args, sparse_args):
         )
         # 获取类别特征的最后一个隐藏层并计算均值
         sparse_args_dict = asdict(sparse_args)
-        category_embedding = category_output.hidden_states[-sparse_args_dict["feature_layer"]][:, -sparse_args_dict["ncls_count"]:].mean(dim=1)
-        category_embedding = model.mis_mlp(category_embedding)
-        category_embeddings_cache.append(category_embedding)
-    
+        global_category_embedding = category_output.hidden_states[-sparse_args_dict["feature_layer"]][:, -sparse_args_dict["ncls_count"]:].mean(dim=1)
+        # local_category_embedding = category_output.hidden_states[-sparse_args_dict["feature_layer"]][:, :-sparse_args_dict["ncls_count"]].mean(dim=1)
+        
+        global_category_embedding = model.mis_mlp(global_category_embedding)
+        # local_category_embedding = model.mis_mlp(local_category_embedding)
+        
+        global_category_embeddings_cache.append(global_category_embedding)
+        # local_category_embeddings_cache.append(local_category_embedding)
+        
     # 将类别特征向量拼接成 (N, C) 的矩阵，其中N是类别数量，C是特征维度
-    category_embeddings_cache = torch.cat(category_embeddings_cache, dim=0).to(device)
-
+    global_category_embeddings_cache = torch.cat(global_category_embeddings_cache, dim=0).to(device)
+    # local_category_embeddings_cache = torch.cat(local_category_embeddings_cache, dim=0).to(device)
     # # 打印类别特征向量的维度
-    print('Category embeddings:', category_embeddings_cache)   
-           
+    print('Global Category embeddings:', global_category_embeddings_cache)   
+    # print('Local Category embeddings:', local_category_embeddings_cache)          
 
     questions = [
         json.loads(q) for q in open(os.path.expanduser(args.question_file), "r")
@@ -152,7 +160,8 @@ def eval_model(args, sparse_args):
             outputs = model.inference_pipeline(
                 input_ids=input_ids,
                 attention_mask=attention_mask, 
-                category_embeddings_cache=category_embeddings_cache,
+                global_category_embeddings_cache=global_category_embeddings_cache,
+                # local_category_embeddings_cache=local_category_embeddings_cache,
                 images=image_tensor.unsqueeze(0).half().cuda(0),
                 image_sizes=[image.size],
                 use_cache=True,

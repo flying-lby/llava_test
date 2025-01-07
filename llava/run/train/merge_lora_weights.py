@@ -23,6 +23,8 @@ class SparseArguments:
     use_local_loss: bool = True
     feature_layer: int = 1
     special_tokens_mlp_type: int = 1
+    use_ca_loss: bool = True
+    inference_type: int = 2
     
 
 def merge_lora(args, sparse_args):
