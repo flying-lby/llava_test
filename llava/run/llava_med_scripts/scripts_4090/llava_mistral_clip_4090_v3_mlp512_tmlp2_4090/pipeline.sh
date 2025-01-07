@@ -46,7 +46,7 @@ deepspeed train/train_mem.py \
     --gradient_checkpointing True \
     --dataloader_num_workers 2 \
     --lazy_preprocess True \
-    --report_to wandb \
+    --report_to none \
     --ncls_count 6 \
     --hidden_dim 1024 \
     --output_dim 4096 \
@@ -55,7 +55,7 @@ deepspeed train/train_mem.py \
     --temperature 0.06 \
     --use_local_loss True \
     --feature_layer 2 \
-    --special_tokens_mlp_type 4
+    --special_tokens_mlp_type 1
 
 if [ $? -ne 0 ]; then
     echo "Training failed. Exiting..."

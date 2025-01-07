@@ -988,7 +988,7 @@ def train(attn_implementation=None):
     model.config.use_cache = False
     model.initialize_mis_mlp() 
     
-    print(model)
+    # print(model)
     if model_args.freeze_backbone:
         model.model.requires_grad_(False)
 

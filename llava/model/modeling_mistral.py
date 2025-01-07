@@ -1299,6 +1299,16 @@ class MistralForCausalLM(MistralPreTrainedModel):
             total_loss = a * global_loss + (1 - a) * local_loss
         else:
             total_loss = global_loss
+            # if self.use_ca_loss:
+            #     # 使用交叉注意力机制，计算info nce loss
+            #     cross_attention_output = self.cross_attention(
+            #         query=ncls_features,  # 图像特征作为查询
+            #         key=txt_ncls_features,  # 文本特征作为键
+            #         value=txt_ncls_features  # 文本特征作为值
+            #     )
+            #     total_loss = global_loss
+            # else:
+            #     total_loss = global_loss
             
         
         return CausalLMOutputWithPast(
