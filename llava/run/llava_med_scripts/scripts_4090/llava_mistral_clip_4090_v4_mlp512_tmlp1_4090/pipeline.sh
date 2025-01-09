@@ -14,7 +14,7 @@ echo "Starting training process..."
 deepspeed train/train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 5e-5 \
     --deepspeed train/zero3.json \
-    --model_name_or_path /srv/lby/llava_med/llava-med-v1.5-mistral-7b \
+    --model_name_or_path /srv/lby/llava_v1.5_7b_official \
     --version v1 \
     --data_path ./data/chest_xray/new_classify_mimic_file_clip.json \
     --image_folder /srv/lby/physionet.org/files/mimic-cxr-jpg/2.0.0/files \

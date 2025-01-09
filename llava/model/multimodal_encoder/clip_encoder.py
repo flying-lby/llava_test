@@ -25,12 +25,26 @@ class CLIPVisionTower(nn.Module):
         else:
             self.cfg_only = CLIPVisionConfig.from_pretrained(self.vision_tower_name)
 
-    def load_model(self):
+    #------------------------------------------------------------------#
+    def load_model(self, model_args=None):  
+        # 如果 model_args 不为空，则更新 vision_tower_name
+        if model_args is not None and hasattr(model_args, 'vision_tower'):
+            self.vision_tower_name = model_args.vision_tower
+
         self.image_processor = CLIPImageProcessor.from_pretrained(self.vision_tower_name)
         self.vision_tower = CLIPVisionModel.from_pretrained(self.vision_tower_name)
         self.vision_tower.requires_grad_(False)
 
+        # 标记为加载完成
         self.is_loaded = True
+
+    #------------------------------------------------------------------#
+    # def load_model(self):
+    #     self.image_processor = CLIPImageProcessor.from_pretrained(self.vision_tower_name)
+    #     self.vision_tower = CLIPVisionModel.from_pretrained(self.vision_tower_name)
+    #     self.vision_tower.requires_grad_(False)
+
+    #     self.is_loaded = True
 
     def feature_select(self, image_forward_outs):
         image_features = image_forward_outs.hidden_states[self.select_layer]
