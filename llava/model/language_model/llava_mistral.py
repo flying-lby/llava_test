@@ -175,6 +175,7 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             self.special_tokens_mlp_type = config.sparse_config["special_tokens_mlp_type"]
             self.use_ca_loss = config.sparse_config["use_ca_loss"]
             self.inference_type = config.sparse_config["inference_type"]
+            self.sig_loss = config.sparse_config["sig_loss"]
         #----------------------------------------------------------#
         if self.special_tokens_mlp_type == 1:
             self.special_token_mlp = nn.Sequential(
@@ -192,7 +193,9 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             )
      
         self.cross_attention_module = CrossAttentionModule(hidden_size=config.hidden_size)
-        
+        self.logit_scale = nn.Parameter(
+            torch.tensor(0.1)
+        )
         self.mis_mlp = mis_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, mlp_type = self.mlp_type)
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
         

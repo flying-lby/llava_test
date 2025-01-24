@@ -1267,22 +1267,24 @@ class MistralForCausalLM(MistralPreTrainedModel):
        
         #  Step 4: 计算全局特征loss
         temperature = self.temperature
-        similarity_matrix = torch.matmul(norm_global_ncls_features, norm_global_txt_ncls_features.T) / temperature  # (B, B)
-       
-        # 生成标签，正样本是对角线上的元素（同索引处的样本是正样本）
-        labels = torch.arange(similarity_matrix.size(0), device=similarity_matrix.device)
-        
-        # 计算 InfoNCE 损失（两个方向：img->txt 和 txt->img）
-        img_to_txt_loss = F.cross_entropy(similarity_matrix, labels)
-        txt_to_img_loss = F.cross_entropy(similarity_matrix.T, labels)
-        
-        # 取两个方向损失的平均值
-        global_loss = (img_to_txt_loss + txt_to_img_loss) / 2
-        
-        # 使用局部特征loss
-        if self.use_local_loss:
-            temperature = self.temperature
-            similarity_matrix = torch.matmul(norm_local_ncls_features, norm_local_txt_ncls_features.T) / temperature  # (B, B)
+        if self.sig_loss:
+            logit_scale = self.logit_scale.exp()  # 确保 logit_scale 是正数
+            print("Logit Scale:", logit_scale.item())  
+            scaled_similarity_matrix = (
+                torch.matmul(norm_global_ncls_features, norm_global_txt_ncls_features.T) * logit_scale
+            ) / self.temperature  # (B, B)
+            print("Scaled Similarity Matrix:", scaled_similarity_matrix)
+            # 用于控制正样本和负样本的行为
+            eye = torch.eye(scaled_similarity_matrix.size(0), device=scaled_similarity_matrix.device)
+            m1_diag1 = -torch.ones_like(scaled_similarity_matrix) + 2 * eye  # 对角线上为 1，其余为 -1
+
+            # 使用 sigmoid 进行对比损失计算
+            loglik = torch.nn.functional.logsigmoid(m1_diag1 * scaled_similarity_matrix)  # 每个元素的对数 sigmoid
+            nll = -torch.sum(loglik, dim=-1)  # 针对每个样本（行）累加所有分数
+            global_loss = nll.mean()
+
+        else:
+            similarity_matrix = torch.matmul(norm_global_ncls_features, norm_global_txt_ncls_features.T) / temperature  # (B, B)
         
             # 生成标签，正样本是对角线上的元素（同索引处的样本是正样本）
             labels = torch.arange(similarity_matrix.size(0), device=similarity_matrix.device)
@@ -1292,11 +1294,47 @@ class MistralForCausalLM(MistralPreTrainedModel):
             txt_to_img_loss = F.cross_entropy(similarity_matrix.T, labels)
             
             # 取两个方向损失的平均值
-            local_loss = (img_to_txt_loss + txt_to_img_loss) / 2
+            global_loss = (img_to_txt_loss + txt_to_img_loss) / 2
+        
+        # 使用局部特征loss
+        if self.use_local_loss:
+            temperature = self.temperature
+            if self.sig_loss:
+                logit_scale = self.logit_scale.exp()  # 确保 logit_scale 是正数
+
+                # 对局部特征进行计算，首先进行缩放操作
+                scaled_similarity_matrix = (
+                    torch.matmul(norm_local_ncls_features, norm_local_txt_ncls_features.T) * logit_scale
+                ) / self.temperature  # (B, B)
+
+                # 生成标签，正样本是对角线上的元素（同索引处的样本是正样本）
+                eye = torch.eye(scaled_similarity_matrix.size(0), device=scaled_similarity_matrix.device)
+                m1_diag1 = -torch.ones_like(scaled_similarity_matrix) + 2 * eye  # 对角线上为 1，其余为 -1
+
+                # 使用 sigmoid 进行对比损失计算
+                loglik = torch.nn.functional.logsigmoid(m1_diag1 * scaled_similarity_matrix)  # 每个元素的对数 sigmoid
+                nll = -torch.sum(loglik, dim=-1)  # 针对每个样本（行）累加所有分数
+                local_loss = nll.mean()
+
+                # 将全局损失和局部损失结合
+                a = self.loss_threshold
+                total_loss = a * global_loss + (1 - a) * local_loss
+            else:
+                similarity_matrix = torch.matmul(norm_local_ncls_features, norm_local_txt_ncls_features.T) / temperature  # (B, B)
             
-            a = self.loss_threshold
-          
-            total_loss = a * global_loss + (1 - a) * local_loss
+                # 生成标签，正样本是对角线上的元素（同索引处的样本是正样本）
+                labels = torch.arange(similarity_matrix.size(0), device=similarity_matrix.device)
+                
+                # 计算 InfoNCE 损失（两个方向：img->txt 和 txt->img）
+                img_to_txt_loss = F.cross_entropy(similarity_matrix, labels)
+                txt_to_img_loss = F.cross_entropy(similarity_matrix.T, labels)
+                
+                # 取两个方向损失的平均值
+                local_loss = (img_to_txt_loss + txt_to_img_loss) / 2
+                
+                a = self.loss_threshold
+            
+                total_loss = a * global_loss + (1 - a) * local_loss
             
         else:
             if self.use_ca_loss:
