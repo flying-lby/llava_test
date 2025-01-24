@@ -15,7 +15,7 @@ echo "Starting training process..."
 deepspeed train/train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-6 \
     --deepspeed train/zero3.json \
-    --model_name_or_path /mnt/nlp-ali/usr/huangwenxuan/home/official_llava_med/llava-v1.6-mistral-med \
+    --model_name_or_path /mnt/nlp-ali/usr/huangwenxuan/home/official_llava/llava-v1.6-7b \
     --version v1 \
     --data_path ./data/chest_xray/llm_classify_mimic_file_clip.json \
     --image_folder /mnt/nlp-ali/usr/huangwenxuan/home/dataset/srv/lby/physionet.org/files/mimic-cxr-jpg/2.0.0/files \
@@ -74,7 +74,7 @@ echo "Starting merge process..."
 
 python -m llava.run.train.merge_lora_weights \
     --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava-lora-new-clip-A100-version3_1_15 \
-    --model-base /mnt/nlp-ali/usr/huangwenxuan/home/official_llava_med/llava-v1.6-mistral-med \
+    --model-base /mnt/nlp-ali/usr/huangwenxuan/home/official_llava/llava-v1.6-7b \
     --save-model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version3_1_15 \
     --ncls_count 4 \
     --hidden_dim 1024 \

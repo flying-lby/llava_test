@@ -131,7 +131,7 @@ class SparseArguments:
     special_tokens_mlp_type: int = 1
     use_ca_loss: bool = True
     inference_type: int = 2
-    sig_loss: bool = True
+
 # ----------------------------------------------------------#
 
 

@@ -57,8 +57,8 @@ deepspeed train/train_mem.py \
     --feature_layer 2 \
     --special_tokens_mlp_type 1 \
     --use_ca_loss False \
-    --sig_loss False 
-
+ 
+ 
 if [ $? -ne 0 ]; then
     echo "Training failed. Exiting..."
     exit 1

@@ -175,7 +175,7 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             self.special_tokens_mlp_type = config.sparse_config["special_tokens_mlp_type"]
             self.use_ca_loss = config.sparse_config["use_ca_loss"]
             self.inference_type = config.sparse_config["inference_type"]
-            self.sig_loss = config.sparse_config["sig_loss"]
+       
         #----------------------------------------------------------#
         if self.special_tokens_mlp_type == 1:
             self.special_token_mlp = nn.Sequential(
@@ -240,8 +240,11 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
     # 直接在序列末尾追加 ncls 标记
         updated_tensors = []
         for i in range(batch_size):
+            # 将 tensor[i] 和 ncls_tensor[i] 在 dim=0 维度上拼接
             updated_tensor = torch.cat([tensor[i], ncls_tensor[i]], dim=0)
+            # 将拼接后的 tensor 添加到 updated_tensors 列表中
             updated_tensors.append(updated_tensor)
+        # 将 updated_tensors 列表中的 tensor 按顺序堆叠起来
         return torch.stack(updated_tensors)
 
 
