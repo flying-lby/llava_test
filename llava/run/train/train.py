@@ -133,6 +133,7 @@ class SparseArguments:
     use_ca_loss: bool = True
     inference_type: int = 2
     use_cat: bool = True
+    use_prompt: bool = True
 
 # ----------------------------------------------------------#
 
@@ -439,7 +440,8 @@ def preprocess_llama_2(
 def preprocess_v1(
     sources,
     tokenizer: transformers.PreTrainedTokenizer,
-    has_image: bool = False
+    has_image: bool = False,
+    use_prompt: bool = True
 ) -> Dict:
     conv = conversation_lib.default_conversation.copy()
     roles = {"human": conv.roles[0], "gpt": conv.roles[1]}
@@ -466,7 +468,11 @@ def preprocess_v1(
     # Tokenize conversations
 
     if has_image:
-        input_ids = torch.stack([tokenizer_image_token(prompt, tokenizer, return_tensors='pt') for prompt in human_conversations], dim=0)
+        if use_prompt:
+            input_ids = torch.stack([tokenizer_image_token(prompt, tokenizer, return_tensors='pt') for prompt in human_conversations], dim=0)
+        else:
+            extracted_conversations = [conv.split('\n')[0] for conv in human_conversations]
+            input_ids = torch.stack([tokenizer_image_token(prompt, tokenizer, return_tensors='pt') for prompt in extracted_conversations], dim=0)
     else:
         input_ids = tokenizer(
             human_conversations,
@@ -647,6 +653,7 @@ def preprocess_plain(
 def preprocess(
     sources: Sequence[str],
     tokenizer: transformers.PreTrainedTokenizer,
+    use_prompt: bool = True,
     has_image: bool = False
 ) -> Dict:
     """
@@ -661,7 +668,7 @@ def preprocess(
     if conversation_lib.default_conversation.sep_style == conversation_lib.SeparatorStyle.LLAMA_2:
         return preprocess_llama_2(sources, tokenizer, has_image=has_image)
     if conversation_lib.default_conversation.version.startswith("v1"):
-        return preprocess_v1(sources, tokenizer, has_image=has_image)
+        return preprocess_v1(sources, tokenizer, use_prompt=use_prompt, has_image=has_image)
     if conversation_lib.default_conversation.version == "mpt":
         return preprocess_mpt(sources, tokenizer, has_image=has_image)
     # add end signal and concatenate together
@@ -696,7 +703,8 @@ class LazySupervisedDataset(Dataset):
 
     def __init__(self, data_path: str,
                  tokenizer: transformers.PreTrainedTokenizer,
-                 data_args: DataArguments):
+                 data_args: DataArguments,
+                 use_prompt: bool = True):
         super(LazySupervisedDataset, self).__init__()
         list_data_dict = json.load(open(data_path, "r"))
 
@@ -704,6 +712,7 @@ class LazySupervisedDataset(Dataset):
         self.tokenizer = tokenizer
         self.list_data_dict = list_data_dict
         self.data_args = data_args
+        self.use_prompt = use_prompt
 
     def __len__(self):
         return len(self.list_data_dict)
@@ -760,7 +769,9 @@ class LazySupervisedDataset(Dataset):
         data_dict = preprocess(
             sources,
             self.tokenizer,
-            has_image=('image' in self.list_data_dict[i]))
+            self.use_prompt,
+            has_image=('image' in self.list_data_dict[i])
+            )
         if isinstance(i, int):
             data_dict = dict(input_ids=data_dict["input_ids"][0],
                              labels=data_dict["labels"][0])
@@ -776,7 +787,10 @@ class LazySupervisedDataset(Dataset):
 
         # Full sentence category as feature 
         category_response = sources[0][-1]["value"]  # This is the full sentence "This is a chest X-ray showing {disease}"
-        txt_prompt = "What disease is described in this text?"  # This is the prompt
+        if self.use_prompt:
+            txt_prompt = "What disease is described in this text?"  # This is the prompt
+        else:
+            txt_prompt = ""
         category_text = category_response +"" + txt_prompt # Use the full sentence directly
         # category_text = category_response
         # Tokenize the full category sentence and add it to data_dict
@@ -874,11 +888,11 @@ class DataCollatorForSupervisedDataset(object):
 
 
 def make_supervised_data_module(tokenizer: transformers.PreTrainedTokenizer,
-                                data_args) -> Dict:
+                                data_args, use_prompt) -> Dict:
     """Make dataset and collator for supervised fine-tuning."""
     train_dataset = LazySupervisedDataset(tokenizer=tokenizer,
                                 data_path=data_args.data_path,
-                                data_args=data_args)
+                                data_args=data_args, use_prompt = use_prompt)
     data_collator = DataCollatorForSupervisedDataset(tokenizer=tokenizer)
     return dict(train_dataset=train_dataset,
                 eval_dataset=None,
@@ -1103,7 +1117,7 @@ def train(attn_implementation=None):
                         module = module.to(torch.bfloat16)
 
     data_module = make_supervised_data_module(tokenizer=tokenizer,
-                                              data_args=data_args)
+                                              data_args=data_args,use_prompt=sparse_args.use_prompt)
    
     trainer = LLaVATrainer(model=model,
                     tokenizer=tokenizer,

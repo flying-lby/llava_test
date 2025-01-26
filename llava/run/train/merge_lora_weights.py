@@ -27,6 +27,7 @@ class SparseArguments:
     use_ca_loss: bool = True
     inference_type: int = 2
     use_cat: bool = True
+    use_prompt: bool = True
 
     
 
