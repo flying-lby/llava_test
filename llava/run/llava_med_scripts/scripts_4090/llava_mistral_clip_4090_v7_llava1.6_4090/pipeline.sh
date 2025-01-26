@@ -59,7 +59,7 @@ deepspeed train/train_mem.py \
     --special_tokens_mlp_type 1 \
     --use_ca_loss False \
     --use_cat False \
-    --use_prompt False
+    # --use_prompt False
  
  
 if [ $? -ne 0 ]; then
