@@ -2,7 +2,8 @@ python -m llava.run.train.merge_lora_weights \
     --model-path ./checkpoints/llava-lora-new-clip-v7 \
     --model-base /srv/lby/llava-v1.6-mistral-7b \
     --save-model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v7 \
-    --ncls_count 4 \
+    --Imgcls_count 4 \
+    --Txtcls_count 4 \
     --hidden_dim 1024 \
     --output_dim 4096 \
     --mlp_type 0 \

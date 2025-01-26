@@ -195,9 +195,9 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             )
      
         self.cross_attention_module = CrossAttentionModule(hidden_size=config.hidden_size)
-        self.logit_scale = nn.Parameter(
-            torch.tensor(0.1)
-        )
+        # self.logit_scale = nn.Parameter(
+        #     torch.tensor(0.1)
+        # )
         self.mis_mlp = mis_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, mlp_type = self.mlp_type)
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
         
