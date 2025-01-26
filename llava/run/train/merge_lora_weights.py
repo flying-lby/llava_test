@@ -14,7 +14,8 @@ from transformers import HfArgumentParser
 
 @dataclass
 class SparseArguments:
-    ncls_count: int = 4
+    Imgcls_count: int = 4
+    Txtcls_count: int = 4
     hidden_dim: int = 1024
     output_dim: int = 512
     mlp_type: int = 0
@@ -25,6 +26,7 @@ class SparseArguments:
     special_tokens_mlp_type: int = 1
     use_ca_loss: bool = True
     inference_type: int = 2
+    use_cat: bool = True
 
     
 

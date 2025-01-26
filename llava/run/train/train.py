@@ -120,7 +120,8 @@ class TrainingArguments(transformers.TrainingArguments):
 # ----------------------------------------------------------#
 @dataclass
 class SparseArguments:
-    ncls_count: int = 4
+    Imgcls_count: int = 4
+    Txtcls_count: int = 4
     hidden_dim: int = 1024
     output_dim: int = 512
     mlp_type: int = 1
@@ -131,6 +132,7 @@ class SparseArguments:
     special_tokens_mlp_type: int = 1
     use_ca_loss: bool = True
     inference_type: int = 2
+    use_cat: bool = True
 
 # ----------------------------------------------------------#
 
@@ -912,7 +914,7 @@ def train(attn_implementation=None):
             )
         ))
    
-    # 先初始化分词器 避免模型初始化后使用ncls标记会报错
+    # 先初始化分词器 避免模型初始化后使用Imgcls，Txtcls标记会报错
     if 'mpt' in model_args.model_name_or_path:
         tokenizer = transformers.AutoTokenizer.from_pretrained(
             model_args.model_name_or_path,
@@ -928,13 +930,15 @@ def train(attn_implementation=None):
             padding_side="right",
             use_fast=False,
         )
-    # 添加 ncls 标记到词汇表中
-    ncls_token = "<ncls>"
-    tokenizer.add_tokens([ncls_token])
+    # 添加 Imgcls_token 标记到词汇表中
+    Imgcls_token = "<Imgcls>"
+    Txtcls_token = "<Txtcls>"
+    tokenizer.add_tokens([Imgcls_token])
+    tokenizer.add_tokens([Txtcls_token])
+    # # # 获取并输出 Imgcls_token 标记的 ID
+    Imgcls_token_id = tokenizer.convert_tokens_to_ids(Imgcls_token)
+    Txtcls_token_id = tokenizer.convert_tokens_to_ids(Txtcls_token)
 
-    # # # 获取并输出 ncls 标记的 ID
-    ncls_token_id = tokenizer.convert_tokens_to_ids(ncls_token)
-    # print(f"Added ncls token '{len(tokenizer)}' with ID: {ncls_token_id}")
         
     if model_args.vision_tower is not None:
         if 'mpt' in model_args.model_name_or_path:
@@ -967,7 +971,8 @@ def train(attn_implementation=None):
                 cache_dir=training_args.cache_dir,
                 attn_implementation=attn_implementation,
                 torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
-                ncls_token_id=ncls_token_id,
+                Imgcls_token_id=Imgcls_token_id,
+                Txtcls_token_id=Txtcls_token_id,
                 **bnb_model_from_pretrained_args,
                 # ignore_mismatched_sizes=True
             )

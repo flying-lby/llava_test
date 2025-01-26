@@ -10,7 +10,8 @@ python -m llava.run.eval.eval_classify \
     --question-file ./data/chest_xray/Chest-X-ray_llava_val.jsonl \
     --image-folder "/srv/lby" \
     --conv-mode vicuna_v1 \
-    --ncls_count 4 \
+    --Imgcls_count 4 \
+    --Txtcls_count 4 \
     --hidden_dim 1024 \
     --output_dim 4096 \
     --mlp_type 0 \
@@ -19,4 +20,5 @@ python -m llava.run.eval.eval_classify \
     --use_local_loss True \
     --feature_layer 2 \
     --special_tokens_mlp_type 1 \
-    --use_ca_loss False
+    --use_ca_loss False \
+    --use_cat True
