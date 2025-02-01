@@ -99,19 +99,17 @@ class mis_mlp(nn.Module):
             )
         elif(self.mlp_type == 4):
             self.out_mlp = nn.Sequential(
-                nn.LayerNorm(self.input_dim),
-                nn.Dropout(0.3),
                 nn.Linear(self.input_dim, self.output_dim),
             )
         elif(self.mlp_type == 5):
             self.out_mlp = nn.Sequential(
                 nn.LayerNorm(self.input_dim),
-                nn.Dropout(0.7),
                 nn.Linear(self.input_dim, self.output_dim),
             )
         elif(self.mlp_type == 6):
             self.out_mlp = nn.Sequential(
                 nn.LayerNorm(self.input_dim),
+                nn.Dropout(0.3),
                 nn.Linear(self.input_dim, self.output_dim),
             )
         else:
