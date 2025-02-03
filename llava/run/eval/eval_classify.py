@@ -271,6 +271,14 @@ def eval_model(args, sparse_args):
     result_metrics["recall_scores_per_class"] = recall_scores
     result_metrics["precision_scores_per_class"] = precision_scores
 
+    # 打印所有计算的结果
+    print("\n===== Evaluation Metrics =====")
+    for key, value in result_metrics.items():
+        if isinstance(value, list) or isinstance(value, np.ndarray):  # 打印所有元素
+            print(f"{key}: {value}")
+        else:
+            print(f"{key}: {value}")
+    
     # 检查目录并创建
     result_dir = os.path.dirname(args.result_file)  # 提取文件路径的目录部分
     if result_dir and not os.path.exists(result_dir):  # 如果目录不存在
