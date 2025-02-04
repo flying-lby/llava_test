@@ -36,10 +36,11 @@ class SparseArguments:
     Txtcls_count: int = 4
     hidden_dim: int = 1024
     output_dim: int = 512
-    mlp_type: int = 0
+    img_mlp_type: int = 1
+    txt_mlp_type: int = 1
     loss_threshold: float = 0.5
     temperature: float = 0.05
-    use_local_loss: bool = True
+    use_local_loss: bool = False
     feature_layer: int = 1
     special_tokens_mlp_type: int = 1
     use_ca_loss: bool = True
@@ -101,7 +102,7 @@ def eval_model(args, sparse_args):
         global_category_embedding = category_output.hidden_states[-sparse_args_dict["feature_layer"]][:, -sparse_args_dict["Txtcls_count"]:].mean(dim=1)
         # local_category_embedding = category_output.hidden_states[-sparse_args_dict["feature_layer"]][:, :-sparse_args_dict["ncls_count"]].mean(dim=1)
         
-        global_category_embedding = model.mis_mlp(global_category_embedding)
+        global_category_embedding = model.txt_mlp(global_category_embedding)
         # local_category_embedding = model.mis_mlp(local_category_embedding)
         
         global_category_embeddings_cache.append(global_category_embedding)

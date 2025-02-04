@@ -315,10 +315,14 @@ class LLaVATrainer(Trainer):
             #     ]
       
             # 显式解冻 mis_mlp 参数
-            if hasattr(opt_model, 'mis_mlp'):   
-                for param in opt_model.mis_mlp.parameters():
+            if hasattr(opt_model, 'img_mlp'):   
+                for param in opt_model.img_mlp.parameters():
                     param.requires_grad = True
-            
+                    
+            if hasattr(opt_model, 'txt_mlp'):   
+                for param in opt_model.txt_mlp.parameters():
+                    param.requires_grad = True
+                    
             if hasattr(opt_model, 'special_token_mlp'):
                 for param in opt_model.special_token_mlp.parameters():
                     param.requires_grad = True
@@ -333,7 +337,7 @@ class LLaVATrainer(Trainer):
                         
             decay_parameters = get_parameter_names(opt_model, ALL_LAYERNORM_LAYERS)
             decay_parameters = [name for name in decay_parameters if "bias" not in name]
-            mis_mlp_parameters = [name for name, _ in opt_model.named_parameters() if "mis_mlp" in name or "special_token_mlp" in name or "cross_attention_module" in name ]
+            mis_mlp_parameters = [name for name, _ in opt_model.named_parameters() if "img_mlp" in name or "txt_mlp" in name or "special_token_mlp" in name or "cross_attention_module" in name ]
           
             
             optimizer_grouped_parameters = [

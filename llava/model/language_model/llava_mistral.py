@@ -66,29 +66,29 @@ class linea_layer(nn.Module):
 #         x = self.linear2(x)
 #         return x 
 
-class mis_mlp(nn.Module):
-    def __init__(self, input_dim, hidden_dim, output_dim, mlp_type):
+class img_mlp(nn.Module):
+    def __init__(self, input_dim, hidden_dim, output_dim, img_mlp_type):
         super().__init__()
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
         self.output_dim = output_dim
-        self.mlp_type = mlp_type
+        self.img_mlp_type = img_mlp_type
         
-        if(self.mlp_type == 1):
+        if(self.img_mlp_type == 1):
             self.out_mlp = nn.Sequential(
                 nn.LayerNorm(self.input_dim),
                 nn.Linear(self.input_dim, self.hidden_dim),
                 nn.GELU(),
                 nn.Linear(self.hidden_dim, self.output_dim)
             )
-        elif(self.mlp_type == 2):
+        elif(self.img_mlp_type == 2):
             self.out_mlp = nn.Sequential(
                 nn.LayerNorm(self.input_dim),
                 nn.Linear(self.input_dim , self.hidden_dim),
                 nn.ReLU(),
                 nn.Linear(self.hidden_dim, self.output_dim)
             )
-        elif(self.mlp_type == 3):
+        elif(self.img_mlp_type == 3):
             self.out_mlp = nn.Sequential(
                 nn.LayerNorm(self.input_dim),
                 nn.Linear(self.input_dim, self.input_dim // 2),
@@ -97,16 +97,16 @@ class mis_mlp(nn.Module):
                 nn.GELU(),
                 nn.Linear(self.hidden_dim, self.output_dim)
             )
-        elif(self.mlp_type == 4):
+        elif(self.img_mlp_type == 4):
             self.out_mlp = nn.Sequential(
                 nn.Linear(self.input_dim, self.output_dim),
             )
-        elif(self.mlp_type == 5):
+        elif(self.img_mlp_type == 5):
             self.out_mlp = nn.Sequential(
                 nn.LayerNorm(self.input_dim),
                 nn.Linear(self.input_dim, self.output_dim),
             )
-        elif(self.mlp_type == 6):
+        elif(self.img_mlp_type == 6):
             self.out_mlp = nn.Sequential(
                 nn.LayerNorm(self.input_dim),
                 nn.Dropout(0.3),
@@ -123,7 +123,63 @@ class mis_mlp(nn.Module):
             return x
         return self.out_mlp(x) 
     
-    
+class txt_mlp(nn.Module):
+    def __init__(self, input_dim, hidden_dim, output_dim, txt_mlp_type):
+        super().__init__()
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
+        self.output_dim = output_dim
+        self.txt_mlp_type = txt_mlp_type
+        
+        if(self.txt_mlp_type == 1):
+            self.out_mlp = nn.Sequential(
+                nn.LayerNorm(self.input_dim),
+                nn.Linear(self.input_dim, self.hidden_dim),
+                nn.GELU(),
+                nn.Linear(self.hidden_dim, self.output_dim)
+            )
+        elif(self.txt_mlp_type == 2):
+            self.out_mlp = nn.Sequential(
+                nn.LayerNorm(self.input_dim),
+                nn.Linear(self.input_dim , self.hidden_dim),
+                nn.ReLU(),
+                nn.Linear(self.hidden_dim, self.output_dim)
+            )
+        elif(self.txt_mlp_type == 3):
+            self.out_mlp = nn.Sequential(
+                nn.LayerNorm(self.input_dim),
+                nn.Linear(self.input_dim, self.input_dim // 2),
+                nn.GELU(),
+                nn.Linear(self.input_dim // 2, self.hidden_dim),
+                nn.GELU(),
+                nn.Linear(self.hidden_dim, self.output_dim)
+            )
+        elif(self.txt_mlp_type == 4):
+            self.out_mlp = nn.Sequential(
+                nn.Linear(self.input_dim, self.output_dim),
+            )
+        elif(self.txt_mlp_type == 5):
+            self.out_mlp = nn.Sequential(
+                nn.LayerNorm(self.input_dim),
+                nn.Linear(self.input_dim, self.output_dim),
+            )
+        elif(self.txt_mlp_type == 6):
+            self.out_mlp = nn.Sequential(
+                nn.LayerNorm(self.input_dim),
+                nn.Dropout(0.3),
+                nn.Linear(self.input_dim, self.output_dim),
+            )
+        else:
+            # When mlp_type is 0, set self.out_mlp to None
+            self.out_mlp = None
+      
+
+    def forward(self, x):
+        if self.out_mlp is None:
+            # If mlp_type is 0, return x directly
+            return x
+        return self.out_mlp(x) 
+
 
 class CrossAttentionModule(nn.Module):
     def __init__(self, hidden_size, num_heads=32, dropout=0.1):
@@ -166,7 +222,8 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             self.Txtcls_count = config.sparse_config["Txtcls_count"]  
             self.hidden_dim = config.sparse_config["hidden_dim"]
             self.output_dim = config.sparse_config["output_dim"]
-            self.mlp_type = config.sparse_config["mlp_type"]
+            self.img_mlp_type = config.sparse_config["img_mlp_type"]
+            self.txt_mlp_type = config.sparse_config["txt_mlp_type"]
             self.loss_threshold = config.sparse_config["loss_threshold"]
             self.temperature = config.sparse_config["temperature"]
             self.use_local_loss = config.sparse_config["use_local_loss"]
@@ -196,7 +253,8 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         # self.logit_scale = nn.Parameter(
         #     torch.tensor(0.1)
         # )
-        self.mis_mlp = mis_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, mlp_type = self.mlp_type)
+        self.img_mlp = img_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, img_mlp_type = self.img_mlp_type)
+        self.txt_mlp = txt_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, txt_mlp_type = self.txt_mlp_type)
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
         
         self.cross_attention = None
@@ -206,7 +264,8 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
     def initialize_mis_mlp(self):
         """确保 mis_mlp 的初始化在模型权重加载后完成"""
         
-        self.mis_mlp = mis_mlp(input_dim = self.config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, mlp_type = self.mlp_type)
+        self.img_mlp = img_mlp(input_dim = self.config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, img_mlp_type = self.img_mlp_type)
+        self.txt_mlp = txt_mlp(input_dim = self.config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, txt_mlp_type = self.txt_mlp_type)
         self.cross_attention_module = CrossAttentionModule(hidden_size = self.config.hidden_size)
         
         if self.special_tokens_mlp_type == 1:
@@ -225,11 +284,14 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             )
             
         # 注册到模块列表中
-        self.add_module("mis_mlp", self.mis_mlp)
+        self.add_module("img_mlp", self.img_mlp)
+        self.add_module("txt_mlp", self.txt_mlp)
         self.add_module("special_token_mlp", self.special_token_mlp)
         self.add_module("cross_attention_module", self.cross_attention_module)
         
-        for param in self.mis_mlp.parameters():
+        for param in self.img_mlp.parameters():
+            param.requires_grad = True
+        for param in self.txt_mlp.parameters():
             param.requires_grad = True
         for param in self.special_token_mlp.parameters():
             param.requires_grad = True
@@ -454,7 +516,7 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         # local_image_embedding = image_output.hidden_states[-self.feature_layer][:, :-self.ncls_count, :].mean(dim=1)
         # image_embedding = torch.max(image_embedding, dim=1).values  # 使用最大池化
         
-        global_image_embedding = self.mis_mlp(global_image_embedding)
+        global_image_embedding = self.img_mlp(global_image_embedding)
         # local_image_embedding = self.mis_mlp(local_image_embedding)
         
         # 步骤2: 对图像特征和类别特征进行L2归一化
