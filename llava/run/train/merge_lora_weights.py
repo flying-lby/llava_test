@@ -54,5 +54,7 @@ if __name__ == "__main__":
     # Use HfArgumentParser for SparseArguments
     hf_parser = HfArgumentParser(SparseArguments)
     sparse_args, = hf_parser.parse_args_into_dataclasses(remaining_args)
-
+    print(remaining_args)
+    print('---------------')
+    print(sparse_args)
     merge_lora(args, sparse_args)
