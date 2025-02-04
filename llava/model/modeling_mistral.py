@@ -1208,13 +1208,14 @@ class MistralForCausalLM(MistralPreTrainedModel):
         attention_mask = attention_mask.bool()  # 确保是布尔类型
     
         imgcls_features = hidden_states[:, -self.Imgcls_count:, :]  # 提取 Imgcls 特征 (B, Imgcls_count, hidden_dim)
-        global_imgcls_features = imgcls_features.mean(dim=1)  # 全局特征
-        global_imgcls_features = self.img_mlp(global_imgcls_features)  # 通过 MLP 投影到最终空间 (B, feature_dim)
+        global_imgcls_features = self.img_mlp(imgcls_features)  # 通过 MLP 投影到最终空间 (B, feature_dim)
+        global_imgcls_features = global_imgcls_features.mean(dim=1)  # 全局特征
 
         # 提取局部图像特征
         local_img_features = hidden_states[:, :-self.Imgcls_count, :]  # 忽略 Imgcls 的部分 (B, seq_len - Imgcls_count, hidden_dim)
-        local_img_features = local_img_features.mean(dim=1)  # 平均池化局部特征
         local_img_features = self.img_mlp(local_img_features)
+        local_img_features = local_img_features.mean(dim=1)  # 平均池化局部特征
+        
         
         # Step 2: 提取文本特殊标记 Txtcls 特征
         txt_output = self.model(
@@ -1233,13 +1234,15 @@ class MistralForCausalLM(MistralPreTrainedModel):
         txt_attention_mask = txt_attention_mask.bool()  # 确保是布尔类型
 
         txtcls_features = txt_hidden_states[:, -self.Txtcls_count:, :]  # 提取 Txtcls 特征 (B, Txtcls_count, hidden_dim)
-        global_txtcls_features = txtcls_features.mean(dim=1)  # 全局文本特征
-        global_txtcls_features = self.txt_mlp(global_txtcls_features)
+        global_txtcls_features = self.txt_mlp(txtcls_features)
+        global_txtcls_features = global_txtcls_features.mean(dim=1)  # 全局文本特征
+        
 
         # 提取局部文本特征
         local_txt_features = txt_hidden_states[:, :-self.Txtcls_count, :]  # 忽略 Txtcls 的部分 (B, seq_len - Txtcls_count, hidden_dim)
-        local_txt_features = local_txt_features.mean(dim=1)
         local_txt_features = self.txt_mlp(local_txt_features)
+        local_txt_features = local_txt_features.mean(dim=1)
+        
 
         # Step 3: 归一化特征向量到单位球面
         norm_global_imgcls_features = F.normalize(global_imgcls_features, p=2, dim=-1)  # (B, feature_dim)

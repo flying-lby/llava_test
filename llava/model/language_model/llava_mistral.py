@@ -512,11 +512,12 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             return_emb = True,
             return_dict=True
         )
-        global_image_embedding = image_output.hidden_states[-self.feature_layer][:, -self.Imgcls_count:, :].mean(dim=1)  # 使用平均池化
+        global_image_embedding = image_output.hidden_states[-self.feature_layer][:, -self.Imgcls_count:, :]  # 使用平均池化
         # local_image_embedding = image_output.hidden_states[-self.feature_layer][:, :-self.ncls_count, :].mean(dim=1)
         # image_embedding = torch.max(image_embedding, dim=1).values  # 使用最大池化
         
         global_image_embedding = self.img_mlp(global_image_embedding)
+        global_image_embedding = global_image_embedding.mean(dim=1)
         # local_image_embedding = self.mis_mlp(local_image_embedding)
         
         # 步骤2: 对图像特征和类别特征进行L2归一化
