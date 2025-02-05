@@ -945,7 +945,22 @@ def train(attn_implementation=None):
             padding_side="right",
             use_fast=False,
         )
-    # 添加 Imgcls_token 标记到词汇表中
+    # # 添加 Imgcls_token 标记到词汇表中
+    # Imgcls_tokens = [f"<Imgcls{i}>" for i in range(sparse_args.Imgcls_count)]
+    # Txtcls_tokens = [f"<Txtcls{i}>" for i in range(sparse_args.Txtcls_count)]
+
+    # # 将所有新标记添加到 tokenizer
+    # all_tokens = Imgcls_tokens + Txtcls_tokens
+    # tokenizer.add_tokens(all_tokens)
+
+    # # 存储 token ID（列表方式）
+    # Imgcls_token_ids = [tokenizer.convert_tokens_to_ids(token) for token in Imgcls_tokens]
+    # Txtcls_token_ids = [tokenizer.convert_tokens_to_ids(token) for token in Txtcls_tokens]
+
+    # # 打印检查
+    # print("Imgcls Token IDs:", Imgcls_token_ids)
+    # print("Txtcls Token IDs:", Txtcls_token_ids)
+
     Imgcls_token = "<Imgcls>"
     Txtcls_token = "<Txtcls>"
     tokenizer.add_tokens([Imgcls_token])
