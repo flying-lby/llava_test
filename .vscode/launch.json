@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "LLaVA Evaluate Classify",
+            "type": "debugpy",
+            "request": "launch",
+            "cwd": "/mnt/nlp01/usr/huangwenxuan/home_tencent1/code/llava_test/llava/run",
+            "program": "eval/eval_classify.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--model-path", "/mnt/public03/usr/zhaizijie/huangwx_tencent/zijie_tencent/results/llava_full_new_clip_a100_version1",
+                "--question-file", "./data/Chest-X-ray_llava_val.jsonl",
+                "--image-folder", "/mnt/public03/usr/zhaizijie/huangwx_tencent/zijie_tencent",
+                "--answers-file", "./data/eval/test_prompt/Chest-X-ray_llava_val_ans.jsonl",
+                "--temperature", "0",
+                "--conv-mode", "vicuna_v1"
+            ],
+            // "env": {
+            //     "CUDA_VISIBLE_DEVICES": "1"
+            // }
+        }
+    ]
+}
