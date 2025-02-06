@@ -89,27 +89,27 @@ def load_pretrained_model(model_path, model_base, model_name, add_sparse=None, l
 
             #------------------------------------------------------------------------#
             
-            # 定义特殊标记
-            Imgcls_token = "<Imgcls>"
-            Txtcls_token = "<Txtcls>"
+          
+            # 添加 Imgcls_token 标记到词汇表中
+            Imgcls_tokens = [f"<Imgcls{i}>" for i in range(add_sparse.Imgcls_count)]
+            Txtcls_tokens = [f"<Txtcls{i}>" for i in range(add_sparse.Txtcls_count)]
 
-            # 确保特殊标记已正确添加到分词器
-            special_tokens = [Imgcls_token, Txtcls_token]
-
-            for token in special_tokens:
+            # 逐个检查 token 是否已存在
+            new_tokens = []
+            for token in Imgcls_tokens + Txtcls_tokens:
                 if token not in tokenizer.get_vocab():
                     print(f"Adding '{token}' to tokenizer...")
-                    tokenizer.add_tokens([token])
+                    new_tokens.append(token)
                 else:
                     print(f"'{token}' already exists in tokenizer.")
 
-            # 获取并输出特殊标记的 ID
-            Imgcls_token_id = tokenizer.convert_tokens_to_ids(Imgcls_token)
-            Txtcls_token_id = tokenizer.convert_tokens_to_ids(Txtcls_token)
-
-            print(f"Imgcls_token_id: {Imgcls_token_id}")
-            print(f"Txtcls_token_id: {Txtcls_token_id}")
-
+            # 仅在存在新 token 时添加
+            if new_tokens:
+                tokenizer.add_tokens(new_tokens)
+                print(f"Added {len(new_tokens)} new tokens.")
+            else:
+                print("No new tokens to add, all tokens already exist in tokenizer.")
+            
             # 检查分词器词汇表大小
             print(f"Tokenizer vocab size after adding special tokens: {len(tokenizer)}")
 
@@ -119,8 +119,6 @@ def load_pretrained_model(model_path, model_base, model_name, add_sparse=None, l
                 model_base,
                 low_cpu_mem_usage=True,
                 config=lora_cfg_pretrained,
-                Imgcls_token_id=Imgcls_token_id,
-                Txtcls_token_id=Txtcls_token_id,
                 **kwargs
             )
             
@@ -177,20 +175,25 @@ def load_pretrained_model(model_path, model_base, model_name, add_sparse=None, l
                 # model = LlavaMptForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
             elif 'mistral' in model_name.lower():
                 tokenizer = AutoTokenizer.from_pretrained(model_path)
-                Imgcls_token = "<Imgcls>"
-                Txtcls_token = "<Txtcls>"
-                
-                special_tokens = [Imgcls_token, Txtcls_token]
-                for token in special_tokens:
+                # 生成 Imgcls 和 Txtcls token
+                Imgcls_tokens = [f"<Imgcls{i}>" for i in range(add_sparse.Imgcls_count)]
+                Txtcls_tokens = [f"<Txtcls{i}>" for i in range(add_sparse.Txtcls_count)]
+
+                # 逐个检查 token 是否已存在
+                new_tokens = []
+                for token in Imgcls_tokens + Txtcls_tokens:
                     if token not in tokenizer.get_vocab():
                         print(f"Adding '{token}' to tokenizer...")
-                        tokenizer.add_tokens([token])
+                        new_tokens.append(token)
                     else:
                         print(f"'{token}' already exists in tokenizer.")
 
-                # 获取并输出  ID
-                Imgcls_token_id = tokenizer.convert_tokens_to_ids(Imgcls_token)
-                Txtcls_token_id = tokenizer.convert_tokens_to_ids(Txtcls_token)
+                # 仅在存在新 token 时添加
+                if new_tokens:
+                    tokenizer.add_tokens(new_tokens)
+                    print(f"Added {len(new_tokens)} new tokens.")
+                else:
+                    print("No new tokens to add, all tokens already exist in tokenizer.")
        
                 #-----------------------调参-------------------------------------------------#
              
@@ -204,8 +207,6 @@ def load_pretrained_model(model_path, model_base, model_name, add_sparse=None, l
                 
                 model = LlavaMistralForCausalLM.from_pretrained(
                     model_path,
-                    Imgcls_token_id=Imgcls_token_id,
-                    Txtcls_token_id=Txtcls_token_id,
                     config =config,
                     low_cpu_mem_usage=True,
                     **kwargs

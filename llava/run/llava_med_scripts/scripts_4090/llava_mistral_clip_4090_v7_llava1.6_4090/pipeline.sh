@@ -58,7 +58,7 @@ deepspeed train/train_mem.py \
     --feature_layer 2 \
     --special_tokens_mlp_type 1 \
     --use_ca_loss False \
-    --use_cat False \
+    --use_cat False 
     # --use_prompt False
  
  

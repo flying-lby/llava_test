@@ -206,7 +206,7 @@ class CrossAttentionModule(nn.Module):
 class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
     config_class = LlavaMistralConfig
 
-    def __init__(self, config, Imgcls_token_id, Txtcls_token_id):
+    def __init__(self, config):
         
         super(MistralForCausalLM, self).__init__(config)
         self.model = LlavaMistralModel(config)
@@ -214,8 +214,8 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         self.padding_idx = config.pad_token_id
         
         self.config = config 
-        self.Imgcls_token_id = Imgcls_token_id
-        self.Txtcls_token_id = Txtcls_token_id
+        # self.Imgcls_token_id = Imgcls_token_id
+        # self.Txtcls_token_id = Txtcls_token_id
         #----------------------------------------------------------#
         if hasattr(config, "sparse_config") and config.sparse_config is not None:
             self.Imgcls_count = config.sparse_config["Imgcls_count"]
@@ -331,35 +331,35 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         return_emb: Optional[bool] = False,  # 新增是否返回嵌入的标志(不计算loss)
         return_dict: Optional[bool] = None
     ) -> Union[Tuple, CausalLMOutputWithPast]:
-        if input_ids is not None and attention_mask is not None:
-            batch_size = input_ids.size(0)
+        # if input_ids is not None and attention_mask is not None:
+        #     batch_size = input_ids.size(0)
 
-            # 1. 更新 input_ids: 添加 Imgcls_token_id
-            imgcls_token_ids = torch.full((batch_size, self.Imgcls_count), self.Imgcls_token_id, dtype=input_ids.dtype, device=input_ids.device)
-            imgcls_attention_mask = torch.ones((batch_size, self.Imgcls_count), dtype=attention_mask.dtype, device=attention_mask.device)
+        #     # 1. 更新 input_ids: 添加 Imgcls_token_id
+        #     imgcls_token_ids = torch.full((batch_size, self.Imgcls_count), self.Imgcls_token_id, dtype=input_ids.dtype, device=input_ids.device)
+        #     imgcls_attention_mask = torch.ones((batch_size, self.Imgcls_count), dtype=attention_mask.dtype, device=attention_mask.device)
 
-            input_ids = self.update_tensor(batch_size, input_ids, imgcls_token_ids)
-            attention_mask = self.update_tensor(batch_size, attention_mask, imgcls_attention_mask)
+        #     input_ids = self.update_tensor(batch_size, input_ids, imgcls_token_ids)
+        #     attention_mask = self.update_tensor(batch_size, attention_mask, imgcls_attention_mask)
 
-            # 更新 position_ids
-            if position_ids is None:
-                position_ids = torch.arange(input_ids.size(1), dtype=torch.long, device=input_ids.device).unsqueeze(0).expand(batch_size, -1)
-            else:
-                imgcls_position_ids = torch.arange(position_ids.size(1), position_ids.size(1) + self.Imgcls_count, device=position_ids.device).unsqueeze(0).expand(batch_size, -1)
-                position_ids = self.update_tensor(batch_size, position_ids, imgcls_position_ids)
+        #     # 更新 position_ids
+        #     if position_ids is None:
+        #         position_ids = torch.arange(input_ids.size(1), dtype=torch.long, device=input_ids.device).unsqueeze(0).expand(batch_size, -1)
+        #     else:
+        #         imgcls_position_ids = torch.arange(position_ids.size(1), position_ids.size(1) + self.Imgcls_count, device=position_ids.device).unsqueeze(0).expand(batch_size, -1)
+        #         position_ids = self.update_tensor(batch_size, position_ids, imgcls_position_ids)
 
-            # 更新 labels
-            if labels is not None:
-                imgcls_labels = torch.full((batch_size, self.Imgcls_count), -100, dtype=labels.dtype, device=labels.device)
-                labels = self.update_tensor(batch_size, labels, imgcls_labels)
+        #     # 更新 labels
+        #     if labels is not None:
+        #         imgcls_labels = torch.full((batch_size, self.Imgcls_count), -100, dtype=labels.dtype, device=labels.device)
+        #         labels = self.update_tensor(batch_size, labels, imgcls_labels)
 
-        # 2. 更新 txt_input_ids: 添加 Txtcls_token_id
-        if category_ids is not None and category_attention_mask is not None:
-            txtcls_token_ids = torch.full((batch_size, self.Txtcls_count), self.Txtcls_token_id, dtype=category_ids.dtype, device=category_ids.device)
-            txtcls_attention_mask = torch.ones((batch_size, self.Txtcls_count), dtype=category_attention_mask.dtype, device=category_attention_mask.device)
+        # # 2. 更新 txt_input_ids: 添加 Txtcls_token_id
+        # if category_ids is not None and category_attention_mask is not None:
+        #     txtcls_token_ids = torch.full((batch_size, self.Txtcls_count), self.Txtcls_token_id, dtype=category_ids.dtype, device=category_ids.device)
+        #     txtcls_attention_mask = torch.ones((batch_size, self.Txtcls_count), dtype=category_attention_mask.dtype, device=category_attention_mask.device)
 
-            category_ids = self.update_tensor(batch_size, category_ids.squeeze(1), txtcls_token_ids)
-            category_attention_mask = self.update_tensor(batch_size, category_attention_mask.squeeze(1), txtcls_attention_mask)
+        #     category_ids = self.update_tensor(batch_size, category_ids.squeeze(1), txtcls_token_ids)
+        #     category_attention_mask = self.update_tensor(batch_size, category_attention_mask.squeeze(1), txtcls_attention_mask)
 
         # 推理时处理类别
         if return_emb:
@@ -367,8 +367,8 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             txt_attention_mask = attention_mask.clone()
             txt_past_key_values = past_key_values
         else:
-            txt_input_ids = category_ids
-            txt_attention_mask = category_attention_mask
+            txt_input_ids = category_ids.squeeze(1)
+            txt_attention_mask = category_attention_mask.squeeze(1)
             txt_past_key_values = past_key_values
 
         # 3. 如果仅有图像输入，则使用图像的多模态预处理

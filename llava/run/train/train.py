@@ -442,7 +442,9 @@ def preprocess_v1(
     sources,
     tokenizer: transformers.PreTrainedTokenizer,
     has_image: bool = False,
-    use_prompt: bool = True
+    use_prompt: bool = True,
+    Imgcls_count: int = 4,
+    Txtcls_count: int = 8
 ) -> Dict:
     conv = conversation_lib.default_conversation.copy()
     roles = {"human": conv.roles[0], "gpt": conv.roles[1]}
@@ -463,6 +465,9 @@ def preprocess_v1(
             conv.append_message(role, sentence["value"])
             if role == conv.roles[0]:  # Only append human messages
                 human_part += sentence["value"] + conv.sep
+        
+        # Append Imgcls tokens
+        human_part += "".join([f"<Imgcls{i}>" for i in range(Imgcls_count)])
         human_conversations.append(human_part)
         conversations.append(conv.get_prompt())
 
@@ -655,6 +660,8 @@ def preprocess(
     sources: Sequence[str],
     tokenizer: transformers.PreTrainedTokenizer,
     use_prompt: bool = True,
+    Imgcls_count: int = 4,
+    Txtcls_count: int = 8,
     has_image: bool = False
 ) -> Dict:
     """
@@ -669,7 +676,7 @@ def preprocess(
     if conversation_lib.default_conversation.sep_style == conversation_lib.SeparatorStyle.LLAMA_2:
         return preprocess_llama_2(sources, tokenizer, has_image=has_image)
     if conversation_lib.default_conversation.version.startswith("v1"):
-        return preprocess_v1(sources, tokenizer, use_prompt=use_prompt, has_image=has_image)
+        return preprocess_v1(sources, tokenizer, use_prompt=use_prompt, Imgcls_count=Imgcls_count, Txtcls_count=Txtcls_count, has_image=has_image)
     if conversation_lib.default_conversation.version == "mpt":
         return preprocess_mpt(sources, tokenizer, has_image=has_image)
     # add end signal and concatenate together
@@ -705,7 +712,9 @@ class LazySupervisedDataset(Dataset):
     def __init__(self, data_path: str,
                  tokenizer: transformers.PreTrainedTokenizer,
                  data_args: DataArguments,
-                 use_prompt: bool = True):
+                 use_prompt: bool = True,
+                 Imgcls_count: int = 4,
+                 Txtcls_count: int = 8):
         super(LazySupervisedDataset, self).__init__()
         list_data_dict = json.load(open(data_path, "r"))
 
@@ -714,6 +723,8 @@ class LazySupervisedDataset(Dataset):
         self.list_data_dict = list_data_dict
         self.data_args = data_args
         self.use_prompt = use_prompt
+        self.Imgcls_count = Imgcls_count
+        self.Txtcls_count = Txtcls_count
 
     def __len__(self):
         return len(self.list_data_dict)
@@ -771,6 +782,8 @@ class LazySupervisedDataset(Dataset):
             sources,
             self.tokenizer,
             self.use_prompt,
+            self.Imgcls_count,
+            self.Txtcls_count,
             has_image=('image' in self.list_data_dict[i])
             )
         if isinstance(i, int):
@@ -793,6 +806,7 @@ class LazySupervisedDataset(Dataset):
         else:
             txt_prompt = ""
         category_text = category_response +"" + txt_prompt # Use the full sentence directly
+        category_text += "".join([f"<Txtcls{i}>" for i in range(self.Txtcls_count)])
         # category_text = category_response
         # Tokenize the full category sentence and add it to data_dict
         category_tokens = self.tokenizer(
@@ -889,11 +903,12 @@ class DataCollatorForSupervisedDataset(object):
 
 
 def make_supervised_data_module(tokenizer: transformers.PreTrainedTokenizer,
-                                data_args, use_prompt) -> Dict:
+                                data_args, use_prompt, Imgcls_count, Txtcls_count) -> Dict:
     """Make dataset and collator for supervised fine-tuning."""
     train_dataset = LazySupervisedDataset(tokenizer=tokenizer,
                                 data_path=data_args.data_path,
-                                data_args=data_args, use_prompt = use_prompt)
+                                data_args=data_args, use_prompt = use_prompt, 
+                                Imgcls_count = Imgcls_count, Txtcls_count = Txtcls_count)
     data_collator = DataCollatorForSupervisedDataset(tokenizer=tokenizer)
     return dict(train_dataset=train_dataset,
                 eval_dataset=None,
@@ -945,13 +960,13 @@ def train(attn_implementation=None):
             padding_side="right",
             use_fast=False,
         )
-    # # 添加 Imgcls_token 标记到词汇表中
-    # Imgcls_tokens = [f"<Imgcls{i}>" for i in range(sparse_args.Imgcls_count)]
-    # Txtcls_tokens = [f"<Txtcls{i}>" for i in range(sparse_args.Txtcls_count)]
+    # 添加 Imgcls_token 标记到词汇表中
+    Imgcls_tokens = [f"<Imgcls{i}>" for i in range(sparse_args.Imgcls_count)]
+    Txtcls_tokens = [f"<Txtcls{i}>" for i in range(sparse_args.Txtcls_count)]
 
-    # # 将所有新标记添加到 tokenizer
-    # all_tokens = Imgcls_tokens + Txtcls_tokens
-    # tokenizer.add_tokens(all_tokens)
+    # 将所有新标记添加到 tokenizer
+    all_tokens = Imgcls_tokens + Txtcls_tokens
+    tokenizer.add_tokens(all_tokens)
 
     # # 存储 token ID（列表方式）
     # Imgcls_token_ids = [tokenizer.convert_tokens_to_ids(token) for token in Imgcls_tokens]
@@ -961,13 +976,13 @@ def train(attn_implementation=None):
     # print("Imgcls Token IDs:", Imgcls_token_ids)
     # print("Txtcls Token IDs:", Txtcls_token_ids)
 
-    Imgcls_token = "<Imgcls>"
-    Txtcls_token = "<Txtcls>"
-    tokenizer.add_tokens([Imgcls_token])
-    tokenizer.add_tokens([Txtcls_token])
-    # # # 获取并输出 Imgcls_token 标记的 ID
-    Imgcls_token_id = tokenizer.convert_tokens_to_ids(Imgcls_token)
-    Txtcls_token_id = tokenizer.convert_tokens_to_ids(Txtcls_token)
+    # Imgcls_token = "<Imgcls>"
+    # Txtcls_token = "<Txtcls>"
+    # tokenizer.add_tokens([Imgcls_token])
+    # tokenizer.add_tokens([Txtcls_token])
+    # # # # 获取并输出 Imgcls_token 标记的 ID
+    # Imgcls_token_id = tokenizer.convert_tokens_to_ids(Imgcls_token)
+    # Txtcls_token_id = tokenizer.convert_tokens_to_ids(Txtcls_token)
 
         
     if model_args.vision_tower is not None:
@@ -1001,8 +1016,6 @@ def train(attn_implementation=None):
                 cache_dir=training_args.cache_dir,
                 attn_implementation=attn_implementation,
                 torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
-                Imgcls_token_id=Imgcls_token_id,
-                Txtcls_token_id=Txtcls_token_id,
                 **bnb_model_from_pretrained_args,
                 # ignore_mismatched_sizes=True
             )
@@ -1133,7 +1146,8 @@ def train(attn_implementation=None):
                         module = module.to(torch.bfloat16)
 
     data_module = make_supervised_data_module(tokenizer=tokenizer,
-                                              data_args=data_args,use_prompt=sparse_args.use_prompt)
+                                              data_args=data_args,use_prompt=sparse_args.use_prompt,
+                                              Imgcls_count=sparse_args.Imgcls_count,Txtcls_count=sparse_args.Txtcls_count)
    
     trainer = LLaVATrainer(model=model,
                     tokenizer=tokenizer,
