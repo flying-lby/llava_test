@@ -1007,10 +1007,10 @@ def train(attn_implementation=None):
             #     # ignore_mismatched_sizes=True
             # )
             # ----------------------------------------------------------#
-            from llava.model.language_model.llava_mistral import LlavaMistralConfig
-            config = LlavaMistralConfig.from_pretrained(model_args.model_name_or_path)
+            from llava.model.language_model.clip_llava_mistral import ClipLlavaMistralConfig
+            config = ClipLlavaMistralConfig.from_pretrained(model_args.model_name_or_path)
             config.sparse_config = vars(sparse_args)
-            model = LlavaMistralForCausalLM.from_pretrained(
+            model = ClipLlavaMistralForCausalLM.from_pretrained(
                 model_args.model_name_or_path,
                 config = config,
                 cache_dir=training_args.cache_dir,

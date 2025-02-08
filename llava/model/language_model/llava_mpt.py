@@ -1,3 +1,9 @@
+'''
+Author: fly
+Date: 2024-08-24 15:46:15
+FilePath: /llava_med/LLaVA-Med/llava/model/language_model/llava_mpt.py
+Description: 
+'''
 #    Copyright 2023 Haotian Liu
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +25,7 @@ import torch
 
 from transformers import AutoConfig, AutoModelForCausalLM, \
                          MptConfig, MptForCausalLM, MptModel
-from llava.model.llava_arch import LlavaMetaModel, LlavaMetaForCausalLM
+from llava.model.clip_llava_arch import LlavaMetaModel, LlavaMetaForCausalLM
 
 
 class LlavaMptConfig(MptConfig):

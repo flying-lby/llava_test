@@ -29,12 +29,12 @@ import torch.utils.checkpoint
 from torch import nn
 from torch.nn import BCEWithLogitsLoss, CrossEntropyLoss, MSELoss
 
-from ...activations import ACT2FN
-from ...cache_utils import Cache, DynamicCache
-from ...modeling_attn_mask_utils import _prepare_4d_causal_attention_mask, _prepare_4d_causal_attention_mask_for_sdpa
-from ...modeling_outputs import BaseModelOutputWithPast, CausalLMOutputWithPast, SequenceClassifierOutputWithPast
-from ...modeling_utils import PreTrainedModel
-from ...utils import (
+from transformers.activations import ACT2FN
+from transformers.cache_utils import Cache, DynamicCache
+from transformers.modeling_attn_mask_utils import _prepare_4d_causal_attention_mask
+from transformers.modeling_outputs import BaseModelOutputWithPast, CausalLMOutputWithPast, SequenceClassifierOutputWithPast
+from transformers.modeling_utils import PreTrainedModel
+from transformers.utils import (
     add_start_docstrings,
     add_start_docstrings_to_model_forward,
     is_flash_attn_2_available,
@@ -42,7 +42,13 @@ from ...utils import (
     logging,
     replace_return_docstrings,
 )
-from .configuration_mistral import MistralConfig
+from transformers.models.mistral.configuration_mistral import MistralConfig
+
+import sys
+sys.path.insert(0, "/home/lby/llava_med/LLaVA-Med/")
+
+
+
 
 
 if is_flash_attn_2_available():
@@ -68,6 +74,7 @@ def _get_unpad_data(attention_mask):
         cu_seqlens,
         max_seqlen_in_batch,
     )
+
 
 
 # Copied from transformers.models.llama.modeling_llama.LlamaRMSNorm with Llama->Mistral
@@ -202,8 +209,8 @@ class MistralAttention(nn.Module):
         self.layer_idx = layer_idx
         if layer_idx is None:
             logger.warning_once(
-                f"Instantiating {self.__class__.__name__} without passing a `layer_idx` is not recommended and will "
-                "lead to errors during the forward call if caching is used. Please make sure to provide a `layer_idx` "
+                f"Instantiating {self.__class__.__name__} without passing `layer_idx` is not recommended and will "
+                "to errors during the forward call, if caching is used. Please make sure to provide a `layer_idx` "
                 "when creating this class."
             )
 
@@ -428,10 +435,8 @@ class MistralFlashAttention2(MistralAttention):
         # cast them back in float16 just to be sure everything works as expected.
         input_dtype = query_states.dtype
         if input_dtype == torch.float32:
-            if torch.is_autocast_enabled():
-                target_dtype = torch.get_autocast_gpu_dtype()
             # Handle the case where the model is quantized
-            elif hasattr(self.config, "_pre_quantization_dtype"):
+            if hasattr(self.config, "_pre_quantization_dtype"):
                 target_dtype = self.config._pre_quantization_dtype
             else:
                 target_dtype = self.q_proj.weight.dtype
@@ -579,7 +584,8 @@ class MistralFlashAttention2(MistralAttention):
             attention_mask = attention_mask[:, attention_mask_num_tokens - kv_seq_len :]
 
         indices_k, cu_seqlens_k, max_seqlen_in_batch_k = _get_unpad_data(attention_mask)
-
+        # key_layer = key_layer.to(query_layer.device)
+        # indices_k = indices_k.to(query_layer.device)
         key_layer = index_first_axis(key_layer.reshape(batch_size * kv_seq_len, num_heads, head_dim), indices_k)
         value_layer = index_first_axis(value_layer.reshape(batch_size * kv_seq_len, num_heads, head_dim), indices_k)
 
@@ -612,98 +618,9 @@ class MistralFlashAttention2(MistralAttention):
         )
 
 
-# Copied from transformers.models.llama.modeling_llama.LlamaSdpaAttention with Llama->Mistral
-class MistralSdpaAttention(MistralAttention):
-    """
-    Mistral attention module using torch.nn.functional.scaled_dot_product_attention. This module inherits from
-    `MistralAttention` as the weights of the module stays untouched. The only changes are on the forward pass to adapt to
-    SDPA API.
-    """
-
-    # Adapted from MistralAttention.forward
-    def forward(
-        self,
-        hidden_states: torch.Tensor,
-        attention_mask: Optional[torch.Tensor] = None,
-        position_ids: Optional[torch.LongTensor] = None,
-        past_key_value: Optional[Cache] = None,
-        output_attentions: bool = False,
-        use_cache: bool = False,
-    ) -> Tuple[torch.Tensor, Optional[torch.Tensor], Optional[Tuple[torch.Tensor]]]:
-        if output_attentions:
-            # TODO: Improve this warning with e.g. `model.config.attn_implementation = "manual"` once this is implemented.
-            logger.warning_once(
-                "MistralModel is using MistralSdpaAttention, but `torch.nn.functional.scaled_dot_product_attention` does not support `output_attentions=True`. Falling back to the manual attention implementation, "
-                'but specifying the manual implementation will be required from Transformers version v5.0.0 onwards. This warning can be removed using the argument `attn_implementation="eager"` when loading the model.'
-            )
-            return super().forward(
-                hidden_states=hidden_states,
-                attention_mask=attention_mask,
-                position_ids=position_ids,
-                past_key_value=past_key_value,
-                output_attentions=output_attentions,
-                use_cache=use_cache,
-            )
-
-        bsz, q_len, _ = hidden_states.size()
-
-        query_states = self.q_proj(hidden_states)
-        key_states = self.k_proj(hidden_states)
-        value_states = self.v_proj(hidden_states)
-
-        query_states = query_states.view(bsz, q_len, self.num_heads, self.head_dim).transpose(1, 2)
-        key_states = key_states.view(bsz, q_len, self.num_key_value_heads, self.head_dim).transpose(1, 2)
-        value_states = value_states.view(bsz, q_len, self.num_key_value_heads, self.head_dim).transpose(1, 2)
-
-        kv_seq_len = key_states.shape[-2]
-        if past_key_value is not None:
-            kv_seq_len += past_key_value.get_usable_length(kv_seq_len, self.layer_idx)
-        cos, sin = self.rotary_emb(value_states, seq_len=kv_seq_len)
-
-        query_states, key_states = apply_rotary_pos_emb(query_states, key_states, cos, sin, position_ids)
-
-        if past_key_value is not None:
-            cache_kwargs = {"sin": sin, "cos": cos}  # Specific to RoPE models
-            key_states, value_states = past_key_value.update(key_states, value_states, self.layer_idx, cache_kwargs)
-
-        key_states = repeat_kv(key_states, self.num_key_value_groups)
-        value_states = repeat_kv(value_states, self.num_key_value_groups)
-
-        if attention_mask is not None:
-            if attention_mask.size() != (bsz, 1, q_len, kv_seq_len):
-                raise ValueError(
-                    f"Attention mask should be of size {(bsz, 1, q_len, kv_seq_len)}, but is {attention_mask.size()}"
-                )
-
-        # SDPA with memory-efficient backend is currently (torch==2.1.2) bugged with non-contiguous inputs with custom attn_mask,
-        # Reference: https://github.com/pytorch/pytorch/issues/112577.
-        if query_states.device.type == "cuda" and attention_mask is not None:
-            query_states = query_states.contiguous()
-            key_states = key_states.contiguous()
-            value_states = value_states.contiguous()
-
-        attn_output = torch.nn.functional.scaled_dot_product_attention(
-            query_states,
-            key_states,
-            value_states,
-            attn_mask=attention_mask,
-            dropout_p=self.attention_dropout if self.training else 0.0,
-            # The q_len > 1 is necessary to match with AttentionMaskConverter.to_causal_4d that does not create a causal mask in case q_len == 1.
-            is_causal=self.is_causal and attention_mask is None and q_len > 1,
-        )
-
-        attn_output = attn_output.transpose(1, 2).contiguous()
-        attn_output = attn_output.reshape(bsz, q_len, self.hidden_size)
-
-        attn_output = self.o_proj(attn_output)
-
-        return attn_output, None, past_key_value
-
-
 MISTRAL_ATTENTION_CLASSES = {
     "eager": MistralAttention,
     "flash_attention_2": MistralFlashAttention2,
-    "sdpa": MistralSdpaAttention,
 }
 
 
@@ -806,7 +723,6 @@ class MistralPreTrainedModel(PreTrainedModel):
     _no_split_modules = ["MistralDecoderLayer"]
     _skip_keys_device_placement = "past_key_values"
     _supports_flash_attn_2 = True
-    _supports_sdpa = True
     _supports_cache_class = True
 
     def _init_weights(self, module):
@@ -912,7 +828,7 @@ class MistralModel(MistralPreTrainedModel):
         self.layers = nn.ModuleList(
             [MistralDecoderLayer(config, layer_idx) for layer_idx in range(config.num_hidden_layers)]
         )
-        self._attn_implementation = config._attn_implementation
+        self._use_flash_attention_2 = config._attn_implementation == "flash_attention_2"
         self.norm = MistralRMSNorm(config.hidden_size, eps=config.rms_norm_eps)
 
         self.gradient_checkpointing = False
@@ -983,7 +899,7 @@ class MistralModel(MistralPreTrainedModel):
         if inputs_embeds is None:
             inputs_embeds = self.embed_tokens(input_ids)
 
-        if attention_mask is not None and self._attn_implementation == "flash_attention_2" and use_cache:
+        if attention_mask is not None and self._use_flash_attention_2 and use_cache:
             is_padding_right = attention_mask[:, -1].sum().item() != batch_size
             if is_padding_right:
                 raise ValueError(
@@ -992,18 +908,9 @@ class MistralModel(MistralPreTrainedModel):
                     " call `tokenizer.padding_side  = 'left'` before tokenizing the input. "
                 )
 
-        if self._attn_implementation == "flash_attention_2":
+        if self._use_flash_attention_2:
             # 2d mask is passed through the layers
             attention_mask = attention_mask if (attention_mask is not None and 0 in attention_mask) else None
-        elif self._attn_implementation == "sdpa" and not output_attentions:
-            # output_attentions=True can not be supported when using SDPA, and we fall back on
-            # the manual implementation that requires a 4D causal mask in all cases.
-            attention_mask = _prepare_4d_causal_attention_mask_for_sdpa(
-                attention_mask,
-                (batch_size, seq_length),
-                inputs_embeds,
-                past_key_values_length,
-            )
         else:
             # 4d mask is passed through the layers
             attention_mask = _prepare_4d_causal_attention_mask(
@@ -1071,18 +978,139 @@ class MistralModel(MistralPreTrainedModel):
             hidden_states=all_hidden_states,
             attentions=all_self_attns,
         )
+        
+# class MistralForCausalLM(MistralPreTrainedModel):
+#     _tied_weights_keys = ["lm_head.weight"]
 
+#     def __init__(self, config):
+#         super().__init__(config)
+#         self.model = MistralModel(config)
+#         self.vocab_size = config.vocab_size
+#         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
+
+#         # Initialize weights and apply final processing
+#         self.post_init()
+
+
+#     def get_input_embeddings(self):
+#         return self.model.embed_tokens
+
+#     def set_input_embeddings(self, value):
+#         self.model.embed_tokens = value
+
+#     def get_output_embeddings(self):
+#         return self.lm_head
+
+#     def set_output_embeddings(self, new_embeddings):
+#         self.lm_head = new_embeddings
+
+#     def set_decoder(self, decoder):
+#         self.model = decoder
+
+#     def get_decoder(self):
+#         return self.model
+
+#     @add_start_docstrings_to_model_forward(MISTRAL_INPUTS_DOCSTRING)
+#     @replace_return_docstrings(output_type=CausalLMOutputWithPast, config_class=_CONFIG_FOR_DOC)
+#     def forward(
+#         self,
+#         input_ids: torch.LongTensor = None,
+#         attention_mask: Optional[torch.Tensor] = None,
+#         position_ids: Optional[torch.LongTensor] = None,
+#         past_key_values: Optional[List[torch.FloatTensor]] = None,
+#         inputs_embeds: Optional[torch.FloatTensor] = None,
+#         labels: Optional[torch.LongTensor] = None,
+#         use_cache: Optional[bool] = None,
+#         output_attentions: Optional[bool] = None,
+#         output_hidden_states: Optional[bool] = None,
+#         return_dict: Optional[bool] = None,
+#     ) -> Union[Tuple, CausalLMOutputWithPast]:
+#         r"""
+#         Args:
+#             labels (`torch.LongTensor` of shape `(batch_size, sequence_length)`, *optional*):
+#                 Labels for computing the masked language modeling loss. Indices should either be in `[0, ...,
+#                 config.vocab_size]` or -100 (see `input_ids` docstring). Tokens with indices set to `-100` are ignored
+#                 (masked), the loss is only computed for the tokens with labels in `[0, ..., config.vocab_size]`.
+
+#         Returns:
+
+#         Example:
+
+#         ```python
+#         >>> from transformers import AutoTokenizer, MistralForCausalLM
+
+#         >>> model = MistralForCausalLM.from_pretrained(PATH_TO_CONVERTED_WEIGHTS)
+#         >>> tokenizer = AutoTokenizer.from_pretrained(PATH_TO_CONVERTED_TOKENIZER)
+
+#         >>> prompt = "Hey, are you conscious? Can you talk to me?"
+#         >>> inputs = tokenizer(prompt, return_tensors="pt")
+
+#         >>> # Generate
+#         >>> generate_ids = model.generate(inputs.input_ids, max_length=30)
+#         >>> tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+#         "Hey, are you conscious? Can you talk to me?\nI'm not conscious, but I can talk to you."
+#         ```"""
+
+#         output_attentions = output_attentions if output_attentions is not None else self.config.output_attentions
+#         output_hidden_states = (
+#             output_hidden_states if output_hidden_states is not None else self.config.output_hidden_states
+#         )
+#         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
+
+#         # decoder outputs consists of (dec_features, layer_state, dec_hidden, dec_attn)
+#         outputs = self.model(
+#             input_ids=input_ids,
+#             attention_mask=attention_mask,
+#             position_ids=position_ids,
+#             past_key_values=past_key_values,
+#             inputs_embeds=inputs_embeds,
+#             use_cache=use_cache,
+#             output_attentions=output_attentions,
+#             output_hidden_states=output_hidden_states,
+#             return_dict=return_dict
+#         )
+
+#         hidden_states = outputs[0]
+#         # Only compute necessary logits, and do not upcast them to float if we are not computing the loss
+#         logits = self.lm_head(hidden_states)
+
+#         loss = None
+#         if labels is not None:
+#             # Upcast to float if we need to compute the loss to avoid potential precision issues
+#             logits = logits.float()
+#             # Shift so that tokens < n predict n
+#             shift_logits = logits[..., :-1, :].contiguous()
+#             shift_labels = labels[..., 1:].contiguous()
+#             # Flatten the tokens
+#             shift_logits = shift_logits.view(-1, self.config.vocab_size)
+#             shift_labels = shift_labels.view(-1)
+#             # Ensure tensors are on the same device
+#             shift_labels = shift_labels.to(shift_logits.device)
+#             loss_fct = CrossEntropyLoss()
+#             loss = loss_fct(shift_logits, shift_labels)
+
+#         if not return_dict:
+#             output = (logits,) + outputs[1:]
+#             return (loss,) + output if loss is not None else output
+
+#         return CausalLMOutputWithPast(
+#             loss=loss,
+#             logits=logits,
+#             past_key_values=outputs.past_key_values,
+#             hidden_states=outputs.hidden_states,
+#             attentions=outputs.attentions,
+#         )
 
 class MistralForCausalLM(MistralPreTrainedModel):
     _tied_weights_keys = ["lm_head.weight"]
 
-    def __init__(self, config):
+    def __init__(self, config: MistralConfig):
         super().__init__(config)
         self.model = MistralModel(config)
         self.vocab_size = config.vocab_size
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
-
-        # Initialize weights and apply final processing
+        self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size, self.padding_idx)
+        
         self.post_init()
 
     def get_input_embeddings(self):
@@ -1117,6 +1145,13 @@ class MistralForCausalLM(MistralPreTrainedModel):
         output_attentions: Optional[bool] = None,
         output_hidden_states: Optional[bool] = None,
         return_dict: Optional[bool] = None,
+        txt_input_ids: torch.LongTensor = None, # 新增文本输入
+        txt_attention_mask: Optional[torch.Tensor] = None,  # 新增文本的注意力mask
+        txt_position_ids: Optional[torch.LongTensor] = None, # 新增文本的位置编码
+        txt_past_key_values: Optional[List[torch.FloatTensor]] = None, # 新增文本的过去的 key-values
+        txt_inputs_embeds: Optional[torch.FloatTensor] = None,  # 新增文本的嵌入
+        txt_labels: Optional[torch.LongTensor] = None, # 新增文本的标签
+        return_emb: Optional[bool] = None,  # 新增是否返回嵌入的标志(不计算loss)
     ) -> Union[Tuple, CausalLMOutputWithPast]:
         r"""
         Args:
@@ -1132,8 +1167,8 @@ class MistralForCausalLM(MistralPreTrainedModel):
         ```python
         >>> from transformers import AutoTokenizer, MistralForCausalLM
 
-        >>> model = MistralForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1")
-        >>> tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-v0.1")
+        >>> model = MistralForCausalLM.from_pretrained(PATH_TO_CONVERTED_WEIGHTS)
+        >>> tokenizer = AutoTokenizer.from_pretrained(PATH_TO_CONVERTED_TOKENIZER)
 
         >>> prompt = "Hey, are you conscious? Can you talk to me?"
         >>> inputs = tokenizer(prompt, return_tensors="pt")
@@ -1151,6 +1186,7 @@ class MistralForCausalLM(MistralPreTrainedModel):
         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
 
         # decoder outputs consists of (dec_features, layer_state, dec_hidden, dec_attn)
+  
         outputs = self.model(
             input_ids=input_ids,
             attention_mask=attention_mask,
@@ -1162,35 +1198,173 @@ class MistralForCausalLM(MistralPreTrainedModel):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict,
         )
+        
+        if return_emb:
+           return outputs
+       
+        # Step 1: 提取图像特殊标记 Imgcls 特征
+    
+        hidden_states = outputs.hidden_states[-self.feature_layer] if output_hidden_states else outputs[0]
+        attention_mask = attention_mask.bool()  # 确保是布尔类型
+    
+        imgcls_features = hidden_states[:, -self.Imgcls_count:, :]  # 提取 Imgcls 特征 (B, Imgcls_count, hidden_dim)
+        global_imgcls_features = self.img_mlp(imgcls_features)  # 通过 MLP 投影到最终空间 (B, feature_dim)
+        global_imgcls_features = global_imgcls_features.mean(dim=1)  # 全局特征
 
-        hidden_states = outputs[0]
-        logits = self.lm_head(hidden_states)
-        logits = logits.float()
+        # 提取局部图像特征
+        local_img_features = hidden_states[:, :-self.Imgcls_count, :]  # 忽略 Imgcls 的部分 (B, seq_len - Imgcls_count, hidden_dim)
+        local_img_features = self.img_mlp(local_img_features)
+        local_img_features = local_img_features.mean(dim=1)  # 平均池化局部特征
+        
+        
+        # Step 2: 提取文本特殊标记 Txtcls 特征
+        txt_output = self.model(
+            input_ids=txt_input_ids,
+            attention_mask=txt_attention_mask,
+            position_ids=txt_position_ids,
+            past_key_values=txt_past_key_values,
+            inputs_embeds=txt_inputs_embeds,
+            use_cache=use_cache,
+            output_attentions=output_attentions,
+            output_hidden_states=output_hidden_states,
+            return_dict=return_dict,
+        )
 
-        loss = None
-        if labels is not None:
-            # Shift so that tokens < n predict n
-            shift_logits = logits[..., :-1, :].contiguous()
-            shift_labels = labels[..., 1:].contiguous()
-            # Flatten the tokens
-            loss_fct = CrossEntropyLoss()
-            shift_logits = shift_logits.view(-1, self.config.vocab_size)
-            shift_labels = shift_labels.view(-1)
-            # Enable model parallelism
-            shift_labels = shift_labels.to(shift_logits.device)
-            loss = loss_fct(shift_logits, shift_labels)
+        txt_hidden_states = txt_output.hidden_states[-self.feature_layer] if output_hidden_states else txt_output[0]
+        txt_attention_mask = txt_attention_mask.bool()  # 确保是布尔类型
 
-        if not return_dict:
-            output = (logits,) + outputs[1:]
-            return (loss,) + output if loss is not None else output
+        txtcls_features = txt_hidden_states[:, -self.Txtcls_count:, :]  # 提取 Txtcls 特征 (B, Txtcls_count, hidden_dim)
+        global_txtcls_features = self.txt_mlp(txtcls_features)
+        global_txtcls_features = global_txtcls_features.mean(dim=1)  # 全局文本特征
+        
 
+        # 提取局部文本特征
+        local_txt_features = txt_hidden_states[:, :-self.Txtcls_count, :]  # 忽略 Txtcls 的部分 (B, seq_len - Txtcls_count, hidden_dim)
+        local_txt_features = self.txt_mlp(local_txt_features)
+        local_txt_features = local_txt_features.mean(dim=1)
+        
+
+        # Step 3: 归一化特征向量到单位球面
+        norm_global_imgcls_features = F.normalize(global_imgcls_features, p=2, dim=-1)  # (B, feature_dim)
+        norm_local_img_features = F.normalize(local_img_features, p=2, dim=-1)
+
+        norm_global_txtcls_features = F.normalize(global_txtcls_features, p=2, dim=-1)  # (B, feature_dim)
+        norm_local_txt_features = F.normalize(local_txt_features, p=2, dim=-1)
+
+        if self.use_cat:
+            # Step 4: 计算全局图像和局部文本特征的 Loss
+            temperature = self.temperature
+            global_img_to_local_txt_similarity = torch.matmul(norm_global_imgcls_features, norm_local_txt_features.T) / temperature  # (B, B)
+
+            # 生成标签，正样本是对角线上的元素
+            labels = torch.arange(global_img_to_local_txt_similarity.size(0), device=global_img_to_local_txt_similarity.device)
+
+            # 计算 InfoNCE 损失
+            global_img_to_local_txt_loss = F.cross_entropy(global_img_to_local_txt_similarity, labels)
+            local_txt_to_global_img_loss = F.cross_entropy(global_img_to_local_txt_similarity.T, labels)
+
+            # 取两个方向损失的平均值
+            img_to_local_txt_loss = (global_img_to_local_txt_loss + local_txt_to_global_img_loss) / 2
+
+            # Step 5: 计算局部图像和全局文本特征的 Loss
+            local_img_to_global_txt_similarity = torch.matmul(norm_local_img_features, norm_global_txtcls_features.T) / temperature  # (B, B)
+
+            # 计算 InfoNCE 损失
+            local_img_to_global_txt_loss = F.cross_entropy(local_img_to_global_txt_similarity, labels)
+            global_txt_to_local_img_loss = F.cross_entropy(local_img_to_global_txt_similarity.T, labels)
+
+            # 取两个方向损失的平均值
+            local_img_to_txt_loss = (local_img_to_global_txt_loss + global_txt_to_local_img_loss) / 2
+
+            total_loss = self.loss_threshold * img_to_local_txt_loss + (1 - self.loss_threshold) * local_img_to_txt_loss
+        else:
+            # Step 4: 计算全局特征损失
+            temperature = self.temperature
+
+            # 计算全局特征之间的相似度矩阵
+            similarity_matrix_global = torch.matmul(norm_global_imgcls_features, norm_global_txtcls_features.T) / temperature  # (B, B)
+
+            # 生成标签：同索引位置上的特征是正样本
+            labels = torch.arange(similarity_matrix_global.size(0), device=similarity_matrix_global.device)
+
+            # 使用全局特征计算 InfoNCE 损失（两个方向：img->txt 和 txt->img）
+            img_to_txt_loss_global = F.cross_entropy(similarity_matrix_global, labels)
+            txt_to_img_loss_global = F.cross_entropy(similarity_matrix_global.T, labels)
+
+            # 全局损失为两个方向的平均
+            global_loss = (img_to_txt_loss_global + txt_to_img_loss_global) / 2
+
+            # 使用局部特征计算损失（如果启用）
+            if self.use_local_loss:
+                # 计算局部特征之间的相似度矩阵
+                similarity_matrix_local = torch.matmul(norm_local_img_features, norm_local_txt_features.T) / temperature  # (B, B)
+
+                # 使用局部特征计算 InfoNCE 损失（两个方向：img->txt 和 txt->img）
+                img_to_txt_loss_local = F.cross_entropy(similarity_matrix_local, labels)
+                txt_to_img_loss_local = F.cross_entropy(similarity_matrix_local.T, labels)
+
+                # 局部损失为两个方向的平均
+                local_loss = (img_to_txt_loss_local + txt_to_img_loss_local) / 2
+
+                # 权重组合全局和局部损失
+                total_loss = self.loss_threshold * global_loss + (1 - self.loss_threshold) * local_loss
+            else:
+                # 仅使用全局特征损失
+                total_loss = global_loss
+        
+        
         return CausalLMOutputWithPast(
-            loss=loss,
-            logits=logits,
+            loss=total_loss,
+            # logits=logits,
             past_key_values=outputs.past_key_values,
             hidden_states=outputs.hidden_states,
             attentions=outputs.attentions,
         )
+      
+        # if self.use_ca_loss:
+            #     # 使用交叉注意力机制，计算info nce loss
+            #     cross_attention_output = self.cross_attention(
+            #         query=ncls_features,  # 图像特征作为查询
+            #         key=txt_ncls_features,  # 文本特征作为键
+            #         value=txt_ncls_features  # 文本特征作为值
+            #     )
+            #     total_loss = global_loss
+            # else:
+            #     total_loss = global_loss
+        # # print(outputs.last_hidden_state)
+        # # 定义mlp 映射 分类特征
+        # hidden_states = outputs[0]
+        # logits = self.lm_head(hidden_states)
+        # logits = logits.float()
+
+        # loss = None
+        # if labels is not None:
+        #     # Shift so that tokens < n predict n
+        #     shift_logits = logits[..., :-1, :].contiguous()
+        #     shift_labels = labels[..., 1:].contiguous()
+        #     # Flatten the tokens
+        #     loss_fct = CrossEntropyLoss()
+        #     shift_logits = shift_logits.view(-1, self.config.vocab_size)
+        #     shift_labels = shift_labels.view(-1)
+        #     # Enable model parallelism
+        #     shift_labels = shift_labels.to(shift_logits.device)
+        #     loss = loss_fct(shift_logits, shift_labels)
+
+        # if not return_dict:
+        #     output = (logits,) + outputs[1:]
+        #     return (loss,) + output if loss is not None else output
+
+        # return CausalLMOutputWithPast(
+        #     loss=loss,
+        #     logits=logits,
+        #     past_key_values=outputs.past_key_values,
+        #     hidden_states=outputs.hidden_states,
+        #     attentions=outputs.attentions,
+        #     # outputs=outputs #新增内容
+        # )
+
+        
+        
 
     def prepare_inputs_for_generation(
         self, input_ids, past_key_values=None, attention_mask=None, inputs_embeds=None, **kwargs
@@ -1207,7 +1381,7 @@ class MistralForCausalLM(MistralPreTrainedModel):
 
             # Keep only the unprocessed tokens:
             # 1 - If the length of the attention_mask exceeds the length of input_ids, then we are in a setting where
-            # some of the inputs are exclusively passed as part of the cache (e.g. when passing input_embeds as
+            # some of the inputs are exclusivelly passed as part of the cache (e.g. when passing input_embeds as
             # input)
             if attention_mask is not None and attention_mask.shape[1] > input_ids.shape[1]:
                 input_ids = input_ids[:, -(attention_mask.shape[1] - past_length) :]
@@ -1338,10 +1512,9 @@ class MistralForSequenceClassification(MistralPreTrainedModel):
             sequence_lengths = -1
         else:
             if input_ids is not None:
-                # if no pad token found, use modulo instead of reverse indexing for ONNX compatibility
-                sequence_lengths = torch.eq(input_ids, self.config.pad_token_id).int().argmax(-1) - 1
-                sequence_lengths = sequence_lengths % input_ids.shape[-1]
-                sequence_lengths = sequence_lengths.to(logits.device)
+                sequence_lengths = (torch.eq(input_ids, self.config.pad_token_id).int().argmax(-1) - 1).to(
+                    logits.device
+                )
             else:
                 sequence_lengths = -1
 

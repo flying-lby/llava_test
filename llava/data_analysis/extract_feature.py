@@ -15,12 +15,12 @@ from tqdm import tqdm
 import random
 import click
 import os
-from llava.model.builder import load_pretrained_model
+from llava.model.clip_llava_builder import load_pretrained_model
 from llava.mm_utils import tokenizer_image_token, process_images
 import math
 from llava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
 from llava.conversation import conv_templates, SeparatorStyle
-from llava.model.builder import load_pretrained_model
+from llava.model.clip_llava_builder import load_pretrained_model
 from llava.utils import disable_torch_init
 from llava.mm_utils import tokenizer_image_token, get_model_name_from_path, KeywordsStoppingCriteria, process_images
 from matplotlib import pyplot as plt

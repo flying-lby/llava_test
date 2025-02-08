@@ -20,11 +20,20 @@ from glob import glob
 import torch
 import torch.nn as nn
 
-from .multimodal_encoder.builder import build_vision_tower
-from .multimodal_projector.builder import build_vision_projector
+from llava.model.multimodal_encoder.builder import build_vision_tower
+from llava.model.multimodal_projector.builder import build_vision_projector
 
 from llava.constants import IGNORE_INDEX, IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_PATCH_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
 
+
+# import debugpy
+# try:
+#     # 5678 is the default attach port in the VS Code debug configurations. Unless a host and port are specified, host defaults to 127.0.0.1
+#     debugpy.listen(("localhost", 9501))
+#     print("Waiting for debugger attach")
+#     debugpy.wait_for_client()
+# except Exception as e:
+#     pass
 
 class LlavaMetaModel:
 
@@ -61,7 +70,7 @@ class LlavaMetaModel:
                 vision_tower = self.vision_tower[0]
             else:
                 vision_tower = self.vision_tower
-            vision_tower.load_model()
+            vision_tower.load_model(model_args)
 
         self.config.use_mm_proj = True
         self.config.mm_projector_type = getattr(model_args, 'mm_projector_type', 'linear')
@@ -70,10 +79,10 @@ class LlavaMetaModel:
         self.config.mm_vision_select_feature = mm_vision_select_feature
 
         # add additional configs for segtok
-        self.config.feature_outs = model_args.feature_outs
-        self.config.img_size = model_args.img_size
-        self.config.vision_backbone = model_args.vision_backbone
-        self.config.segtok_posembed = model_args.segtok_posembed
+        # self.config.feature_outs = model_args.feature_outs
+        # self.config.img_size = model_args.img_size
+        # self.config.vision_backbone = model_args.vision_backbone
+        # self.config.segtok_posembed = model_args.segtok_posembed
 
         if getattr(self, 'mm_projector', None) is None:
             self.mm_projector = build_vision_projector(self.config)
@@ -114,15 +123,131 @@ class LlavaMetaForCausalLM(ABC):
 
     def get_vision_tower(self):
         return self.get_model().get_vision_tower()
-
+    
     def encode_images(self, images):
-        image_features = self.get_model().get_vision_tower()(images)
+        # 确保输入的 images 在正确的设备上
+        images = images.to(self.device)
+        
+        # 获取视觉特征
+        image_features = self.get_model().get_vision_tower()(images)  # torch.Size([4, 576, 1024])
+        
+        # 将 image_features 的 dtype 和设备调整为 mm_projector 的权重一致
+        mm_projector_weight = self.get_model().mm_projector[0].weight
+        image_features = image_features.to(dtype=mm_projector_weight.dtype, device=mm_projector_weight.device)
+        
+        # 应用 mm_projector
         image_features = self.get_model().mm_projector(image_features)
+        
         return image_features
 
+
+    # def encode_images(self, images):
+    #     image_features = self.get_model().get_vision_tower()(images) #torch.Size([4, 576, 1024])
+    #     # 将 image_features 的 dtype 转换为与 mm_projector 权重的 dtype 一致
+    #     image_features = image_features.to(self.get_model().mm_projector[0].weight.dtype)
+        
+    #     # 应用 mm_projector
+    #     image_features = self.get_model().mm_projector(image_features)
+        
+    #     return image_features
+    #     # image_features = self.get_model().get_vision_tower()(images)
+    #     # image_features = self.get_model().mm_projector(image_features)
+    #     # return image_features
+
+    def prepare_inputs_txt_labels_for_multimodal(
+        self, input_ids, position_ids, attention_mask, past_key_values
+    ):  
+        
+        # Let's just add dummy tensors if they do not exist
+       
+        _position_ids = position_ids
+        _attention_mask = attention_mask
+
+        if attention_mask is None:
+            attention_mask = torch.ones_like(input_ids, dtype=torch.bool)
+        else:
+            attention_mask = attention_mask.bool()
+
+        if position_ids is None:
+            position_ids = torch.arange(0, input_ids.shape[1], dtype=torch.long, device=input_ids.device).unsqueeze(0)
+            position_ids = position_ids.expand(input_ids.shape[0], -1)
+
+        # 替换 `IMAGE_TOKEN_INDEX` 为 tokenizer 的 `pad_token_id`
+        input_ids = torch.where(
+            input_ids == IMAGE_TOKEN_INDEX,    
+            torch.tensor(0, device=input_ids.device),
+            input_ids,
+        )
+        #  # 筛选有效的 input_ids
+        # input_ids = input_ids[attention_mask.bool()] 
+        # 进行嵌入
+        new_input_embeds = []
+        for batch_idx, cur_input_ids in enumerate(input_ids):
+            # 直接进行文本嵌入
+            cur_input_embeds = self.get_model().embed_tokens(cur_input_ids)
+
+            # 将嵌入和标签添加到结果中
+            new_input_embeds.append(cur_input_embeds)
+
+        # 获取嵌入特征
+        new_input_embeds = torch.stack(new_input_embeds)
+    
+        # 如果有最大长度限制，则截断序列
+        tokenizer_model_max_length = getattr(self.config, "tokenizer_model_max_length", None)
+        if tokenizer_model_max_length is not None:
+            new_input_embeds = [x[:tokenizer_model_max_length] for x in new_input_embeds]
+        
+        new_input_embeds_padded = []
+
+        max_len = max(x.shape[0] for x in new_input_embeds)
+        batch_size = len(new_input_embeds)
+
+        attention_mask = torch.zeros((batch_size, max_len), dtype=attention_mask.dtype, device=attention_mask.device)
+        position_ids = torch.zeros((batch_size, max_len), dtype=position_ids.dtype, device=position_ids.device)
+
+        for i, cur_new_embed in enumerate(new_input_embeds):
+            cur_len = cur_new_embed.shape[0]
+            if getattr(self.config, 'tokenizer_padding_side', 'right') == "left":
+                # 左对齐填充
+                new_input_embeds_padded.append(torch.cat((
+                    torch.zeros((max_len - cur_len, cur_new_embed.shape[1]), dtype=cur_new_embed.dtype, device=cur_new_embed.device),
+                    cur_new_embed
+                ), dim=0))
+                if cur_len > 0:
+                    # 调整 attention_mask 和 position_ids
+                    attention_mask[i, -cur_len:] = True
+                    position_ids[i, -cur_len:] = torch.arange(0, cur_len, dtype=position_ids.dtype, device=position_ids.device)
+            else:
+                # 右对齐填充
+                new_input_embeds_padded.append(torch.cat((
+                    cur_new_embed,
+                    torch.zeros((max_len - cur_len, cur_new_embed.shape[1]), dtype=cur_new_embed.dtype, device=cur_new_embed.device)
+                ), dim=0))
+                if cur_len > 0:
+                    # 调整 attention_mask 和 position_ids
+                    attention_mask[i, :cur_len] = True
+                    position_ids[i, :cur_len] = torch.arange(0, cur_len, dtype=position_ids.dtype, device=position_ids.device)
+
+        # 堆叠填充后的张量
+        new_input_embeds = torch.stack(new_input_embeds_padded, dim=0)
+
+        # 如果传入的是 None，则保持为 None
+        if _attention_mask is None:
+            attention_mask = None
+        else:
+            attention_mask = attention_mask.to(dtype=_attention_mask.dtype)
+
+        if _position_ids is None:
+            position_ids = None
+
+        # 返回处理后的值
+        return None, position_ids, attention_mask, past_key_values, new_input_embeds
+    
+
+    
     def prepare_inputs_labels_for_multimodal(
         self, input_ids, position_ids, attention_mask, past_key_values, labels, images, image_sizes=None
-    ):
+    ):  
         vision_tower = self.get_vision_tower()
         if vision_tower is None or images is None or input_ids.shape[1] == 1:
             if past_key_values is not None and vision_tower is not None and images is not None and input_ids.shape[1] == 1:
@@ -142,16 +267,11 @@ class LlavaMetaForCausalLM(ABC):
             image_features = torch.split(image_features, split_sizes, dim=0)
             image_features = [x.flatten(0, 1).to(self.device) for x in image_features]
         else:
-            image_features = self.encode_images(images).to(self.device)
-
+            image_features = self.encode_images(images).to(self.device)  #torch.Size([1024, 3, 14, 14])
         # TODO: image start / end is not implemented here to support pretraining.
         if getattr(self.config, 'tune_mm_mlp_adapter', False) and getattr(self.config, 'mm_use_im_start_end', False):
             raise NotImplementedError
-
-        # Let's just add dummy tensors if they do not exist,
-        # it is a headache to deal with None all the time.
-        # But it is not ideal, and if you have a better idea,
-        # please open an issue / submit a PR, thanks.
+        # Let's just add dummy tensors if they do not exist
         _labels = labels 
         _position_ids = position_ids
         _attention_mask = attention_mask
@@ -166,8 +286,21 @@ class LlavaMetaForCausalLM(ABC):
         if labels is None:
             labels = torch.full_like(input_ids, IGNORE_INDEX)
         
-        input_ids = [cur_input_ids[cur_attention_mask] for cur_input_ids, cur_attention_mask in zip(input_ids, attention_mask)]
-        labels = [cur_labels[cur_attention_mask] for cur_labels, cur_attention_mask in zip(labels, attention_mask)]
+        # # Append category_ids and category_attention_mask to input_ids and attention_mask
+        # category_ids_flattened = category_ids.view(category_ids.size(0), -1)  # 将其展平
+        # # 现在可以沿着 dim=1 进行拼接
+        # input_ids = torch.cat([input_ids, category_ids_flattened], dim=1)
+        # category_attention_mask = torch.ones((input_ids.size(0), category_ids_flattened.size(1)), dtype=attention_mask.dtype, device=attention_mask.device)
+
+        # # 将 attention_mask 和 category_attention_mask 拼接
+        # attention_mask = torch.cat([attention_mask, category_attention_mask], dim=1)
+
+        # # Update position_ids accordingly
+        # position_ids = torch.cat([position_ids, torch.arange(position_ids.size(0), position_ids.size(0) + category_ids.size(2), device=position_ids.device)], dim=0)
+        # labels = [torch.cat([cur_labels, cur_category_ids], dim=0) for cur_labels, cur_category_ids in zip(labels, category_ids_flattened)]
+
+        # input_ids = [cur_input_ids[cur_attention_mask] for cur_input_ids, cur_attention_mask in zip(input_ids, attention_mask)]
+        # labels = [cur_labels[cur_attention_mask] for cur_labels, cur_attention_mask in zip(labels, attention_mask)]
 
         new_input_embeds = []
         new_labels = []
@@ -262,7 +395,11 @@ class LlavaMetaForCausalLM(ABC):
 
         if _position_ids is None:
             position_ids = None
+        
         return None, position_ids, attention_mask, past_key_values, new_input_embeds, new_labels
+
+
+        # return None, position_ids, attention_mask, past_key_values, new_input_embeds, new_labels, category_ids, category_attention_mask
 
     def initialize_vision_tokenizer(self, model_args, tokenizer):
         if model_args.mm_use_im_patch_token:

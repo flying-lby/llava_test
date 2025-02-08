@@ -23,7 +23,7 @@ from llava.mm_utils import (
     process_images,
     tokenizer_image_token,
 )
-from llava.model.builder import load_pretrained_model
+from llava.model.clip_llava_builder import load_pretrained_model
 from llava.utils import disable_torch_init
 
 

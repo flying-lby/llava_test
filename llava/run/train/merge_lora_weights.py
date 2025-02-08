@@ -5,7 +5,7 @@ FilePath: /llava_med/LLaVA-Med/llava/run/train/merge_lora_weights.py
 Description: 
 '''
 import argparse
-from llava.model.builder import load_pretrained_model
+from llava.model.clip_llava_builder import load_pretrained_model
 from llava.mm_utils import get_model_name_from_path
 import torch
 from dataclasses import dataclass

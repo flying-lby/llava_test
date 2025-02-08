@@ -1,33 +1,61 @@
-#    Copyright 2023 Haotian Liu
-#
-#    Licensed under the Apache License, Version 2.0 (the "License");
-#    you may not use this file except in compliance with the License.
-#    You may obtain a copy of the License at
-#
-#        http://www.apache.org/licenses/LICENSE-2.0
-#
-#    Unless required by applicable law or agreed to in writing, software
-#    distributed under the License is distributed on an "AS IS" BASIS,
-#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#    See the License for the specific language governing permissions and
-#    limitations under the License.
-
-
+'''
+Author: fly
+Date: 2024-08-08 13:56:14
+FilePath: /llava_med/LLaVA-Med/llava/model/builder.py
+Description: 
+'''
 import os
-import warnings
 import shutil
-
+import warnings
 from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig, BitsAndBytesConfig
 import torch
+from llava.model import ClipLlavaMistralForCausalLM
 from llava.model import *
 from llava.constants import DEFAULT_IMAGE_PATCH_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
 
+from dataclasses import dataclass
 
-def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, load_4bit=False, device_map="auto", device="cuda", use_flash_attn=False, **kwargs):
-    kwargs = {"device_map": device_map, **kwargs}
+# 定义 SparseArguments 数据类
+@dataclass
+class SparseArguments:
+    Imgcls_count: int = 4
+    Txtcls_count: int = 4
+    hidden_dim: int = 1024
+    output_dim: int = 512
+    img_mlp_type: int = 1
+    txt_mlp_type: int = 1
+    loss_threshold: float = 0.5
+    temperature: float = 0.05
+    use_local_loss: bool = False
+    feature_layer: int = 1
+    special_tokens_mlp_type: int = 1
+    use_ca_loss: bool = True
+    inference_type: int = 2
+    use_cat: bool = True
+    use_prompt: bool = True
+   
 
+# 全局定义 add_sparse 参数
+default_sparse_args = SparseArguments()
+
+# torch.cuda.set_device(1)
+def load_pretrained_model(model_path, model_base, model_name, add_sparse=None, load_8bit=False, load_4bit=False, device_map="auto", device="cuda:0", use_flash_attn=False):
+    
+    # 如果没有传递 add_sparse，则使用全局定义的默认值
+    if not add_sparse:
+        add_sparse = default_sparse_args
+
+        
+    kwargs = {}
+    
+    # 如果设备不是 CUDA，设置设备映射
     if device != "cuda":
         kwargs['device_map'] = {"": device}
+    else:
+        kwargs['device_map'] = device_map
+
+    # 设置低内存使用选项
+    # kwargs['low_cpu_mem_usage'] = True
 
     if load_8bit:
         kwargs['load_in_8bit'] = True
@@ -50,21 +78,58 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
         if 'lora' in model_name.lower() and model_base is None:
             warnings.warn('There is `lora` in model name but no `model_base` is provided. If you are loading a LoRA model, please provide the `model_base` argument. Detailed instruction: https://github.com/haotian-liu/LLaVA#launch-a-model-worker-lora-weights-unmerged.')
         if 'lora' in model_name.lower() and model_base is not None:
-            from llava.model.language_model.llava_mistral import LlavaConfig
-            lora_cfg_pretrained = LlavaConfig.from_pretrained(model_path)
+            
+            from llava.model.language_model.clip_llava_mistral import ClipLlavaMistralConfig
+            lora_cfg_pretrained = ClipLlavaMistralConfig.from_pretrained(model_path)
             tokenizer = AutoTokenizer.from_pretrained(model_base, use_fast=False)
-            print('Loading LLaVA from base model...')
-            model = LlavaMistralForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
-            token_num, tokem_dim = model.lm_head.out_features, model.lm_head.in_features
-            if model.lm_head.weight.shape[0] != token_num:
-                model.lm_head.weight = torch.nn.Parameter(torch.empty(token_num, tokem_dim, device=model.device, dtype=model.dtype))
-                model.model.embed_tokens.weight = torch.nn.Parameter(torch.empty(token_num, tokem_dim, device=model.device, dtype=model.dtype))
+            
+            #-----------------------调参-------------------------------------------------#
+        
+            lora_cfg_pretrained.sparse_config = vars(add_sparse)
 
+            #------------------------------------------------------------------------#
+            
+          
+            # 添加 Imgcls_token 标记到词汇表中
+            Imgcls_tokens = [f"<Imgcls{i}>" for i in range(add_sparse.Imgcls_count)]
+            Txtcls_tokens = [f"<Txtcls{i}>" for i in range(add_sparse.Txtcls_count)]
+
+            # 逐个检查 token 是否已存在
+            new_tokens = []
+            for token in Imgcls_tokens + Txtcls_tokens:
+                if token not in tokenizer.get_vocab():
+                    print(f"Adding '{token}' to tokenizer...")
+                    new_tokens.append(token)
+                else:
+                    print(f"'{token}' already exists in tokenizer.")
+
+            # 仅在存在新 token 时添加
+            if new_tokens:
+                tokenizer.add_tokens(new_tokens)
+                print(f"Added {len(new_tokens)} new tokens.")
+            else:
+                print("No new tokens to add, all tokens already exist in tokenizer.")
+            
+            # 检查分词器词汇表大小
+            print(f"Tokenizer vocab size after adding special tokens: {len(tokenizer)}")
+
+            # 加载 Llava 模型
+            print("Loading LLaVA model with customized configurations...")
+            model = ClipLlavaMistralForCausalLM.from_pretrained(
+                model_base,
+                low_cpu_mem_usage=True,
+                config=lora_cfg_pretrained,
+                **kwargs
+            )
+            
+            # 调整词汇表大小，并确保只新增标记的权重被初始化
+            model.resize_token_embeddings(len(tokenizer))
+           
+            # 加载训练后的权重
             print('Loading additional LLaVA weights...')
             if os.path.exists(os.path.join(model_path, 'non_lora_trainables.bin')):
                 non_lora_trainables = torch.load(os.path.join(model_path, 'non_lora_trainables.bin'), map_location='cpu')
             else:
-                # this is probably from HF Hub
                 from huggingface_hub import hf_hub_download
                 def load_from_hf(repo_id, filename, subfolder=None):
                     cache_file = hf_hub_download(
@@ -73,16 +138,19 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                         subfolder=subfolder)
                     return torch.load(cache_file, map_location='cpu')
                 non_lora_trainables = load_from_hf(model_path, 'non_lora_trainables.bin')
+
+            # 加载权重
             non_lora_trainables = {(k[11:] if k.startswith('base_model.') else k): v for k, v in non_lora_trainables.items()}
             if any(k.startswith('model.model.') for k in non_lora_trainables):
                 non_lora_trainables = {(k[6:] if k.startswith('model.') else k): v for k, v in non_lora_trainables.items()}
             model.load_state_dict(non_lora_trainables, strict=False)
-
+            
             from peft import PeftModel
             print('Loading LoRA weights...')
             model = PeftModel.from_pretrained(model, model_path)
             print('Merging LoRA weights...')
             model = model.merge_and_unload()
+                        
             print('Model is loaded...')
         elif model_base is not None:
             # this may be mm projector only
@@ -96,20 +164,62 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
             else:
                 tokenizer = AutoTokenizer.from_pretrained(model_base, use_fast=False)
                 cfg_pretrained = AutoConfig.from_pretrained(model_path)
-                model = LlavaMistralForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
+                model = ClipLlavaMistralForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
 
             mm_projector_weights = torch.load(os.path.join(model_path, 'mm_projector.bin'), map_location='cpu')
             mm_projector_weights = {k: v.to(torch.float16) for k, v in mm_projector_weights.items()}
             model.load_state_dict(mm_projector_weights, strict=False)
         else:
-            if 'mistral' in model_name.lower():
+            if 'mpt' in model_name.lower():
+                tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
+                # model = LlavaMptForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
+            elif 'mistral' in model_name.lower():
                 tokenizer = AutoTokenizer.from_pretrained(model_path)
-                model = LlavaMistralForCausalLM.from_pretrained(
+                # 生成 Imgcls 和 Txtcls token
+                Imgcls_tokens = [f"<Imgcls{i}>" for i in range(add_sparse.Imgcls_count)]
+                Txtcls_tokens = [f"<Txtcls{i}>" for i in range(add_sparse.Txtcls_count)]
+
+                # 逐个检查 token 是否已存在
+                new_tokens = []
+                for token in Imgcls_tokens + Txtcls_tokens:
+                    if token not in tokenizer.get_vocab():
+                        print(f"Adding '{token}' to tokenizer...")
+                        new_tokens.append(token)
+                    else:
+                        print(f"'{token}' already exists in tokenizer.")
+
+                # 仅在存在新 token 时添加
+                if new_tokens:
+                    tokenizer.add_tokens(new_tokens)
+                    print(f"Added {len(new_tokens)} new tokens.")
+                else:
+                    print("No new tokens to add, all tokens already exist in tokenizer.")
+       
+                #-----------------------调参-------------------------------------------------#
+             
+              
+                from llava.model.language_model.clip_llava_mistral import ClipLlavaMistralConfig
+                config = ClipLlavaMistralConfig.from_pretrained(model_path)
+                if add_sparse:
+                    config.sparse_config = vars(add_sparse)
+               
+                #------------------------------------------------------------------------#
+                
+                model = ClipLlavaMistralForCausalLM.from_pretrained(
                     model_path,
+                    config =config,
                     low_cpu_mem_usage=True,
                     **kwargs
                 )
-    
+           
+              
+            else:
+                tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
+                # model = LlavaLlamaForCausalLM.from_pretrained(
+                #     model_path,
+                #     low_cpu_mem_usage=True,
+                #     **kwargs
+                # )
     else:
         # Load language model
         if model_base is not None:
@@ -146,6 +256,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
         vision_tower = model.get_vision_tower()
         if not vision_tower.is_loaded:
             vision_tower.load_model()
+            # vision_tower.load_model(device_map=device_map)
         if device_map != 'auto':
             vision_tower.to(device=device_map, dtype=torch.float16)
         image_processor = vision_tower.image_processor
@@ -156,3 +267,8 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
         context_len = 2048
 
     return tokenizer, model, image_processor, context_len
+
+
+
+
+
