@@ -180,6 +180,43 @@ class txt_mlp(nn.Module):
             return x
         return self.out_mlp(x) 
 
+class knowledge_mlp(nn.Module):
+    def __init__(self, input_dim, hidden_dim, output_dim, knowledge_mlp_type):
+        super().__init__()
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
+        self.output_dim = output_dim
+        self.knowledge_mlp_type = knowledge_mlp_type
+        
+        if(self.knowledge_mlp_type == 1):
+            self.out_mlp = nn.Sequential(
+                nn.LayerNorm(self.input_dim),
+                nn.Linear(self.input_dim, self.hidden_dim),
+                nn.GELU(),
+                nn.Linear(self.hidden_dim, self.output_dim)
+            )
+        elif(self.knowledge_mlp_type == 2):
+            self.out_mlp = nn.Sequential(
+                nn.LayerNorm(self.input_dim),
+                nn.Linear(self.input_dim, self.output_dim),
+            )
+        elif(self.knowledge_mlp_type == 3):
+            self.out_mlp = nn.Sequential(
+                nn.LayerNorm(self.input_dim),
+                nn.Dropout(0.3),
+                nn.Linear(self.input_dim, self.output_dim),
+            )
+        else:
+            # When mlp_type is 0, set self.out_mlp to None
+            self.out_mlp = None
+      
+
+    def forward(self, x):
+        if self.out_mlp is None:
+            # If mlp_type is 0, return x directly
+            return x
+        return self.out_mlp(x) 
+
 
 class CrossAttentionModule(nn.Module):
     def __init__(self, hidden_size, num_heads=32, dropout=0.1):
@@ -224,6 +261,7 @@ class ClipLlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             self.output_dim = config.sparse_config["output_dim"]
             self.img_mlp_type = config.sparse_config["img_mlp_type"]
             self.txt_mlp_type = config.sparse_config["txt_mlp_type"]
+            self.knowledge_mlp_type = config.sparse_config["knowledge_mlp_type"]
             self.loss_threshold = config.sparse_config["loss_threshold"]
             self.temperature = config.sparse_config["temperature"]
             self.use_local_loss = config.sparse_config["use_local_loss"]
@@ -255,6 +293,7 @@ class ClipLlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         # )
         self.img_mlp = img_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, img_mlp_type = self.img_mlp_type)
         self.txt_mlp = txt_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, txt_mlp_type = self.txt_mlp_type)
+        self.knowledge_mlp = knowledge_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, knowledge_mlp_type = self.knowledge_mlp_type)
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
         
         self.cross_attention = None
@@ -266,6 +305,7 @@ class ClipLlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         
         self.img_mlp = img_mlp(input_dim = self.config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, img_mlp_type = self.img_mlp_type)
         self.txt_mlp = txt_mlp(input_dim = self.config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, txt_mlp_type = self.txt_mlp_type)
+        self.knowledge_mlp = knowledge_mlp(input_dim = self.config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, knowledge_mlp_type = self.knowledge_mlp_type)
         self.cross_attention_module = CrossAttentionModule(hidden_size = self.config.hidden_size)
         
         if self.special_tokens_mlp_type == 1:
@@ -287,16 +327,17 @@ class ClipLlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         self.add_module("img_mlp", self.img_mlp)
         self.add_module("txt_mlp", self.txt_mlp)
         self.add_module("special_token_mlp", self.special_token_mlp)
+        self.add_module("knowledge_mlp", self.knowledge_mlp)
         self.add_module("cross_attention_module", self.cross_attention_module)
         
-        for param in self.img_mlp.parameters():
-            param.requires_grad = True
-        for param in self.txt_mlp.parameters():
-            param.requires_grad = True
-        for param in self.special_token_mlp.parameters():
-            param.requires_grad = True
-        for param in self.cross_attention_module.parameters():
-            param.requires_grad = True
+        # for param in self.img_mlp.parameters():
+        #     param.requires_grad = True
+        # for param in self.txt_mlp.parameters():
+        #     param.requires_grad = True
+        # for param in self.special_token_mlp.parameters():
+        #     param.requires_grad = True
+        # for param in self.cross_attention_module.parameters():
+        #     param.requires_grad = True
         
     def update_tensor(self, batch_size, tensor, ncls_tensor):
     # 直接在序列末尾追加 ncls 标记
@@ -328,6 +369,9 @@ class ClipLlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         txt_position_ids: Optional[torch.LongTensor] = None, # 新增文本的位置编码
         txt_past_key_values: Optional[List[torch.FloatTensor]] = None, # 新增文本的过去的 key-values
         txt_inputs_embeds: Optional[torch.FloatTensor] = None,  # 新增文本的嵌入
+        disease_desc_ids: Optional[torch.LongTensor] = None,  # 新增疾病描述的输入
+        disease_desc_attention_mask: Optional[torch.Tensor] = None,  # 新增疾病描述的注意力mask
+        disease_inputs_embeds: Optional[torch.FloatTensor] = None,  # 新增疾病描述的嵌入
         return_emb: Optional[bool] = False,  # 新增是否返回嵌入的标志(不计算loss)
         return_dict: Optional[bool] = None
     ) -> Union[Tuple, CausalLMOutputWithPast]:
@@ -361,6 +405,7 @@ class ClipLlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         #     category_ids = self.update_tensor(batch_size, category_ids.squeeze(1), txtcls_token_ids)
         #     category_attention_mask = self.update_tensor(batch_size, category_attention_mask.squeeze(1), txtcls_attention_mask)
 
+    
         # 推理时处理类别
         if return_emb:
             txt_input_ids = input_ids.clone()
@@ -384,6 +429,9 @@ class ClipLlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
                 txt_input_ids, None, txt_attention_mask, txt_past_key_values
             )
 
+        if disease_desc_ids is not None:
+            disease_inputs_embeds = self.get_model().embed_tokens(disease_desc_ids)
+        
         # 5. 获取模型的文本输出
         outputs = super().forward(
             input_ids=input_ids,
@@ -401,6 +449,7 @@ class ClipLlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             txt_attention_mask=txt_attention_mask,
             txt_past_key_values=txt_past_key_values,
             txt_inputs_embeds=txt_inputs_embeds,
+            disease_inputs_embeds=disease_inputs_embeds,
             return_emb=return_emb
         )
 

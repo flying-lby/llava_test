@@ -126,6 +126,7 @@ class SparseArguments:
     output_dim: int = 512
     img_mlp_type: int = 1
     txt_mlp_type: int = 1
+    knowledge_mlp_type: int = 1
     loss_threshold: float = 0.5
     temperature: float = 0.05
     use_local_loss: bool = False
@@ -196,7 +197,7 @@ def get_mm_adapter_state_maybe_zero_3(named_params, keys_to_match):
 def find_all_linear_names(model):
     cls = torch.nn.Linear
     lora_module_names = set()
-    multimodal_keywords = ['mm_projector', 'vision_tower', 'vision_resampler', 'img_mlp', 'txt_mlp', 'special_token_mlp', 'cross_attention_module']
+    multimodal_keywords = ['mm_projector', 'vision_tower', 'vision_resampler', 'img_mlp', 'txt_mlp', 'special_token_mlp', 'cross_attention_module', 'knowledge_mlp']
     for name, module in model.named_modules():
         if any(mm_keyword in name for mm_keyword in multimodal_keywords):
             continue
@@ -725,7 +726,26 @@ class LazySupervisedDataset(Dataset):
         self.use_prompt = use_prompt
         self.Imgcls_count = Imgcls_count
         self.Txtcls_count = Txtcls_count
+        
+        #---------------------------#
+      
+        with open("data/disease_desc.json", "r", encoding="utf-8") as f:
+            self.disease_desc = json.load(f)  # 读取 JSON 文件
+        
+        # 预计算疾病描述的 tokenized ID
+        self.tokenized_desc = [
+            torch.tensor(self.tokenizer.encode(desc, return_tensors="pt").squeeze(0))
+            for desc in self.disease_desc.values()
+        ]
 
+        # 进行 padding，确保形状为 [num_diseases, max_seq_len]
+        self.disease_desc_ids_padded = torch.nn.utils.rnn.pad_sequence(
+            self.tokenized_desc, batch_first=True, padding_value=self.tokenizer.pad_token_id
+        )
+        self.disease_desc_attention_mask = self.disease_desc_ids_padded.ne(self.tokenizer.pad_token_id)
+            
+       
+            
     def __len__(self):
         return len(self.list_data_dict)
 
@@ -817,8 +837,11 @@ class LazySupervisedDataset(Dataset):
         )
         data_dict["category_ids"] = category_tokens["input_ids"]
         data_dict["category_attention_mask"] = category_tokens["attention_mask"]
-       
-
+        
+       ## 读取label，查询label 语义，data_dict 返回
+        data_dict["disease_desc_ids"]=self.disease_desc_ids_padded
+        data_dict["disease_desc_attention_mask"]=self.disease_desc_attention_mask
+        
         return data_dict
 
 @dataclass
@@ -826,6 +849,7 @@ class DataCollatorForSupervisedDataset(object):
     """Collate examples for supervised fine-tuning."""
 
     tokenizer: transformers.PreTrainedTokenizer
+    
     # def __call__(self, instances: Sequence[Dict]) -> Dict[str, torch.Tensor]:
     #     input_ids, labels = tuple([instance[key] for instance in instances]
     #                               for key in ("input_ids", "labels"))
@@ -853,6 +877,9 @@ class DataCollatorForSupervisedDataset(object):
 
     #     return batch
 
+
+
+    
     def __call__(self, instances: Sequence[Dict]) -> Dict[str, torch.Tensor]:
         # input_ids, labels = tuple([instance[key] for instance in instances]
         #                     for key in ("input_ids", "labels"))
@@ -884,12 +911,37 @@ class DataCollatorForSupervisedDataset(object):
         attention_mask = input_ids.ne(self.tokenizer.pad_token_id)
         category_attention_mask = category_ids_padded.ne(self.tokenizer.pad_token_id)
 
+        #---------------------------#
+      
+        # for instance in instances:
+        #     labels = instance["disease_label"]  # 可能是一个标签列表
+        #     label_descs = []
+        #     for label in labels:
+        #         token_tensor = self.disease_desc_ids.get(label)
+        #         if token_tensor is None:
+        #             raise ValueError(f"疾病标签 '{label}' 在知识库中未找到。")
+        #         label_descs.append(token_tensor)
+
+        #     # 拼接所有疾病描述的 token ids，并添加分隔符
+        #     disease_desc_ids_instance = label_descs[0]
+        #     for desc in label_descs[1:]:
+        #         disease_desc_ids_instance = torch.cat([disease_desc_ids_instance, sep_token, desc], dim=0)
+
+        #     disease_desc_ids.append(disease_desc_ids_instance)
+
+        # 获取 disease_desc_ids 和 disease_desc_attention_mask
+        disease_desc_ids = [instance["disease_desc_ids"] for instance in instances]
+        disease_desc_attention_mask = [instance["disease_desc_attention_mask"] for instance in instances]
+ 
+        
         batch = dict(
             input_ids=input_ids,
             labels=labels,
             attention_mask=attention_mask,
             category_ids=category_ids_padded,
-            category_attention_mask=category_attention_mask
+            category_attention_mask=category_attention_mask,
+            disease_desc_ids=torch.stack(disease_desc_ids, dim=0),  # 确保不受 batch_size 影响
+            disease_desc_attention_mask=torch.stack(disease_desc_attention_mask, dim=0)
         )
         
         if 'image' in instances[0]:

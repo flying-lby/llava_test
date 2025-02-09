@@ -53,13 +53,14 @@ deepspeed train/train_mem.py \
     --output_dim 4096 \
     --img_mlp_type 1 \
     --txt_mlp_type 1 \
+    --knowledge_mlp_type 1 \
     --loss_threshold 0.5 \
     --temperature 0.05 \
     --use_local_loss True \
     --feature_layer 2 \
     --special_tokens_mlp_type 1 \
     --use_ca_loss False \
-    --use_cat False 
+    --use_cat True 
 
 if [ $? -ne 0 ]; then
     echo "Training failed. Exiting..."

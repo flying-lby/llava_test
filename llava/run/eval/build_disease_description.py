@@ -52,6 +52,7 @@ class SparseArguments:
     output_dim: int = 512
     img_mlp_type: int = 0
     txt_mlp_type: int = 0
+    knowledge_mlp_type: int = 1
     loss_threshold: float = 0.5
     temperature: float = 0.05
     use_local_loss: bool = False

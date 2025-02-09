@@ -1151,6 +1151,7 @@ class MistralForCausalLM(MistralPreTrainedModel):
         txt_past_key_values: Optional[List[torch.FloatTensor]] = None, # 新增文本的过去的 key-values
         txt_inputs_embeds: Optional[torch.FloatTensor] = None,  # 新增文本的嵌入
         txt_labels: Optional[torch.LongTensor] = None, # 新增文本的标签
+        disease_inputs_embeds: Optional[torch.FloatTensor] = None,  # 新增疾病描述的嵌入
         return_emb: Optional[bool] = None,  # 新增是否返回嵌入的标志(不计算loss)
     ) -> Union[Tuple, CausalLMOutputWithPast]:
         r"""
@@ -1243,14 +1244,28 @@ class MistralForCausalLM(MistralPreTrainedModel):
         local_txt_features = self.txt_mlp(local_txt_features)
         local_txt_features = local_txt_features.mean(dim=1)
         
-
+        # disease_features = self.knowledge_mlp(disease_inputs_embeds).mean(dim=2)
+        disease_features = self.knowledge_mlp(disease_inputs_embeds).mean(dim=2)
         # Step 3: 归一化特征向量到单位球面
         norm_global_imgcls_features = F.normalize(global_imgcls_features, p=2, dim=-1)  # (B, feature_dim)
         norm_local_img_features = F.normalize(local_img_features, p=2, dim=-1)
 
         norm_global_txtcls_features = F.normalize(global_txtcls_features, p=2, dim=-1)  # (B, feature_dim)
         norm_local_txt_features = F.normalize(local_txt_features, p=2, dim=-1)
+        
+        norm_disease_features = F.normalize(disease_features, p=2, dim=-1)
+      
+        # 计算类别知识引导的loss
+        txt_to_disease_similarity = torch.matmul(norm_global_txtcls_features.unsqueeze(1), norm_disease_features.permute(0, 2, 1)).squeeze(1) / self.temperature  # (8, 15)
+        img_to_disease_similarity = torch.matmul(norm_global_imgcls_features.unsqueeze(1), norm_disease_features.permute(0, 2, 1)).squeeze(1) / self.temperature
+        batch_size = norm_global_txtcls_features.size(0)
+        labels = torch.arange(batch_size, device=norm_global_txtcls_features.device)
+        loss_txt = F.cross_entropy(txt_to_disease_similarity, labels)
+        loss_img = F.cross_entropy(img_to_disease_similarity, labels)
 
+        K_exp_loss = (loss_txt + loss_img) / 2
+
+    
         if self.use_cat:
             # Step 4: 计算全局图像和局部文本特征的 Loss
             temperature = self.temperature
@@ -1276,7 +1291,10 @@ class MistralForCausalLM(MistralPreTrainedModel):
             # 取两个方向损失的平均值
             local_img_to_txt_loss = (local_img_to_global_txt_loss + global_txt_to_local_img_loss) / 2
 
-            total_loss = self.loss_threshold * img_to_local_txt_loss + (1 - self.loss_threshold) * local_img_to_txt_loss
+            # total_loss = self.loss_threshold * img_to_local_txt_loss + (1 - self.loss_threshold) * local_img_to_txt_loss
+            ca_loss = (img_to_local_txt_loss +  local_img_to_txt_loss) * 0.5
+    
+            total_loss = self.loss_threshold * ca_loss + (1 - self.loss_threshold) * K_exp_loss
         else:
             # Step 4: 计算全局特征损失
             temperature = self.temperature

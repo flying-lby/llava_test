@@ -326,6 +326,10 @@ class LLaVATrainer(Trainer):
             if hasattr(opt_model, 'special_token_mlp'):
                 for param in opt_model.special_token_mlp.parameters():
                     param.requires_grad = True
+                    
+            if hasattr(opt_model, 'knowledge_mlp'):
+                for param in opt_model.knowledge_mlp.parameters():
+                    param.requires_grad = True
             
             if hasattr(opt_model, 'cross_attention_module'):
                 for param in opt_model.cross_attention_module.parameters():
@@ -337,7 +341,7 @@ class LLaVATrainer(Trainer):
                         
             decay_parameters = get_parameter_names(opt_model, ALL_LAYERNORM_LAYERS)
             decay_parameters = [name for name in decay_parameters if "bias" not in name]
-            mis_mlp_parameters = [name for name, _ in opt_model.named_parameters() if "img_mlp" in name or "txt_mlp" in name or "special_token_mlp" in name or "cross_attention_module" in name ]
+            mis_mlp_parameters = [name for name, _ in opt_model.named_parameters() if "img_mlp" in name or "txt_mlp" in name or "special_token_mlp" in name or "knowledge_mlp" in name or "cross_attention_module" in name ]
           
             
             optimizer_grouped_parameters = [

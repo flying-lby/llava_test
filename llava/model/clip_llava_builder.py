@@ -1,7 +1,7 @@
 '''
 Author: fly
 Date: 2024-08-08 13:56:14
-FilePath: /llava_med/LLaVA-Med/llava/model/builder.py
+FilePath: /llava_med/LLaVA-Med/llava/model/clip_llava_builder.py
 Description: 
 '''
 import os
@@ -24,6 +24,7 @@ class SparseArguments:
     output_dim: int = 512
     img_mlp_type: int = 1
     txt_mlp_type: int = 1
+    knowledge_mlp_type: int = 1
     loss_threshold: float = 0.5
     temperature: float = 0.05
     use_local_loss: bool = False

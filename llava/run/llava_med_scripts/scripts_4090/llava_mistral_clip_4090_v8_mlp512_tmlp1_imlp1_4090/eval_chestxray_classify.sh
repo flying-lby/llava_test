@@ -7,7 +7,7 @@
 python -m llava.run.eval.eval_classify \
     --model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v2 \
     --result-file ./result/R4090/llava-mistral_new_clip_v1/Chest_Xray_classify2.txt \
-    --question-file ./data/chest_xray/new_Chest-X-ray_llava_val.jsonl \
+    --question-file ./data/chest_xray/Chest-X-ray_llava_val.jsonl \
     --image-folder "/srv/lby" \
     --conv-mode vicuna_v1 \
     --Imgcls_count 4 \
