@@ -48,19 +48,20 @@ deepspeed train/train_mem.py \
     --lazy_preprocess True \
     --report_to none \
     --Imgcls_count 4 \
-    --Txtcls_count 4 \
+    --Txtcls_count 8 \
     --hidden_dim 1024 \
     --output_dim 4096 \
-    --img_mlp_type 1 \
-    --txt_mlp_type 1 \
-    --knowledge_mlp_type 1 \
+    --img_mlp_type 0 \
+    --txt_mlp_type 0 \
+    --knowledge_mlp_type 0 \
     --loss_threshold 0.5 \
     --temperature 0.05 \
     --use_local_loss True \
     --feature_layer 2 \
     --special_tokens_mlp_type 1 \
     --use_ca_loss False \
-    --use_cat True 
+    --use_cat True
+    
 
 if [ $? -ne 0 ]; then
     echo "Training failed. Exiting..."

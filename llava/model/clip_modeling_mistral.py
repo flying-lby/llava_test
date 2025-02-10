@@ -1259,7 +1259,10 @@ class MistralForCausalLM(MistralPreTrainedModel):
         txt_to_disease_similarity = torch.matmul(norm_global_txtcls_features.unsqueeze(1), norm_disease_features.permute(0, 2, 1)).squeeze(1) / self.temperature  # (8, 15)
         img_to_disease_similarity = torch.matmul(norm_global_imgcls_features.unsqueeze(1), norm_disease_features.permute(0, 2, 1)).squeeze(1) / self.temperature
         batch_size = norm_global_txtcls_features.size(0)
-        labels = torch.arange(batch_size, device=norm_global_txtcls_features.device)
+        num_disease_classes = norm_disease_features.size(1)
+
+        labels = torch.arange(batch_size, device=norm_global_txtcls_features.device) % num_disease_classes
+ 
         loss_txt = F.cross_entropy(txt_to_disease_similarity, labels)
         loss_img = F.cross_entropy(img_to_disease_similarity, labels)
 

@@ -734,7 +734,7 @@ class LazySupervisedDataset(Dataset):
         
         # 预计算疾病描述的 tokenized ID
         self.tokenized_desc = [
-            torch.tensor(self.tokenizer.encode(desc, return_tensors="pt").squeeze(0))
+            self.tokenizer.encode(desc, return_tensors="pt").squeeze(0).clone().detach()
             for desc in self.disease_desc.values()
         ]
 
