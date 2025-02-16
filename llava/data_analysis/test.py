@@ -82,7 +82,7 @@ def main(
 @click.command()
 @click.option("--model_id", default="/srv/lby/llava_med/checkpoints/llava-mistral_finetuning/")
 @click.option("--data_path", default="./data/eval/Chest-X-ray.jsonl")
-@click.option("--class_path", default="./data/eval/Chest-X-ray_classes.json")
+@click.option("--class_path", default="./data/chest_xray/Chest-X-ray_classes.json")
 @click.option("--seed", default=1234)
 @click.option("--output_path", default="outputs")
 @click.option("--batch_size", default=16)

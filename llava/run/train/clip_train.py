@@ -20,10 +20,14 @@ from dataclasses import dataclass, field
 import json
 import logging
 import pathlib
+import re
 from typing import Dict, Optional, Sequence, List
 
 import torch
-
+from torch import nn
+import torch.nn.functional as F
+import torch.nn as nn
+import torch.nn.init as init
 import transformers
 import tokenizers
 
@@ -32,6 +36,7 @@ from torch.utils.data import Dataset
 from llava.run.train.llava_trainer import LLaVATrainer
 
 from llava import conversation as conversation_lib
+
 from llava.model import *
 from llava.mm_utils import tokenizer_image_token
 
@@ -112,6 +117,28 @@ class TrainingArguments(transformers.TrainingArguments):
     group_by_modality_length: bool = field(default=False)
     mis_mlp_lr: float = 5e-5
 
+# ----------------------------------------------------------#
+@dataclass
+class SparseArguments:
+    Imgcls_count: int = 4
+    Txtcls_count: int = 4
+    hidden_dim: int = 1024
+    output_dim: int = 512
+    img_mlp_type: int = 1
+    txt_mlp_type: int = 1
+    knowledge_mlp_type: int = 1
+    loss_threshold: float = 0.5
+    temperature: float = 0.05
+    use_local_loss: bool = False
+    feature_layer: int = 1
+    special_tokens_mlp_type: int = 1
+    use_ca_loss: bool = True
+    inference_type: int = 2
+    use_cat: bool = True
+    use_prompt: bool = True
+
+# ----------------------------------------------------------#
+
 
 def maybe_zero_3(param, ignore_status=False, name=None):
     from deepspeed import zero
@@ -170,7 +197,7 @@ def get_mm_adapter_state_maybe_zero_3(named_params, keys_to_match):
 def find_all_linear_names(model):
     cls = torch.nn.Linear
     lora_module_names = set()
-    multimodal_keywords = ['mm_projector', 'vision_tower', 'vision_resampler']
+    multimodal_keywords = ['mm_projector', 'vision_tower', 'vision_resampler', 'img_mlp', 'txt_mlp', 'special_token_mlp', 'cross_attention_module', 'knowledge_mlp']
     for name, module in model.named_modules():
         if any(mm_keyword in name for mm_keyword in multimodal_keywords):
             continue
@@ -415,12 +442,16 @@ def preprocess_llama_2(
 def preprocess_v1(
     sources,
     tokenizer: transformers.PreTrainedTokenizer,
-    has_image: bool = False
+    has_image: bool = False,
+    use_prompt: bool = True,
+    Imgcls_count: int = 4,
+    Txtcls_count: int = 8
 ) -> Dict:
     conv = conversation_lib.default_conversation.copy()
     roles = {"human": conv.roles[0], "gpt": conv.roles[1]}
 
     # Apply prompt templates
+    human_conversations = []
     conversations = []
     for i, source in enumerate(sources):
         if roles[source[0]["from"]] != conv.roles[0]:
@@ -428,26 +459,44 @@ def preprocess_v1(
             source = source[1:]
 
         conv.messages = []
+        human_part = ""
         for j, sentence in enumerate(source):
             role = roles[sentence["from"]]
             assert role == conv.roles[j % 2], f"{i}"
             conv.append_message(role, sentence["value"])
+            if role == conv.roles[0]:  # Only append human messages
+                human_part += sentence["value"] + conv.sep
+        
+        # Append Imgcls tokens
+        human_part += "".join([f"<Imgcls{i}>" for i in range(Imgcls_count)])
+        human_conversations.append(human_part)
         conversations.append(conv.get_prompt())
 
     # Tokenize conversations
 
     if has_image:
-        input_ids = torch.stack([tokenizer_image_token(prompt, tokenizer, return_tensors='pt') for prompt in conversations], dim=0)
+        if use_prompt:
+            input_ids = torch.stack([tokenizer_image_token(prompt, tokenizer, return_tensors='pt') for prompt in human_conversations], dim=0)
+        else:
+            extracted_conversations = [conv.split('\n')[0] for conv in human_conversations]
+            input_ids = torch.stack([tokenizer_image_token(prompt, tokenizer, return_tensors='pt') for prompt in extracted_conversations], dim=0)
     else:
         input_ids = tokenizer(
-            conversations,
+            human_conversations,
             return_tensors="pt",
             padding="longest",
             max_length=tokenizer.model_max_length,
             truncation=True,
         ).input_ids
 
-    targets = input_ids.clone()
+    # targets = input_ids.clone()
+    targets = tokenizer(
+        conversations,
+        return_tensors="pt",
+        padding="longest",
+        max_length=tokenizer.model_max_length,
+        truncation=True,
+    ).input_ids
 
     assert conv.sep_style == conversation_lib.SeparatorStyle.TWO
 
@@ -611,6 +660,9 @@ def preprocess_plain(
 def preprocess(
     sources: Sequence[str],
     tokenizer: transformers.PreTrainedTokenizer,
+    use_prompt: bool = True,
+    Imgcls_count: int = 4,
+    Txtcls_count: int = 8,
     has_image: bool = False
 ) -> Dict:
     """
@@ -625,7 +677,7 @@ def preprocess(
     if conversation_lib.default_conversation.sep_style == conversation_lib.SeparatorStyle.LLAMA_2:
         return preprocess_llama_2(sources, tokenizer, has_image=has_image)
     if conversation_lib.default_conversation.version.startswith("v1"):
-        return preprocess_v1(sources, tokenizer, has_image=has_image)
+        return preprocess_v1(sources, tokenizer, use_prompt=use_prompt, Imgcls_count=Imgcls_count, Txtcls_count=Txtcls_count, has_image=has_image)
     if conversation_lib.default_conversation.version == "mpt":
         return preprocess_mpt(sources, tokenizer, has_image=has_image)
     # add end signal and concatenate together
@@ -655,13 +707,15 @@ def preprocess(
 
     return dict(input_ids=input_ids, labels=targets)
 
-
 class LazySupervisedDataset(Dataset):
     """Dataset for supervised fine-tuning."""
 
     def __init__(self, data_path: str,
                  tokenizer: transformers.PreTrainedTokenizer,
-                 data_args: DataArguments):
+                 data_args: DataArguments,
+                 use_prompt: bool = True,
+                 Imgcls_count: int = 4,
+                 Txtcls_count: int = 8):
         super(LazySupervisedDataset, self).__init__()
         list_data_dict = json.load(open(data_path, "r"))
 
@@ -669,7 +723,29 @@ class LazySupervisedDataset(Dataset):
         self.tokenizer = tokenizer
         self.list_data_dict = list_data_dict
         self.data_args = data_args
+        self.use_prompt = use_prompt
+        self.Imgcls_count = Imgcls_count
+        self.Txtcls_count = Txtcls_count
+        
+        #---------------------------#
+      
+        with open("data/disease_desc.json", "r", encoding="utf-8") as f:
+            self.disease_desc = json.load(f)  # 读取 JSON 文件
+        
+        # 预计算疾病描述的 tokenized ID
+        self.tokenized_desc = [
+            self.tokenizer.encode(desc, return_tensors="pt").squeeze(0).clone().detach()
+            for desc in self.disease_desc.values()
+        ]
 
+        # 进行 padding，确保形状为 [num_diseases, max_seq_len]
+        self.disease_desc_ids_padded = torch.nn.utils.rnn.pad_sequence(
+            self.tokenized_desc, batch_first=True, padding_value=self.tokenizer.pad_token_id
+        )
+        self.disease_desc_attention_mask = self.disease_desc_ids_padded.ne(self.tokenizer.pad_token_id)
+            
+       
+            
     def __len__(self):
         return len(self.list_data_dict)
 
@@ -725,7 +801,11 @@ class LazySupervisedDataset(Dataset):
         data_dict = preprocess(
             sources,
             self.tokenizer,
-            has_image=('image' in self.list_data_dict[i]))
+            self.use_prompt,
+            self.Imgcls_count,
+            self.Txtcls_count,
+            has_image=('image' in self.list_data_dict[i])
+            )
         if isinstance(i, int):
             data_dict = dict(input_ids=data_dict["input_ids"][0],
                              labels=data_dict["labels"][0])
@@ -737,18 +817,79 @@ class LazySupervisedDataset(Dataset):
             # image does not exist in the data, but the model is multimodal
             crop_size = self.data_args.image_processor.crop_size
             data_dict['image'] = torch.zeros(3, crop_size['height'], crop_size['width'])
-        return data_dict
+        
 
+        # Full sentence category as feature 
+        category_response = sources[0][-1]["value"]  # This is the full sentence "This is a chest X-ray showing {disease}"
+        if self.use_prompt:
+            txt_prompt = "What disease is described in this text?"  # This is the prompt
+        else:
+            txt_prompt = ""
+        category_text = category_response +"" + txt_prompt # Use the full sentence directly
+        category_text += "".join([f"<Txtcls{i}>" for i in range(self.Txtcls_count)])
+        # category_text = category_response
+        # Tokenize the full category sentence and add it to data_dict
+        category_tokens = self.tokenizer(
+            category_text,
+            return_tensors="pt",
+            truncation=True,
+            max_length=self.tokenizer.model_max_length
+        )
+        data_dict["category_ids"] = category_tokens["input_ids"]
+        data_dict["category_attention_mask"] = category_tokens["attention_mask"]
+        
+       ## 读取label，查询label 语义，data_dict 返回
+        data_dict["disease_desc_ids"]=self.disease_desc_ids_padded
+        data_dict["disease_desc_attention_mask"]=self.disease_desc_attention_mask
+        
+        return data_dict
 
 @dataclass
 class DataCollatorForSupervisedDataset(object):
     """Collate examples for supervised fine-tuning."""
 
     tokenizer: transformers.PreTrainedTokenizer
+    
+    # def __call__(self, instances: Sequence[Dict]) -> Dict[str, torch.Tensor]:
+    #     input_ids, labels = tuple([instance[key] for instance in instances]
+    #                               for key in ("input_ids", "labels"))
+    #     input_ids = torch.nn.utils.rnn.pad_sequence(
+    #         input_ids,
+    #         batch_first=True,
+    #         padding_value=self.tokenizer.pad_token_id)
+    #     labels = torch.nn.utils.rnn.pad_sequence(labels,
+    #                                              batch_first=True,
+    #                                              padding_value=IGNORE_INDEX)
+    #     input_ids = input_ids[:, :self.tokenizer.model_max_length]
+    #     labels = labels[:, :self.tokenizer.model_max_length]
+    #     batch = dict(
+    #         input_ids=input_ids,
+    #         labels=labels,
+    #         attention_mask=input_ids.ne(self.tokenizer.pad_token_id),
+    #     )
 
+    #     if 'image' in instances[0]:
+    #         images = [instance['image'] for instance in instances]
+    #         if all(x is not None and x.shape == images[0].shape for x in images):
+    #             batch['images'] = torch.stack(images)
+    #         else:
+    #             batch['images'] = images
+
+    #     return batch
+
+
+
+    
     def __call__(self, instances: Sequence[Dict]) -> Dict[str, torch.Tensor]:
-        input_ids, labels = tuple([instance[key] for instance in instances]
-                                  for key in ("input_ids", "labels"))
+        # input_ids, labels = tuple([instance[key] for instance in instances]
+        #                     for key in ("input_ids", "labels"))
+        input_ids, labels, category_ids = tuple(
+            [instance[key] for instance in instances]
+            for key in ("input_ids", "labels", "category_ids")
+        )
+        # Find the maximum length in the current batch for category_ids
+        max_len = max([cat_id.size(1) for cat_id in category_ids])  # max length based on second dimension
+
         input_ids = torch.nn.utils.rnn.pad_sequence(
             input_ids,
             batch_first=True,
@@ -758,40 +899,81 @@ class DataCollatorForSupervisedDataset(object):
                                                  padding_value=IGNORE_INDEX)
         input_ids = input_ids[:, :self.tokenizer.model_max_length]
         labels = labels[:, :self.tokenizer.model_max_length]
+        # Manually pad category_ids to max_len using F.pad
+        category_ids_padded = []
+        for cat_id in category_ids:
+            padded_cat_id = F.pad(cat_id, (0, max_len - cat_id.size(1)), value=self.tokenizer.pad_token_id)
+            category_ids_padded.append(padded_cat_id)
+
+        category_ids_padded = torch.stack(category_ids_padded, dim=0)
+
+        # # Attention masks
+        attention_mask = input_ids.ne(self.tokenizer.pad_token_id)
+        category_attention_mask = category_ids_padded.ne(self.tokenizer.pad_token_id)
+
+        #---------------------------#
+      
+        # for instance in instances:
+        #     labels = instance["disease_label"]  # 可能是一个标签列表
+        #     label_descs = []
+        #     for label in labels:
+        #         token_tensor = self.disease_desc_ids.get(label)
+        #         if token_tensor is None:
+        #             raise ValueError(f"疾病标签 '{label}' 在知识库中未找到。")
+        #         label_descs.append(token_tensor)
+
+        #     # 拼接所有疾病描述的 token ids，并添加分隔符
+        #     disease_desc_ids_instance = label_descs[0]
+        #     for desc in label_descs[1:]:
+        #         disease_desc_ids_instance = torch.cat([disease_desc_ids_instance, sep_token, desc], dim=0)
+
+        #     disease_desc_ids.append(disease_desc_ids_instance)
+
+        # 获取 disease_desc_ids 和 disease_desc_attention_mask
+        disease_desc_ids = [instance["disease_desc_ids"] for instance in instances]
+        disease_desc_attention_mask = [instance["disease_desc_attention_mask"] for instance in instances]
+ 
+        
         batch = dict(
             input_ids=input_ids,
             labels=labels,
-            attention_mask=input_ids.ne(self.tokenizer.pad_token_id),
+            attention_mask=attention_mask,
+            category_ids=category_ids_padded,
+            category_attention_mask=category_attention_mask,
+            disease_desc_ids=torch.stack(disease_desc_ids, dim=0),  # 确保不受 batch_size 影响
+            disease_desc_attention_mask=torch.stack(disease_desc_attention_mask, dim=0)
         )
-
+        
         if 'image' in instances[0]:
             images = [instance['image'] for instance in instances]
-            if all(x is not None and x.shape == images[0].shape for x in images):
-                batch['images'] = torch.stack(images)
-            else:
-                batch['images'] = images
+        if all(x is not None and x.shape == images[0].shape for x in images):
+            batch['images'] = torch.stack(images)
+        else:
+            batch['images'] = images
 
         return batch
 
 
 def make_supervised_data_module(tokenizer: transformers.PreTrainedTokenizer,
-                                data_args) -> Dict:
+                                data_args, use_prompt, Imgcls_count, Txtcls_count) -> Dict:
     """Make dataset and collator for supervised fine-tuning."""
     train_dataset = LazySupervisedDataset(tokenizer=tokenizer,
                                 data_path=data_args.data_path,
-                                data_args=data_args)
+                                data_args=data_args, use_prompt = use_prompt, 
+                                Imgcls_count = Imgcls_count, Txtcls_count = Txtcls_count)
     data_collator = DataCollatorForSupervisedDataset(tokenizer=tokenizer)
     return dict(train_dataset=train_dataset,
                 eval_dataset=None,
                 data_collator=data_collator)
 
 
+
 def train(attn_implementation=None):
     global local_rank
 
     parser = transformers.HfArgumentParser(
-        (ModelArguments, DataArguments, TrainingArguments))
-    model_args, data_args, training_args = parser.parse_args_into_dataclasses()
+        (ModelArguments, DataArguments, TrainingArguments, SparseArguments))
+    model_args, data_args, training_args, sparse_args  = parser.parse_args_into_dataclasses()
     local_rank = training_args.local_rank
     compute_dtype = (torch.float16 if training_args.fp16 else (torch.bfloat16 if training_args.bf16 else torch.float32))
 
@@ -813,7 +995,48 @@ def train(attn_implementation=None):
                 bnb_4bit_quant_type=training_args.quant_type # {'fp4', 'nf4'}
             )
         ))
+   
+    # 先初始化分词器 避免模型初始化后使用Imgcls，Txtcls标记会报错
+    if 'mpt' in model_args.model_name_or_path:
+        tokenizer = transformers.AutoTokenizer.from_pretrained(
+            model_args.model_name_or_path,
+            cache_dir=training_args.cache_dir,
+            model_max_length=training_args.model_max_length,
+            padding_side="right"
+        )
+    else:
+        tokenizer = transformers.AutoTokenizer.from_pretrained(
+            model_args.model_name_or_path,
+            cache_dir=training_args.cache_dir,
+            model_max_length=training_args.model_max_length,
+            padding_side="right",
+            use_fast=False,
+        )
+    # 添加 Imgcls_token 标记到词汇表中
+    Imgcls_tokens = [f"<Imgcls{i}>" for i in range(sparse_args.Imgcls_count)]
+    Txtcls_tokens = [f"<Txtcls{i}>" for i in range(sparse_args.Txtcls_count)]
 
+    # 将所有新标记添加到 tokenizer
+    all_tokens = Imgcls_tokens + Txtcls_tokens
+    tokenizer.add_tokens(all_tokens)
+
+    # # 存储 token ID（列表方式）
+    # Imgcls_token_ids = [tokenizer.convert_tokens_to_ids(token) for token in Imgcls_tokens]
+    # Txtcls_token_ids = [tokenizer.convert_tokens_to_ids(token) for token in Txtcls_tokens]
+
+    # # 打印检查
+    # print("Imgcls Token IDs:", Imgcls_token_ids)
+    # print("Txtcls Token IDs:", Txtcls_token_ids)
+
+    # Imgcls_token = "<Imgcls>"
+    # Txtcls_token = "<Txtcls>"
+    # tokenizer.add_tokens([Imgcls_token])
+    # tokenizer.add_tokens([Txtcls_token])
+    # # # # 获取并输出 Imgcls_token 标记的 ID
+    # Imgcls_token_id = tokenizer.convert_tokens_to_ids(Imgcls_token)
+    # Txtcls_token_id = tokenizer.convert_tokens_to_ids(Txtcls_token)
+
+        
     if model_args.vision_tower is not None:
         if 'mpt' in model_args.model_name_or_path:
             config = transformers.AutoConfig.from_pretrained(model_args.model_name_or_path, trust_remote_code=True)
@@ -825,13 +1048,33 @@ def train(attn_implementation=None):
                 **bnb_model_from_pretrained_args
             )
         else:
-            model = LlavaMistralForCausalLM.from_pretrained(
+            
+            # model = LlavaMistralForCausalLM.from_pretrained(
+            #     model_args.model_name_or_path,
+            #     cache_dir=training_args.cache_dir,
+            #     attn_implementation=attn_implementation,
+            #     torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
+            #     ncls_token_id=ncls_token_id,
+            #     **bnb_model_from_pretrained_args,
+            #     # ignore_mismatched_sizes=True
+            # )
+            # ----------------------------------------------------------#
+            from llava.model.language_model.clip_llava_mistral import ClipLlavaMistralConfig
+            config = ClipLlavaMistralConfig.from_pretrained(model_args.model_name_or_path)
+            config.sparse_config = vars(sparse_args)
+            model = ClipLlavaMistralForCausalLM.from_pretrained(
                 model_args.model_name_or_path,
+                config = config,
                 cache_dir=training_args.cache_dir,
                 attn_implementation=attn_implementation,
                 torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
-                **bnb_model_from_pretrained_args
+                **bnb_model_from_pretrained_args,
+                # ignore_mismatched_sizes=True
             )
+         
+            # ----------------------------------------------------------#
+            
+
     else:
         model = transformers.LlamaForCausalLM.from_pretrained(
             model_args.model_name_or_path,
@@ -840,15 +1083,26 @@ def train(attn_implementation=None):
             torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
             **bnb_model_from_pretrained_args
         )
+        
+    
+    # 更新模型的嵌入层以适应新的词汇表大小
+    model.resize_token_embeddings(len(tokenizer))    
     model.config.use_cache = False
-
+    model.initialize_mis_mlp() 
+    
+    # print(model)
     if model_args.freeze_backbone:
         model.model.requires_grad_(False)
+
 
     if training_args.bits in [4, 8]:
         from peft import prepare_model_for_kbit_training
         model.config.torch_dtype=(torch.float32 if training_args.fp16 else (torch.bfloat16 if training_args.bf16 else torch.float32))
         model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=training_args.gradient_checkpointing)
+
+    # ######## mis_mlp 解冻########
+    # for p in model.mis_mlp.parameters():
+    #     p.requires_grad = True
 
     if training_args.gradient_checkpointing:
         if hasattr(model, "enable_input_require_grads"):
@@ -876,21 +1130,7 @@ def train(attn_implementation=None):
         rank0_print("Adding LoRA adapters...")
         model = get_peft_model(model, lora_config)
 
-    if 'mpt' in model_args.model_name_or_path:
-        tokenizer = transformers.AutoTokenizer.from_pretrained(
-            model_args.model_name_or_path,
-            cache_dir=training_args.cache_dir,
-            model_max_length=training_args.model_max_length,
-            padding_side="right"
-        )
-    else:
-        tokenizer = transformers.AutoTokenizer.from_pretrained(
-            model_args.model_name_or_path,
-            cache_dir=training_args.cache_dir,
-            model_max_length=training_args.model_max_length,
-            padding_side="right",
-            use_fast=False,
-        )
+
 
     if model_args.version == "v0":
         if tokenizer.pad_token is None:
@@ -958,7 +1198,9 @@ def train(attn_implementation=None):
                         module = module.to(torch.bfloat16)
 
     data_module = make_supervised_data_module(tokenizer=tokenizer,
-                                              data_args=data_args)
+                                              data_args=data_args,use_prompt=sparse_args.use_prompt,
+                                              Imgcls_count=sparse_args.Imgcls_count,Txtcls_count=sparse_args.Txtcls_count)
+   
     trainer = LLaVATrainer(model=model,
                     tokenizer=tokenizer,
                     args=training_args,

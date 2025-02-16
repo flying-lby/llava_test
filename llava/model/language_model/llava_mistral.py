@@ -3,8 +3,13 @@ from typing import List, Optional, Tuple, Union
 import torch
 import torch.nn as nn
 
-from transformers import AutoConfig, AutoModelForCausalLM, \
-                         MistralConfig, MistralModel, MistralForCausalLM
+from transformers import AutoConfig, AutoModelForCausalLM
+import torch.nn.functional as F
+from llava.model.modeling_mistral import (
+    MistralConfig,
+    MistralModel,
+    MistralForCausalLM
+)
 
 from transformers.modeling_outputs import CausalLMOutputWithPast
 from transformers.generation.utils import GenerateOutput
@@ -84,6 +89,43 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict
         )
+        
+    @torch.no_grad()
+    def inference_pipeline(
+        self,
+        input_ids: torch.LongTensor,
+        attention_mask: Optional[torch.Tensor],
+        global_category_embeddings_cache: torch.Tensor,  # 新增参数，用于传递全局类别特征向量
+        # local_category_embeddings_cache: torch.Tensor,
+        images: Optional[torch.Tensor] = None,
+        image_sizes: Optional[torch.Tensor] = None,
+        **kwargs,
+    ):
+        # Step 2: 获取图片特征向量
+        image_output = self.forward(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            images=images,
+            image_sizes=image_sizes,
+            output_hidden_states=True,
+            return_dict=True
+        )
+        global_image_embedding = image_output.hidden_states[-2].mean(dim=1)
+        # local_image_embedding = image_output.hidden_states[-self.feature_layer][:, :-self.ncls_count, :].mean(dim=1)
+        
+        # 步骤2: 对图像特征和类别特征进行L2归一化
+        norm_global_image_embedding = F.normalize(global_image_embedding, p=2, dim=-1)
+        # norm_local_image_embedding = F.normalize(local_image_embedding, p=2, dim=-1)
+        
+        norm_global_category_embeddings_cache = F.normalize(global_category_embeddings_cache, p=2, dim=-1)
+        # norm_local_category_embeddings_cache = F.normalize(local_category_embeddings_cache, p=2, dim=-1)
+        
+        similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) / 0.05  # 计算余弦相似度
+        # 将相似度矩阵转换为概率分布 
+        similarity_probs = similarity_matrix.softmax(dim=-1)
+      
+        return similarity_probs
+    
 
     @torch.no_grad()
     def generate(

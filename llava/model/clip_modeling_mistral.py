@@ -1267,7 +1267,7 @@ class MistralForCausalLM(MistralPreTrainedModel):
         loss_img = F.cross_entropy(img_to_disease_similarity, labels)
 
         K_exp_loss = (loss_txt + loss_img) / 2
-
+        
     
         if self.use_cat:
             # Step 4: 计算全局图像和局部文本特征的 Loss

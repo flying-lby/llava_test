@@ -70,10 +70,10 @@ class LlavaMetaModel:
         self.config.mm_vision_select_feature = mm_vision_select_feature
 
         # add additional configs for segtok
-        self.config.feature_outs = model_args.feature_outs
-        self.config.img_size = model_args.img_size
-        self.config.vision_backbone = model_args.vision_backbone
-        self.config.segtok_posembed = model_args.segtok_posembed
+        # self.config.feature_outs = model_args.feature_outs
+        # self.config.img_size = model_args.img_size
+        # self.config.vision_backbone = model_args.vision_backbone
+        # self.config.segtok_posembed = model_args.segtok_posembed
 
         if getattr(self, 'mm_projector', None) is None:
             self.mm_projector = build_vision_projector(self.config)
