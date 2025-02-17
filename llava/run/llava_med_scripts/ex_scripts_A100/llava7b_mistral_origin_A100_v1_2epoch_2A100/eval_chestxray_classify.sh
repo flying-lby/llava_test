@@ -11,7 +11,7 @@
 echo "Starting evaluation process..."
 
 python -m llava.run.eval.origin_eval_classify_chestxray \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava7b_mistral_lora_sft_v1_2_16 \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava7b_mistral_sft_v1_2_16 \
     --output-path ./data/chest_xray/Chest-X-ray_llava_origin_val_ans.jsonl \
     --class_path ./data/chest_xray/Chest-X-ray_classes.json \
     --result-file ./result/experiments/Ex_A100/2025_2_16/llava7b_mistral_lora_sft_v1_2epoch_2A100/Chest_Xray_classify_origin.txt \
@@ -22,7 +22,7 @@ python -m llava.run.eval.origin_eval_classify_chestxray \
 
 
 python -m llava.run.eval.origin_eval_classify_chestxray \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava7b_mistral_lora_sft_v1_2_16 \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava7b_mistral_sft_v1_2_16 \
     --output-path ./data/chest_xray/Chest-X-ray_llava_origin_val_ans.jsonl \
     --class_path ./data/chest_xray/Chest-X-ray_classes.json \
     --result-file ./result/experiments/Ex_A100/2025_2_16/llava7b_mistral_lora_sft_v1_2epoch_2A100/Chest_Xray_classify_clip.txt \

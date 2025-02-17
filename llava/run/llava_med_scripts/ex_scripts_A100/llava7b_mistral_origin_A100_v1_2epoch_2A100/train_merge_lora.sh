@@ -30,8 +30,8 @@ deepspeed train/train_mem.py \
     --mis_mlp_lr 2e-5 \
     --output_dir /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava7b-lora-sft-v1_2_16 \
     --num_train_epochs 2 \
-    --per_device_train_batch_size 64 \
-    --per_device_eval_batch_size 64 \
+    --per_device_train_batch_size 32 \
+    --per_device_eval_batch_size 32 \
     --gradient_accumulation_steps 1 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
@@ -65,7 +65,7 @@ echo "Starting merge process..."
 python -m llava.run.train.merge_lora_weights \
     --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava7b-lora-sft-v1_2_16 \
     --model-base /mnt/nlp-ali/usr/huangwenxuan/home/official_llava/llava_mistral_7b_official \
-    --save-model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava7b_mistral_lora_sft_v1_2_16 
+    --save-model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava7b_mistral_sft_v1_2_16 
 
 if [ $? -ne 0 ]; then
     echo "Merge failed. Exiting..."
