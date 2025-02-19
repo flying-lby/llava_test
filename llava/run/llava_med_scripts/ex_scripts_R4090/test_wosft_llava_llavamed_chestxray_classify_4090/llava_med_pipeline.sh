@@ -2,7 +2,7 @@
 ###
  # @Author: fly
  # @Date: 2024-08-24 14:44:49
- # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/ex_scripts_R4090/llava_mistral_clip_4090_v8_mlp512_tmlp1_imlp1_4090/pipeline.sh
+ # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/ex_scripts_R4090/test_wosft_llava_llavamed_chestxray_classify_4090/llava_med_pipeline.sh
  # @Description: 测试sft 采用生成loss为训练目标 结果如何
 ### 
 
@@ -16,7 +16,7 @@ deepspeed train/train_mem.py \
     --deepspeed train/zero3.json \
     --model_name_or_path /srv/lby/llava_med/llava-med-v1.5-mistral-7b \
     --version v1 \
-    --data_path ./data/chest_xray/llm_classify_mimic_file_clip.json \
+    --data_path ./data/chest_xray/new_classify_mimic_file_clip.json \
     --image_folder /srv/lby/physionet.org/files/mimic-cxr-jpg/2.0.0/files \
     --vision_tower /srv/lby/clip-vit-large-patch14-336 \
     --mm_projector_type mlp2x_gelu \
@@ -27,8 +27,8 @@ deepspeed train/train_mem.py \
     --group_by_modality_length True \
     --bf16 True \
     --mis_mlp_lr 5e-5 \
-    --output_dir ./checkpoints/llava-lora-sft-v1 \
-    --num_train_epochs 2 \
+    --output_dir srv/lby/llava_med/checkpoints/llava-med-lora-sft-v1 \
+    --num_train_epochs 1 \
     --per_device_train_batch_size 8 \
     --per_device_eval_batch_size 8 \
     --gradient_accumulation_steps 1 \
@@ -46,7 +46,7 @@ deepspeed train/train_mem.py \
     --gradient_checkpointing True \
     --dataloader_num_workers 2 \
     --lazy_preprocess True \
-    --report_to none 
+    --report_to wandb 
    
     
 
@@ -62,9 +62,9 @@ echo "Training completed successfully."
 echo "Starting merge process..."
 
 python -m llava.run.train.merge_lora_weights \
-    --model-path ./checkpoints/llava-lora-sft-v1 \
+    --model-path srv/lby/llava_med/checkpoints/llava-med-lora-sft-v1 \
     --model-base /srv/lby/llava_med/llava-med-v1.5-mistral-7b \
-    --save-model-path /srv/lby/llava_med/checkpoints/llava-mistral_sft_v1 
+    --save-model-path /srv/lby/llava_med/checkpoints/llava_med_mistral_sft_v1 
 
 
 
@@ -73,6 +73,27 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 echo "Merge completed successfully."
+
+python -m llava.run.eval.origin_eval_classify_chestxray \
+    --model-path /srv/lby/llava_med/llava_med_mistral_sft_v1 \
+    --output-path ./data/chest_xray/Chest-X-ray_llava_origin_val_ans.jsonl \
+    --class_path ./data/chest_xray/Chest-X-ray_classes.json \
+    --result-file ./result/experiments/Ex_R4090/llava_med_sft_v1_Chest_Xray_classify_clip.txt \
+    --question-file ./data/chest_xray/Chest-X-ray_llava_origin_val.jsonl \
+    --inference clip \
+    --image-folder "/srv/lby" \
+    --conv-mode vicuna_v1 
+
+python -m llava.run.eval.origin_eval_classify_chestxray \
+    --model-path /srv/lby/llava_med/llava_med_mistral_sft_v1 \
+    --output-path ./data/chest_xray/Chest-X-ray_llava_origin_val_ans.jsonl \
+    --class_path ./data/chest_xray/Chest-X-ray_classes.json \
+    --result-file ./result/experiments/Ex_R4090/llava_med_sft_v1_Chest_Xray_classify_origin.txt \
+    --question-file ./data/chest_xray/Chest-X-ray_llava_origin_val.jsonl \
+    --inference origin \
+    --image-folder "/srv/lby" \
+    --conv-mode vicuna_v1 
+
 
 # python -m llava.run.eval.eval_classify \
 #     --model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v8 \

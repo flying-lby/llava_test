@@ -1,0 +1,24 @@
+{
+    "category_accuracies": {
+        "fibrosis": 0.0,
+        "edema": 0.0,
+        "pneumothorax": 100.0,
+        "cardiomegaly": 0.0,
+        "atelectasis": 0.0,
+        "nodule": 0.0,
+        "emphysema": 0.0,
+        "no finding": 0.0,
+        "mass": 0.0,
+        "pleural_thickening": 0.0,
+        "effusion": 0.0,
+        "infiltration": 0.0,
+        "pneumonia": 0.0,
+        "hernia": 0,
+        "consolidation": 0.0
+    },
+    "average_accuracy": 6.666666666666667,
+    "auc_micro": 0.48650793650793656,
+    "auc_macro": 0.49848714718806775,
+    "f1_micro": 0.05737704918032787,
+    "f1_macro": 0.00880503144654088
+}
