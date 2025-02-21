@@ -5,22 +5,21 @@
  # @Description: 
 ### 
 python -m llava.run.eval.origin_eval_classify_chestxray \
-    --model-path /srv/lby/llava_med/llava-med-v1.5-mistral-7b \
+    --model-path /srv/lby/llava_med/checkpoints/llava_med_mistral_sft_v1  \
     --output-path ./data/chest_xray/Chest-X-ray_llava_origin_val_ans.jsonl \
     --class_path ./data/chest_xray/Chest-X-ray_classes.json \
-    --result-file ./result/experiments/Ex_R4090/llava_med_Chest_Xray_classify_clip.txt \
+    --result-file ./result/experiments/Ex_R4090/llava_med_sft_v1_Chest_Xray_classify_clip.txt \
     --question-file ./data/chest_xray/Chest-X-ray_llava_origin_val.jsonl \
     --inference clip \
     --image-folder "/srv/lby" \
     --conv-mode vicuna_v1 
 
 python -m llava.run.eval.origin_eval_classify_chestxray \
-    --model-path /srv/lby/llava_med/llava-med-v1.5-mistral-7b \
+    --model-path /srv/lby/llava_med/checkpoints/llava_med_mistral_sft_v1  \
     --output-path ./data/chest_xray/Chest-X-ray_llava_origin_val_ans.jsonl \
     --class_path ./data/chest_xray/Chest-X-ray_classes.json \
-    --result-file ./result/experiments/Ex_R4090/llava_med_Chest_Xray_classify_origin.txt \
+    --result-file ./result/experiments/Ex_R4090/llava_med_sft_v1_Chest_Xray_classify_origin.txt \
     --question-file ./data/chest_xray/Chest-X-ray_llava_origin_val.jsonl \
     --inference origin \
     --image-folder "/srv/lby" \
     --conv-mode vicuna_v1 
-

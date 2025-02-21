@@ -27,7 +27,7 @@ deepspeed train/train_mem.py \
     --group_by_modality_length True \
     --bf16 True \
     --mis_mlp_lr 5e-5 \
-    --output_dir srv/lby/llava_med/checkpoints/llava-med-lora-sft-v1 \
+    --output_dir /srv/lby/llava_med/checkpoints/llava-med-lora-sft-v1 \
     --num_train_epochs 1 \
     --per_device_train_batch_size 8 \
     --per_device_eval_batch_size 8 \
@@ -62,7 +62,7 @@ echo "Training completed successfully."
 echo "Starting merge process..."
 
 python -m llava.run.train.merge_lora_weights \
-    --model-path srv/lby/llava_med/checkpoints/llava-med-lora-sft-v1 \
+    --model-path /srv/lby/llava_med/checkpoints/llava-med-lora-sft-v1 \
     --model-base /srv/lby/llava_med/llava-med-v1.5-mistral-7b \
     --save-model-path /srv/lby/llava_med/checkpoints/llava_med_mistral_sft_v1 
 
@@ -75,7 +75,7 @@ fi
 echo "Merge completed successfully."
 
 python -m llava.run.eval.origin_eval_classify_chestxray \
-    --model-path /srv/lby/llava_med/llava_med_mistral_sft_v1 \
+    --model-path /srv/lby/llava_med/checkpoints/llava_med_mistral_sft_v1  \
     --output-path ./data/chest_xray/Chest-X-ray_llava_origin_val_ans.jsonl \
     --class_path ./data/chest_xray/Chest-X-ray_classes.json \
     --result-file ./result/experiments/Ex_R4090/llava_med_sft_v1_Chest_Xray_classify_clip.txt \
@@ -85,7 +85,7 @@ python -m llava.run.eval.origin_eval_classify_chestxray \
     --conv-mode vicuna_v1 
 
 python -m llava.run.eval.origin_eval_classify_chestxray \
-    --model-path /srv/lby/llava_med/llava_med_mistral_sft_v1 \
+    --model-path /srv/lby/llava_med/checkpoints/llava_med_mistral_sft_v1  \
     --output-path ./data/chest_xray/Chest-X-ray_llava_origin_val_ans.jsonl \
     --class_path ./data/chest_xray/Chest-X-ray_classes.json \
     --result-file ./result/experiments/Ex_R4090/llava_med_sft_v1_Chest_Xray_classify_origin.txt \
