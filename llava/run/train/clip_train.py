@@ -30,6 +30,8 @@ import torch.nn as nn
 import torch.nn.init as init
 import transformers
 import tokenizers
+from torchvision import transforms
+from llava.run.train.randaugment import RandomAugment
 
 from llava.constants import IGNORE_INDEX, IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
 from torch.utils.data import Dataset
@@ -136,6 +138,8 @@ class SparseArguments:
     inference_type: int = 2
     use_cat: bool = True
     use_prompt: bool = True
+    Book_choice: int = 1
+    
 
 # ----------------------------------------------------------#
 
@@ -715,7 +719,8 @@ class LazySupervisedDataset(Dataset):
                  data_args: DataArguments,
                  use_prompt: bool = True,
                  Imgcls_count: int = 4,
-                 Txtcls_count: int = 8):
+                 Txtcls_count: int = 8,
+                 Book_choice: int = 1):
         super(LazySupervisedDataset, self).__init__()
         list_data_dict = json.load(open(data_path, "r"))
 
@@ -726,11 +731,15 @@ class LazySupervisedDataset(Dataset):
         self.use_prompt = use_prompt
         self.Imgcls_count = Imgcls_count
         self.Txtcls_count = Txtcls_count
+        self.Book_choice = Book_choice
         
         #---------------------------#
-      
-        with open("data/disease_desc.json", "r", encoding="utf-8") as f:
-            self.disease_desc = json.load(f)  # 读取 JSON 文件
+        if self.Book_choice:
+            with open("data/disease_desc.json", "r", encoding="utf-8") as f:
+                self.disease_desc = json.load(f)  # 读取 JSON 文件
+        else:
+            with open("data/full_disease.json", "r", encoding="utf-8") as f:
+                self.disease_desc = json.load(f)  # 读取 JSON 文件
         
         # 预计算疾病描述的 tokenized ID
         self.tokenized_desc = [
@@ -743,7 +752,15 @@ class LazySupervisedDataset(Dataset):
             self.tokenized_desc, batch_first=True, padding_value=self.tokenizer.pad_token_id
         )
         self.disease_desc_attention_mask = self.disease_desc_ids_padded.ne(self.tokenizer.pad_token_id)
-            
+        self.transform = transforms.Compose([
+            transforms.RandomHorizontalFlip(),
+            RandomAugment(
+                2, 7, 
+                isPIL=True,  # 保持PIL格式输出
+                augs=['Identity','AutoContrast','Equalize','Brightness','Sharpness',
+                    'ShearX', 'ShearY', 'TranslateX', 'TranslateY', 'Rotate']
+            )
+        ])
        
             
     def __len__(self):
@@ -790,9 +807,11 @@ class LazySupervisedDataset(Dataset):
                         result.paste(pil_img, ((height - width) // 2, 0))
                         return result
                 image = expand2square(image, tuple(int(x*255) for x in processor.image_mean))
-                image = processor.preprocess(image, return_tensors='pt')['pixel_values'][0]
+                augmented_image = self.transform(image) 
+                image = processor.preprocess(augmented_image, return_tensors='pt')['pixel_values'][0]
             else:
-                image = processor.preprocess(image, return_tensors='pt')['pixel_values'][0]
+                augmented_image = self.transform(image)
+                image = processor.preprocess(augmented_image, return_tensors='pt')['pixel_values'][0]
             sources = preprocess_multimodal(
                 copy.deepcopy([e["conversations"] for e in sources]),
                 self.data_args)
@@ -955,12 +974,12 @@ class DataCollatorForSupervisedDataset(object):
 
 
 def make_supervised_data_module(tokenizer: transformers.PreTrainedTokenizer,
-                                data_args, use_prompt, Imgcls_count, Txtcls_count) -> Dict:
+                                data_args, use_prompt, Imgcls_count, Txtcls_count, Book_choice) -> Dict:
     """Make dataset and collator for supervised fine-tuning."""
     train_dataset = LazySupervisedDataset(tokenizer=tokenizer,
                                 data_path=data_args.data_path,
                                 data_args=data_args, use_prompt = use_prompt, 
-                                Imgcls_count = Imgcls_count, Txtcls_count = Txtcls_count)
+                                Imgcls_count = Imgcls_count, Txtcls_count = Txtcls_count, Book_choice = Book_choice)
     data_collator = DataCollatorForSupervisedDataset(tokenizer=tokenizer)
     return dict(train_dataset=train_dataset,
                 eval_dataset=None,
@@ -1199,7 +1218,7 @@ def train(attn_implementation=None):
 
     data_module = make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args,use_prompt=sparse_args.use_prompt,
-                                              Imgcls_count=sparse_args.Imgcls_count,Txtcls_count=sparse_args.Txtcls_count)
+                                              Imgcls_count=sparse_args.Imgcls_count,Txtcls_count=sparse_args.Txtcls_count, Book_choice=sparse_args.Book_choice)
    
     trainer = LLaVATrainer(model=model,
                     tokenizer=tokenizer,

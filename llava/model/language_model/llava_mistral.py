@@ -110,8 +110,8 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             output_hidden_states=True,
             return_dict=True
         )
-        global_image_embedding = image_output.hidden_states[-2].mean(dim=1)
-        # local_image_embedding = image_output.hidden_states[-self.feature_layer][:, :-self.ncls_count, :].mean(dim=1)
+        # global_image_embedding = image_output.hidden_states[-2].mean(dim=1)
+        global_image_embedding = image_output.hidden_states[-self.feature_layer][:, :-self.ncls_count, :].mean(dim=1)
         
         # 步骤2: 对图像特征和类别特征进行L2归一化
         norm_global_image_embedding = F.normalize(global_image_embedding, p=2, dim=-1)
@@ -120,7 +120,7 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         norm_global_category_embeddings_cache = F.normalize(global_category_embeddings_cache, p=2, dim=-1)
         # norm_local_category_embeddings_cache = F.normalize(local_category_embeddings_cache, p=2, dim=-1)
         
-        similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) / 0.05  # 计算余弦相似度
+        similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) / self.temperature  # 计算余弦相似度
         # 将相似度矩阵转换为概率分布 
         similarity_probs = similarity_matrix.softmax(dim=-1)
       

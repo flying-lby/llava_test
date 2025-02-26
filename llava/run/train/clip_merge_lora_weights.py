@@ -1,7 +1,7 @@
 '''
 Author: fly
 Date: 2024-09-01 21:16:43
-FilePath: /llava_med/LLaVA-Med/llava/run/train/merge_lora_weights.py
+FilePath: /llava_med/LLaVA-Med/llava/run/train/clip_merge_lora_weights.py
 Description: 
 '''
 import argparse
@@ -30,6 +30,7 @@ class SparseArguments:
     inference_type: int = 2
     use_cat: bool = True
     use_prompt: bool = True
+    Book_choice: int = 1
 
     
 

@@ -34,6 +34,7 @@ class SparseArguments:
     inference_type: int = 2
     use_cat: bool = True
     use_prompt: bool = True
+    Book_choice: int = 1
    
 
 # 全局定义 add_sparse 参数

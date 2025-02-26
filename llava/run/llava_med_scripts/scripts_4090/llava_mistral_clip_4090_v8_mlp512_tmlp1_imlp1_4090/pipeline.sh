@@ -46,7 +46,7 @@ deepspeed train/clip_train_mem.py \
     --gradient_checkpointing True \
     --dataloader_num_workers 2 \
     --lazy_preprocess True \
-    --report_to wandb \
+    --report_to none \
     --Imgcls_count 4 \
     --Txtcls_count 8 \
     --hidden_dim 1024 \
@@ -60,7 +60,8 @@ deepspeed train/clip_train_mem.py \
     --feature_layer 2 \
     --special_tokens_mlp_type 1 \
     --use_ca_loss False \
-    --use_cat True
+    --use_cat False \
+    --Book_choice 1
     
 
 if [ $? -ne 0 ]; then

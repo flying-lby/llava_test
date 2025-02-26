@@ -576,10 +576,21 @@ class ClipLlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         
         norm_global_category_embeddings_cache = F.normalize(global_category_embeddings_cache, p=2, dim=-1)
         # norm_local_category_embeddings_cache = F.normalize(local_category_embeddings_cache, p=2, dim=-1)
+        num_categories = norm_global_category_embeddings_cache.size(0) 
         
-        similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) / self.temperature  # 计算余弦相似度
+        # similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) / self.temperature # 计算余弦相似度
+        # similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) / self.temperature  # 计算余弦相似度
         # 将相似度矩阵转换为概率分布 
-        similarity_probs = similarity_matrix.softmax(dim=-1)
+        # similarity_probs = torch.sigmoid(similarity_matrix)
+        if num_categories == 1:
+            # 只有一个类别时，直接设置概率为 1（可以根据需求调整）
+            similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) 
+            similarity_probs = torch.sigmoid(similarity_matrix)
+
+        else:
+            # 计算相似度矩阵并应用 softmax
+            similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) / self.temperature
+            similarity_probs = similarity_matrix.softmax(dim=-1) 
         # if self.inference_type == 1:
         #     # 计算余弦相似度矩阵
         #     similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) / self.temperature  # 计算余弦相似度

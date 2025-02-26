@@ -1247,6 +1247,7 @@ class MistralForCausalLM(MistralPreTrainedModel):
         # disease_features = self.knowledge_mlp(disease_inputs_embeds).mean(dim=2)
         # disease_inputs_embeds.shape torch.Size([8, 15, 136, 4096])  disease_features  torch.Size([8, 15, 4096])
         disease_features = self.knowledge_mlp(disease_inputs_embeds).mean(dim=2)
+        disease_features = torch.mean(disease_features, dim=0)
         # Step 3: 归一化特征向量到单位球面
         norm_global_imgcls_features = F.normalize(global_imgcls_features, p=2, dim=-1)  # (B, feature_dim)
         norm_local_img_features = F.normalize(local_img_features, p=2, dim=-1)
@@ -1257,19 +1258,32 @@ class MistralForCausalLM(MistralPreTrainedModel):
         norm_disease_features = F.normalize(disease_features, p=2, dim=-1)
       
         # 计算类别知识引导的loss
-        txt_to_disease_similarity = torch.matmul(norm_global_txtcls_features.unsqueeze(1), norm_disease_features.permute(0, 2, 1)).squeeze(1) / self.temperature  # (8, 15)
-        img_to_disease_similarity = torch.matmul(norm_global_imgcls_features.unsqueeze(1), norm_disease_features.permute(0, 2, 1)).squeeze(1) / self.temperature
-        batch_size = norm_global_txtcls_features.size(0)
-        num_disease_classes = norm_disease_features.size(1)
+        # txt_to_disease_similarity = torch.matmul(norm_global_txtcls_features, norm_disease_features.T).squeeze(1) / self.temperature  # (8, 15)
+        # img_to_disease_similarity = torch.matmul(norm_global_imgcls_features, norm_disease_features.T).squeeze(1) / self.temperature
+        # batch_size = norm_global_txtcls_features.size(0)
+        # num_disease_classes = norm_disease_features.size(0)
 
-        labels = torch.arange(batch_size, device=norm_global_txtcls_features.device) % num_disease_classes
+        # labels = torch.arange(batch_size, device=norm_global_txtcls_features.device) % num_disease_classes
  
-        loss_txt = F.cross_entropy(txt_to_disease_similarity, labels)
-        loss_img = F.cross_entropy(img_to_disease_similarity, labels)
+        # loss_txt = F.cross_entropy(txt_to_disease_similarity, labels)
+        # loss_img = F.cross_entropy(img_to_disease_similarity, labels)
 
+        # CG_loss = (loss_txt + loss_img) / 2
+        
+
+        txt2disease = torch.mm(norm_global_txtcls_features, norm_disease_features.t()) / self.temperature  # [B,C]
+        img2disease = torch.mm(norm_global_imgcls_features, norm_disease_features.t()) / self.temperature  # [B,C]
+
+        # 构造对比学习目标
+        logits_per_txt = txt2disease @ img2disease.t()  # [B,B]
+        logits_per_img = logits_per_txt.t()  # [B,B]
+
+        # 对称对比损失
+        labels = torch.arange(len(logits_per_txt), device=txt2disease.device)
+        loss_txt = F.cross_entropy(logits_per_txt, labels)
+        loss_img = F.cross_entropy(logits_per_img, labels)
         CG_loss = (loss_txt + loss_img) / 2
         
-    
         if self.use_cat:
             # Step 4: 计算全局图像和局部文本特征的 Loss
             temperature = self.temperature
@@ -1300,41 +1314,9 @@ class MistralForCausalLM(MistralPreTrainedModel):
     
             total_loss = self.loss_threshold * ca_loss + (1 - self.loss_threshold) * CG_loss
         else:
-            # Step 4: 计算全局特征损失
-            temperature = self.temperature
-
-            # 计算全局特征之间的相似度矩阵
-            similarity_matrix_global = torch.matmul(norm_global_imgcls_features, norm_global_txtcls_features.T) / temperature  # (B, B)
-
-            # 生成标签：同索引位置上的特征是正样本
-            labels = torch.arange(similarity_matrix_global.size(0), device=similarity_matrix_global.device)
-
-            # 使用全局特征计算 InfoNCE 损失（两个方向：img->txt 和 txt->img）
-            img_to_txt_loss_global = F.cross_entropy(similarity_matrix_global, labels)
-            txt_to_img_loss_global = F.cross_entropy(similarity_matrix_global.T, labels)
-
-            # 全局损失为两个方向的平均
-            global_loss = (img_to_txt_loss_global + txt_to_img_loss_global) / 2
-
-            # 使用局部特征计算损失（如果启用）
-            if self.use_local_loss:
-                # 计算局部特征之间的相似度矩阵
-                similarity_matrix_local = torch.matmul(norm_local_img_features, norm_local_txt_features.T) / temperature  # (B, B)
-
-                # 使用局部特征计算 InfoNCE 损失（两个方向：img->txt 和 txt->img）
-                img_to_txt_loss_local = F.cross_entropy(similarity_matrix_local, labels)
-                txt_to_img_loss_local = F.cross_entropy(similarity_matrix_local.T, labels)
-
-                # 局部损失为两个方向的平均
-                local_loss = (img_to_txt_loss_local + txt_to_img_loss_local) / 2
-
-                # 权重组合全局和局部损失
-                total_loss = self.loss_threshold * global_loss + (1 - self.loss_threshold) * local_loss
-            else:
-                # 仅使用全局特征损失
-                total_loss = global_loss
-        
-        
+           
+            total_loss = CG_loss
+           
         return CausalLMOutputWithPast(
             loss=total_loss,
             # logits=logits,

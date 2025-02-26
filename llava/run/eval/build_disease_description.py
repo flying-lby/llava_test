@@ -62,6 +62,7 @@ class SparseArguments:
     inference_type: int = 2
     use_cat: bool = True
     use_prompt: bool = True
+    Book_choice: int = 1
 
 def build_model(args):
     disable_torch_init()

@@ -5,5 +5,10 @@ __pycache__
 ../wandb
 ../probe_outputs
 llava/run/checkpoints/
-llava/run/data/
+llava/run/data/train/
+llava/run/data/data/chest_xray/new_classify_mimic_file_clip.json
+llava/run/data/data/chest_xray/llm_classify_mimic_file_clip.json
+llava/run/data/data/label_classify_mimic_file_clip.json
+llava/run/data/data/Chest-X-ray_llava_origin_val_ans.jsonl
+llava/run/data/eval/
 llava/run/wandb/
