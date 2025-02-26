@@ -12,7 +12,7 @@
 # ========================
 echo "Starting training process..."
 
-deepspeed train/train_mem.py \
+deepspeed train/clip_train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-6 \
     --deepspeed train/zero3.json \
     --model_name_or_path /mnt/nlp-ali/usr/huangwenxuan/home/official_llava_med/llava-med-v1.5-mistral-7b \
@@ -76,7 +76,7 @@ echo "Training completed successfully."
 # ========================
 echo "Starting merge process..."
 
-python -m llava.run.train.merge_lora_weights \
+python -m llava.run.train.clip_merge_lora_weights \
     --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava-lora-new-clip-A100-version3_2_26 \
     --model-base /mnt/nlp-ali/usr/huangwenxuan/home/official_llava_med/llava-med-v1.5-mistral-7b \
     --save-model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version3_2_26 \
