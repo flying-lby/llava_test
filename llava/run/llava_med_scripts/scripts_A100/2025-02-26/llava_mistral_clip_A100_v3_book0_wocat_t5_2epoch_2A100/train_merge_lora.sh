@@ -30,8 +30,8 @@ deepspeed train/clip_train_mem.py \
     --mis_mlp_lr 2e-5 \
     --output_dir /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava-lora-new-clip-A100-version3_2_26 \
     --num_train_epochs 2 \
-    --per_device_train_batch_size 64 \
-    --per_device_eval_batch_size 64 \
+    --per_device_train_batch_size 32 \
+    --per_device_eval_batch_size 32 \
     --gradient_accumulation_steps 1 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \

@@ -27,7 +27,7 @@ deepspeed train/clip_train_mem.py \
     --group_by_modality_length True \
     --bf16 True \
     --mis_mlp_lr 5e-5 \
-    --output_dir /srv/lby/llava_med/checkpoints/llava-lora-new-clip-v9 \
+    --output_dir /srv/lby/llava_med/checkpoints/llava-lora-new-clip-v10 \
     --num_train_epochs 1 \
     --per_device_train_batch_size 8 \
     --per_device_eval_batch_size 8 \
@@ -46,7 +46,7 @@ deepspeed train/clip_train_mem.py \
     --gradient_checkpointing True \
     --dataloader_num_workers 2 \
     --lazy_preprocess True \
-    --report_to none \
+    --report_to wandb \
     --Imgcls_count 4 \
     --Txtcls_count 8 \
     --hidden_dim 1024 \
@@ -60,8 +60,8 @@ deepspeed train/clip_train_mem.py \
     --feature_layer 2 \
     --special_tokens_mlp_type 1 \
     --use_ca_loss False \
-    --use_cat False \
-    --Book_choice 1
+    --use_cat True \
+    --Book_choice 0
     
 
 if [ $? -ne 0 ]; then
@@ -76,9 +76,9 @@ echo "Training completed successfully."
 echo "Starting merge process..."
 
 python -m llava.run.train.clip_merge_lora_weights \
-    --model-path /srv/lby/llava_med/checkpoints/llava-lora-new-clip-v9 \
+    --model-path /srv/lby/llava_med/checkpoints/llava-lora-new-clip-v10 \
     --model-base /srv/lby/llava_med/llava-med-v1.5-mistral-7b \
-    --save-model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v9 \
+    --save-model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v10 \
     --Imgcls_count 4 \
     --Txtcls_count 8 \
     --hidden_dim 1024 \
@@ -92,7 +92,8 @@ python -m llava.run.train.clip_merge_lora_weights \
     --feature_layer 2 \
     --special_tokens_mlp_type 1 \
     --use_ca_loss False \
-    --use_cat True
+    --use_cat True \
+    --Book_choice 0
 
 if [ $? -ne 0 ]; then
     echo "Merge failed. Exiting..."
@@ -101,10 +102,10 @@ fi
 echo "Merge completed successfully."
 
 python -m llava.run.eval.eval_classify \
-    --model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v9 \
-    --result-file ./result/R4090/llava-mistral_new_clip_v9/Chest_Xray_classify.txt \
-    --question-file ./data/chest_xray/Chest-X-ray_llava_val.jsonl \
-    --image-folder "/srv/lby" \
+    --model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v10 \
+    --result-folder ./result/R4090/llava-mistral_new_clip_v10/ \
+    --image-folder "/srv/lby/" \
+    --dataset "chestxray" \
     --conv-mode vicuna_v1 \
     --Imgcls_count 4 \
     --Txtcls_count 8 \
@@ -119,4 +120,5 @@ python -m llava.run.eval.eval_classify \
     --feature_layer 2 \
     --special_tokens_mlp_type 1 \
     --use_ca_loss False \
-    --use_cat True
+    --use_cat True \
+    --Book_choice 0
