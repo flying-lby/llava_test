@@ -588,20 +588,20 @@ class ClipLlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         # similarity_probs = torch.sigmoid(similarity_matrix)
         if num_categories == 1:
             # 只有一个类别时，直接设置概率为 1（可以根据需求调整）
-            # similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) 
-            # similarity_probs = torch.sigmoid(similarity_matrix)
-            txt2disease = torch.mm(norm_global_category_embeddings_cache, norm_disease_features.t()) / self.temperature  # [B,C]
-            img2disease = torch.mm(norm_global_image_embedding, norm_disease_features.t()) / self.temperature  # [B,C]
-            fused_logits = img2disease @ txt2disease.t()
-            similarity_probs = torch.sigmoid(fused_logits)
+            similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) 
+            similarity_probs = torch.sigmoid(similarity_matrix)
+            # txt2disease = torch.mm(norm_global_category_embeddings_cache, norm_disease_features.t()) / self.temperature  # [B,C]
+            # img2disease = torch.mm(norm_global_image_embedding, norm_disease_features.t()) / self.temperature  # [B,C]
+            # fused_logits = img2disease @ txt2disease.t()
+            # similarity_probs = torch.sigmoid(fused_logits)
         else:
             # 计算相似度矩阵并应用 softmax
-            # similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) / self.temperature
-            # similarity_probs = similarity_matrix.softmax(dim=-1) 
-            txt2disease = torch.mm(norm_global_category_embeddings_cache, norm_disease_features.t()) / self.temperature  # [B,C]
-            img2disease = torch.mm(norm_global_image_embedding, norm_disease_features.t()) / self.temperature  # [B,C]
-            fused_logits = img2disease @ txt2disease.t()
-            similarity_probs = torch.softmax(fused_logits, dim=1)
+            similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) / self.temperature
+            similarity_probs = similarity_matrix.softmax(dim=-1) 
+            # txt2disease = torch.mm(norm_global_category_embeddings_cache, norm_disease_features.t()) / self.temperature  # [B,C]
+            # img2disease = torch.mm(norm_global_image_embedding, norm_disease_features.t()) / self.temperature  # [B,C]
+            # fused_logits = img2disease @ txt2disease.t()
+            # similarity_probs = torch.softmax(fused_logits, dim=1)
         # if self.inference_type == 1:
         #     # 计算余弦相似度矩阵
         #     similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) / self.temperature  # 计算余弦相似度

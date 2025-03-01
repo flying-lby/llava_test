@@ -105,7 +105,7 @@ def test(args, sparse_args):
 
     siim_cls = ['pneumothorax', 'non-pneumothorax']
     rsna_cls = ['pneumonia','normal']
-    covid_cls = ['covid19']
+    covid_cls = ['covid19','non-covid19']
 
     padchest_seen_class = ['normal', 'pleural effusion', 'pacemaker', 'atelectasis', 'pneumonia', 'consolidation', 'cardiomegaly', 'emphysema', 
                            'nodule', 'edema', 'pneumothorax', 'fracture', 'mass', 'catheter']
@@ -154,7 +154,8 @@ def test(args, sparse_args):
         result_file = args.result_folder + 'rsna_classify.txt'
     elif args.dataset == 'covid-cxr2':
         dataset_cls = covid_cls
-        original_class.append('covid19')
+        question_file = './data/COVIDx_CXR/COVIDx_CXR_llava_val.jsonl'
+        result_file = args.result_folder + 'COVIDx_CXR_classify.txt'
     elif args.dataset == 'covid-r':
         dataset_cls = covid_cls
         original_class.append('covid19')
