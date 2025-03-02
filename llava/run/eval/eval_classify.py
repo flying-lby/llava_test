@@ -75,7 +75,7 @@ def test(args, sparse_args):
     model_path = os.path.expanduser(args.model_path)
     model_name = get_model_name_from_path(model_path)
     tokenizer, model, image_processor, context_len = load_pretrained_model(
-        model_path, args.model_base, model_name, sparse_args, device_map=None  # 让 DataParallel 处理 device
+        model_path, args.model_base, model_name, sparse_args # 让 DataParallel 处理 device
     )
 
     # 多 GPU 推理
@@ -90,18 +90,20 @@ def test(args, sparse_args):
         model_config = model.config
     
     # 加载类别数据
-    chexray14_cls = [ 'atelectasis', 'cardiomegaly', 'effusion', 'infiltrate', 'mass', 'nodule', 'pneumonia',
-                    'pneumothorax', 'consolidation', 'edema', 'emphysema', 'fibrosis', 'thicken', 'hernia']  #Fibrosis seldom appears in MIMIC_CXR and is divided into the 'tail_abnorm_obs' entitiy.  
+    chexray14_cls = ["fibrosis","edema","pneumothorax","cardiomegaly","atelectasis","nodule","emphysema","no finding",
+                     "mass","pleural_thickening","effusion","infiltration","pneumonia","hernia","consolidation"]  #Fibrosis seldom appears in MIMIC_CXR and is divided into the 'tail_abnorm_obs' entitiy.  
     mura_cls = lera_cls = ['abnormality']
     if args.dataset == 'chexpert':
         chexpert_subset = args.chexpert_subset
 
         if chexpert_subset == 'False':
-            chexpert_cls = ['normal', 'enlarge', 'cardiomegaly',
-                'opacity', 'lesion', 'edema', 'consolidation', 'pneumonia', 'atelectasis',
-                'pneumothorax', 'effusion', "abnormality", 'fracture', 'device']
+            chexpert_cls = [
+            'no finding', 'enlarged cardiomediastinum', 'cardiomegaly', 
+            'lung opacity', 'lung lesion', 'edema', 'consolidation', 
+            'pneumonia', 'atelectasis', 'pneumothorax', 'pleural effusion', 
+            'pleural other', 'fracture', 'support devices']
         else:
-            chexpert_cls = ['cardiomegaly','edema', 'consolidation', 'atelectasis','effusion']
+            chexpert_cls = ['cardiomegaly','edema', 'consolidation', 'atelectasis','pleural effusion']
 
     siim_cls = ['pneumothorax', 'non-pneumothorax']
     rsna_cls = ['pneumonia','normal']
@@ -187,7 +189,7 @@ def test(args, sparse_args):
     MIMIC_mapping = [ _ for i,_ in enumerate(mapping) if _ != -1] # valid MIMIC class index
     dataset_mapping = [ i for i,_ in enumerate(mapping) if _ != -1] # valid (exist in MIMIC) chexray class index
     target_class = [dataset_cls[i] for i in dataset_mapping ] # Filter out non-existing class
-    # target_class = rsna_cls
+    # target_class = chexray14_cls
     print(MIMIC_mapping)
 
 
@@ -207,7 +209,7 @@ def test(args, sparse_args):
         with open("data/disease_desc.json", "r", encoding="utf-8") as f:
             disease_desc = json.load(f)  # 读取 JSON 文件
     else:
-        with open("data/full_disease.json", "r", encoding="utf-8") as f:
+        with open("data/new_full_disease.json", "r", encoding="utf-8") as f:
             disease_desc = json.load(f)  # 读取 JSON 文件
     
     # 预计算疾病描述的 tokenized ID
@@ -366,6 +368,7 @@ def test(args, sparse_args):
         try:
             auc_score = roc_auc_score(all_labels[:, i], all_probs[:, i])
         except ValueError:
+            # pass
             auc_score = np.nan  # 如果该类别标签全为0或1，返回 NaN
         
         # 计算 AUPRC
@@ -413,7 +416,6 @@ def test(args, sparse_args):
             f.write(f"{key}: {value}\n")
 
     print(f"Results saved to {result_file}")
-
 
 
 

@@ -738,7 +738,7 @@ class LazySupervisedDataset(Dataset):
             with open("data/disease_desc.json", "r", encoding="utf-8") as f:
                 self.disease_desc = json.load(f)  # 读取 JSON 文件
         else:
-            with open("data/full_disease.json", "r", encoding="utf-8") as f:
+            with open("data/new_full_disease.json", "r", encoding="utf-8") as f:
                 self.disease_desc = json.load(f)  # 读取 JSON 文件
         
         # 预计算疾病描述的 tokenized ID

@@ -34,6 +34,8 @@ import json
 import numpy as np
 from sklearn.metrics import roc_auc_score, f1_score
 from typing import List
+import pydicom
+from skimage import exposure
 
 def split_list(lst, n):
     """Split a list into n (roughly) equal-sized chunks"""
@@ -47,24 +49,87 @@ def get_chunk(lst, n, k):
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+def get_classes(args):
+      
+    # 加载类别数据
+    chexray14_cls = ["fibrosis","edema","pneumothorax","cardiomegaly","atelectasis","nodule","emphysema","no finding",
+                     "mass","pleural_thickening","effusion","infiltration","pneumonia","hernia","consolidation"]  #Fibrosis seldom appears in MIMIC_CXR and is divided into the 'tail_abnorm_obs' entitiy.  
+    
+    if args.dataset == 'chexpert':
+        chexpert_subset = args.chexpert_subset
 
+        if chexpert_subset == 'False':
+            chexpert_cls = [
+            'no finding', 'enlarged cardiomediastinum', 'cardiomegaly', 
+            'lung opacity', 'lung lesion', 'edema', 'consolidation', 
+            'pneumonia', 'atelectasis', 'pneumothorax', 'pleural effusion', 
+            'pleural other', 'fracture', 'support devices']
+        else:
+            chexpert_cls = ['cardiomegaly','edema', 'consolidation', 'atelectasis','pleural effusion']
 
-def eval_model(args):
+    siim_cls = ['pneumothorax', 'non-pneumothorax']
+    rsna_cls = ['pneumonia','normal']
+    covid_cls = ['covid19','non-covid19']
+
+    
+    original_class = [
+                'normal', 'clear', 'sharp', 'sharply', 'unremarkable', 'intact', 'stable', 'free',
+                'effusion', 'opacity', 'pneumothorax', 'edema', 'atelectasis', 'tube', 'consolidation', 'process', 'abnormality', 'enlarge', 'tip', 'low',
+                'pneumonia', 'line', 'congestion', 'catheter', 'cardiomegaly', 'fracture', 'air', 'tortuous', 'lead', 'disease', 'calcification', 'prominence',
+                'device', 'engorgement', 'picc', 'clip', 'elevation', 'expand', 'nodule', 'wire', 'fluid', 'degenerative', 'pacemaker', 'thicken', 'marking', 'scar',
+                'hyperinflate', 'blunt', 'loss', 'widen', 'collapse', 'density', 'emphysema', 'aerate', 'mass', 'crowd', 'infiltrate', 'obscure', 'deformity', 'hernia',
+                'drainage', 'distention', 'shift', 'stent', 'pressure', 'lesion', 'finding', 'borderline', 'hardware', 'dilation', 'chf', 'redistribution', 'aspiration',
+                'tail_abnorm_obs', 'excluded_obs'
+            ]
+    
+    if args.dataset == 'chestxray':
+        dataset_cls = chexray14_cls
+        question_file = './data/chest_xray/Chest-X-ray_llava_origin_val.jsonl'
+    elif args.dataset == 'chexpert':
+        dataset_cls = chexpert_cls
+        question_file = './data/chexpert/chexpert_llava_origin_val.jsonl'
+    elif args.dataset == 'siim':
+        dataset_cls = siim_cls
+        question_file = './data/SIIM_Pneumothorax/SIIM_Pneumothorax_llava_origin_val.jsonl'
+    elif args.dataset == 'rsna':
+        dataset_cls = rsna_cls
+        question_file = './data/rsna/rsna_pneumonia_llava_origin_val.jsonl'
+    elif args.dataset == 'covid-cxr2':
+        dataset_cls = covid_cls
+        question_file = './data/COVIDx_CXR/COVIDx_CXR_llava_origin_val.jsonl'
+  
+        
+    original_class.extend(item for item in dataset_cls if item not in original_class)
+    # original_class = dataset_cls
+    mapping = []
+    for disease in dataset_cls:
+        if disease in original_class:
+            print(disease)
+            mapping.append(original_class.index(disease))
+        else:
+            mapping.append(-1)
+    MIMIC_mapping = [ _ for i,_ in enumerate(mapping) if _ != -1] # valid MIMIC class index
+    dataset_mapping = [ i for i,_ in enumerate(mapping) if _ != -1] # valid (exist in MIMIC) chexray class index
+    target_class = [dataset_cls[i] for i in dataset_mapping ] # Filter out non-existing class
+    
+    return target_class,question_file
+
+def eval_model(args, classes,question_file):
     # Model
     disable_torch_init()
     model_path = os.path.expanduser(args.model_path)
     model_name = get_model_name_from_path(model_path)
     tokenizer, model, image_processor, context_len = load_pretrained_model(model_path, args.model_base, model_name, device_map='cuda:0')
 
-    questions = [json.loads(q) for q in open(os.path.expanduser(args.question_file), "r")]
+    questions = [json.loads(q) for q in open(os.path.expanduser(question_file), "r")]
     questions = get_chunk(questions, args.num_chunks, args.chunk_idx)
-    # questions = random.sample(questions, min(100, len(questions)))
+    questions = random.sample(questions, min(100, len(questions)))
     
     answers_file = os.path.expanduser(args.output_path)
     os.makedirs(os.path.dirname(answers_file), exist_ok=True)
     ans_file = open(answers_file, "w")
     for line in tqdm(questions):
-        idx = line["question_id"]
+        idx = line["label"]
         image_file = os.path.join(args.image_folder,line["image"])
         
         qs = line["text"].replace('<image>', '').strip()
@@ -76,7 +141,11 @@ def eval_model(args):
         cur_prompt = '<image>' + '\n' + cur_prompt
         # qs = qs + '\n' + "Answer with the option's letter from the given choices directly."
         # cur_prompt = cur_prompt + '\n' + "Answer with the option's letter from the given choices directly."
-        
+        if args.use_cot:
+            cot = " Let's think step by step."
+        else:
+            cot=""
+        qs = qs + cot
         conv = conv_templates[args.conv_mode].copy()
         conv.append_message(conv.roles[0], qs)
         conv.append_message(conv.roles[1], None)
@@ -84,8 +153,20 @@ def eval_model(args):
 
         input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(0).cuda(0)
 
-        image = Image.open(os.path.join(args.image_folder, image_file))
-        image_tensor = process_images([image], image_processor, model.config)[0].cuda(0)
+       
+        if args.dataset == 'rsna':
+            img = pydicom.dcmread(image_file).pixel_array  # 读取 DICOM 图像数据
+            img = img.astype(float) / 255.0  # 归一化图像
+            img = exposure.equalize_hist(img)  # 直方图均衡化
+
+            # 转换为 PIL 图像并应用预处理
+            img = (255 * img).astype(np.uint8)  # 转换为 uint8 类型
+            image = Image.fromarray(img).convert('RGB') 
+            # image = Image.open(os.path.join(args.image_folder, image_file)).convert("RGB")
+            image_tensor = process_images([image], image_processor, model.config)[0].cuda(0)
+        else:
+            image = Image.open(image_file).convert("RGB")
+            image_tensor = process_images([image], image_processor, model.config)[0].to(device)
 
         # stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
         # keywords = [stop_str]
@@ -113,7 +194,7 @@ def eval_model(args):
         ans_file.flush()
     ans_file.close()
     
-def clip_eval_model(args):
+def clip_eval_model(args,classes,question_file):
     # Model
     # disable_torch_init()
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -123,11 +204,7 @@ def clip_eval_model(args):
     tokenizer, model, image_processor, context_len = load_pretrained_model(
         model_path, args.model_base, model_name, device_map='cuda:0'
     )
-    
-    # 加载类别数据
-    with open(args.class_path, 'r') as f:
-        classes = json.load(f)
-
+  
     # 确保类别数据是一个列表
     categories = [f"This is a chest X-ray showing {category}" for category in classes]
 
@@ -164,23 +241,20 @@ def clip_eval_model(args):
     # print('Local Category embeddings:', local_category_embeddings_cache)          
 
     questions = [
-        json.loads(q) for q in open(os.path.expanduser(args.question_file), "r")
+        json.loads(q) for q in open(os.path.expanduser(question_file), "r")
     ]
     questions = get_chunk(questions, args.num_chunks, args.chunk_idx)
-    # questions = random.sample(questions, min(100, len(questions)))
+    questions = random.sample(questions, min(100, len(questions)))
 
     # 存储真实标签和预测结果
-    all_labels = []  # 真实标签
-    all_predictions = []  # 预测标签
-    all_probs = []  # 存储类别概率，用于计算 AUC
-
+    all_labels = []
+    all_probs = []
+    letter_to_disease = {chr(65 + idx): disease for idx, disease in enumerate(classes)}
     for line in tqdm(questions):
-        idx = line["question_id"]
-        image_file = line["image"]
+        img_path = args.image_folder + line["image"]
         qs = line["text"]
+        label_dict = line["label"]
         
-        # 创建提示语句
-        cur_prompt = qs
         if model.config.mm_use_im_start_end:
             qs = (
                 DEFAULT_IM_START_TOKEN
@@ -206,15 +280,31 @@ def clip_eval_model(args):
         )
         attention_mask = (input_ids != tokenizer.pad_token_id).long().cuda(0)
         
-        image = Image.open(os.path.join(args.image_folder, image_file)).convert("RGB")
-        image_tensor = process_images([image], image_processor, model.config)[0].cuda(0)
+        # 尝试加载图像，如果遇到异常则跳过该图像
+        try:
+            if args.dataset == 'rsna':
+                img = pydicom.dcmread(img_path).pixel_array  # 读取 DICOM 图像数据
+                img = img.astype(float) / 255.0  # 归一化图像
+                img = exposure.equalize_hist(img)  # 直方图均衡化
+
+                # 转换为 PIL 图像并应用预处理
+                img = (255 * img).astype(np.uint8)  # 转换为 uint8 类型
+                image = Image.fromarray(img).convert('RGB') 
+                # image = Image.open(os.path.join(args.image_folder, image_file)).convert("RGB")
+                image_tensor = process_images([image], image_processor, model.config)[0].cuda(0)
+            else:
+                image = Image.open(img_path).convert("RGB")
+                image_tensor = process_images([image], image_processor, model.config)[0].to(device)
+        except Exception as e:
+            print(f"Warning: Skipping image {img_path} due to error: {e}")
+            continue 
         
         with torch.inference_mode():
             outputs = model.inference_pipeline(
                 input_ids=input_ids,
                 attention_mask=attention_mask, 
                 global_category_embeddings_cache=global_category_embeddings_cache,
-                images=image_tensor.unsqueeze(0).half().cuda(0),
+                images=image_tensor.unsqueeze(0).half().to(device),
                 image_sizes=[image.size],
                 use_cache=True,
             )
@@ -222,21 +312,12 @@ def clip_eval_model(args):
             # similarity_probs 是一个 (batch_size, num_classes) 的矩阵
             similarity_probs = outputs  # 已经 softmax 过了，得到每个类别的预测概率
             # 获取真实标签
-            labels = ["-".join(line["question_id"].split("-")[1:])]  # 获取标签
-            labels = [", ".join(classes[ord(l.strip()) - ord('a')] for l in label.lower().split(",")) for label in labels] 
-
-            # 计算该样本的真实标签
+        
             true_labels = torch.zeros(len(classes))  # 假设 `classes` 是类别列表
-            for label in labels:
-                # 将逗号分隔的多标签拆分为单个类别
-                split_labels = [lbl.strip() for lbl in label.split(",")]
-                for split_label in split_labels:
-                    if split_label in classes:
-                        # 在这里设置真实标签为 1，如果该样本属于该类别
-                        true_labels[classes.index(split_label)] = 1
-                    else:
-                        print(f"Warning: {split_label} not found in classes.")
-
+            for disease, value in label_dict.items():
+                if value == 1 and disease in classes:
+                    true_labels[classes.index(disease)] = 1
+                    
             # 将标签和预测概率存储到全局变量
             all_labels.append(true_labels.cpu().numpy())
             all_probs.append(similarity_probs.cpu().numpy())
@@ -245,66 +326,45 @@ def clip_eval_model(args):
     all_labels = np.array(all_labels)  # shape: (num_samples, num_classes)
     all_probs = np.array(all_probs).squeeze(1)  # shape: (num_samples, num_classes)
 
-    # 初始化准确率列表
-    accuracies = []
     result_metrics = {}
 
-    # 计算每个类别的准确率
+    # 计算每个类别的准确率、AUC、AUPRC、F1、精确度、召回率
+    accuracies, auc_scores, auprc_scores, f1_scores, recall_scores, precision_scores = [], [], [], [], [], []
+    
     for i in range(all_labels.shape[1]):
-        # 获取当前类别的精确度、召回率和阈值
+        # 计算精确度、召回率和阈值
         precision, recall, thresholds = precision_recall_curve(all_labels[:, i], all_probs[:, i])
-        
-        # 计算 F1 分数
+
+        # 计算 F1 分数并找到最大值
         f1 = 2 * precision * recall / (precision + recall + 1e-8)  # 避免分母为0
-        max_f1_idx = np.argmax(f1)  # 取最大 F1 分数对应的索引
+        max_f1_idx = np.argmax(f1)  # 最大 F1 对应的索引
         
-        # 选择最大 F1 分数时的阈值
+        # 选择最大 F1 对应的阈值
         best_threshold = thresholds[max_f1_idx]
         
-        # 根据该阈值对预测值进行二值化（预测为1的样本）
+        # 二值化预测并计算准确率
         all_predictions_binary = (all_probs[:, i] >= best_threshold).astype(int)
-        
-        # 计算该类别的准确率
         accuracy = (all_predictions_binary == all_labels[:, i]).mean()
-        accuracies.append(accuracy)
 
-    # 计算 AUC（逐类计算 AUC）
-    auc_scores = []
-    for i in range(all_labels.shape[1]):  # 对每个类别计算 AUC
+        # 计算 AUC 和 AUPRC
         try:
             auc_score = roc_auc_score(all_labels[:, i], all_probs[:, i])
-            auc_scores.append(auc_score)
         except ValueError:
-            # 如果该类别的标签都为0或1，roc_auc_score会抛出 ValueError
-            auc_scores.append(np.nan)
+            # pass
+            auc_score = np.nan  # 如果该类别标签全为0或1，返回 NaN
+        
+        # 计算 AUPRC
+        auprc_score = auc(recall, precision)
 
-    # 计算 AUPRC（逐类计算 AUPRC）
-    auprc_scores = []
-    for i in range(all_labels.shape[1]):  # 对每个类别计算 AUPRC
-        precision, recall, _ = precision_recall_curve(all_labels[:, i], all_probs[:, i])
-        auprc_score = auc(recall, precision)  # 计算 AUPRC
+        # 保存每个类别的指标
+        accuracies.append(accuracy)
+        auc_scores.append(auc_score)
         auprc_scores.append(auprc_score)
+        f1_scores.append(np.max(f1))
+        recall_scores.append(recall[max_f1_idx])
+        precision_scores.append(precision[max_f1_idx])
 
-    # 计算每个类别的精确度、召回率和 F1 分数
-    f1_scores = []
-    recall_scores = []
-    precision_scores = []
-    for i in range(all_labels.shape[1]):
-        # 计算每个类别的精确度、召回率和 F1 分数
-        precision, recall, thresholds = precision_recall_curve(all_labels[:, i], all_probs[:, i])
-
-        # 计算 F1 分数
-        f1 = 2 * precision * recall / (precision + recall + 1e-8)  # 避免分母为0
-        max_f1 = np.max(f1)  # 取最大 F1 分数
-        f1_scores.append(max_f1)
-
-        # 记录召回率（对应最大 F1 的召回率）
-        recall_scores.append(recall[np.argmax(f1)])
-
-        # 记录精确度
-        precision_scores.append(precision[np.argmax(f1)])
-        
-        
+    # 汇总结果
     result_metrics["mean_accuracy"] = np.mean(accuracies)
     result_metrics["mean_auc"] = np.nanmean(auc_scores)
     result_metrics["mean_f1"] = np.mean(f1_scores)
@@ -320,19 +380,19 @@ def clip_eval_model(args):
     result_metrics["precision_scores_per_class"] = precision_scores
 
     # 打印所有计算的结果
-    print("\n===== Evaluation Metrics =====")
+    print(f"\n===== Evaluation Metrics for {args.dataset} =====")
     for key, value in result_metrics.items():
-        if isinstance(value, list) or isinstance(value, np.ndarray):  # 打印所有元素
+        if isinstance(value, (list, np.ndarray)):  # 打印所有元素
             print(f"{key}: {value}")
         else:
             print(f"{key}: {value}")
-    
-    # 检查目录并创建
-    result_dir = os.path.dirname(args.result_file)  # 提取文件路径的目录部分
-    if result_dir and not os.path.exists(result_dir):  # 如果目录不存在
-        os.makedirs(result_dir, exist_ok=True)  # 创建目录
 
-    # 写入文件
+    # 创建结果目录
+    result_dir = os.path.dirname(args.result_file)
+    if result_dir and not os.path.exists(result_dir):
+        os.makedirs(result_dir, exist_ok=True)
+
+    # 写入结果文件
     with open(args.result_file, 'w') as f:
         for key, value in result_metrics.items():
             f.write(f"{key}: {value}\n")
@@ -341,15 +401,13 @@ def clip_eval_model(args):
 
 
 
-
 # 通过疾病名字计算指标
-def get_metrics1(args):
+def get_metrics1(args,classes,question_file):
     # 读取数据
 
     answers = [json.loads(line) for line in open(args.output_path)]
 
-    with open(args.class_path, 'r') as f:
-        disease_list = json.load(f)
+    disease_list = classes
     
     print(f"Total number of answers: {len(answers)}")
 
@@ -362,8 +420,7 @@ def get_metrics1(args):
     # 遍历每个 answer，提取 labels 和预测类别
     for item in answers:
         # 获取标签（label），可能包含多个标签
-        labels = item["question_id"].split("-")[1:]
-        labels = [l.strip() for label in labels for l in label.split(",")]
+        labels = item["question_id"]
 
         # 获取预测的 text
         text = item["text"].lower()
@@ -372,8 +429,10 @@ def get_metrics1(args):
         predicted_categories = [1 if disease in text else 0 for disease in disease_list]
 
         # 生成真实标签向量
-        true_labels = [1 if chr(65 + disease_to_idx[disease]) in labels else 0 for disease in disease_list]
-
+        true_labels = torch.zeros(len(disease_list))  # 假设 `classes` 是类别列表
+        for disease, value in labels.items():
+            if value == 1 and disease in disease_list:
+                true_labels[disease_list.index(disease)] = 1
         y_true.append(true_labels)
         y_pred.append(predicted_categories)
 
@@ -418,17 +477,18 @@ def get_metrics1(args):
         "f1_macro": f1_macro
     }
 
+    result_dir = os.path.dirname(args.result_file)
+
+    # 确保目录存在
+    os.makedirs(result_dir, exist_ok=True)
     with open(args.result_file, 'w') as f:
         json.dump(result, f, indent=4)
 
 # 通过疾病索引计算指标 A,B,C,D...
 
-def get_metrics2(args):
+def get_metrics2(args,classes,question_file):
     # 读取数据
     answers = [json.loads(line) for line in open(args.output_path)]
-    
-    with open(args.class_path, 'r') as f:
-        disease_list = json.load(f)
 
     # 疾病类别及其索引 A, B, C, D...
     # disease_list = [
@@ -436,7 +496,7 @@ def get_metrics2(args):
     #     'nodule', 'emphysema', 'no finding', 'mass', 'pleural_thickening', 
     #     'effusion', 'infiltration', 'pneumonia', 'hernia', 'consolidation'
     # ]
-    disease_indices = [chr(65 + i) for i in range(len(disease_list))]  # A, B, C, ..., O
+    disease_indices = [chr(65 + i) for i in range(len(classes))]  # A, B, C, ..., O
 
     print(f"Total number of answers: {len(answers)}")
 
@@ -447,8 +507,7 @@ def get_metrics2(args):
     # 遍历每个 answer，提取 labels 和预测类别
     for item in answers:
         # 真实标签（A, B, C, D...）
-        labels = item["question_id"].split("-")[1:]
-        labels = [l.strip() for label in labels for l in label.split(",")]
+        labels = item["question_id"]
 
         # 获取预测的 text
         text = item["text"].upper().strip()  # 转换为大写匹配 A, B, C, D...
@@ -480,7 +539,7 @@ def get_metrics2(args):
     # 计算每个类别的准确率
     category_accuracies = (y_true * y_pred).sum(axis=0) / y_true.sum(axis=0) * 100
     category_accuracies = {
-        disease_list[i]: acc if not np.isnan(acc) else 0 
+        classes[i]: acc if not np.isnan(acc) else 0 
         for i, acc in enumerate(category_accuracies)
     }
 
@@ -515,10 +574,11 @@ if __name__ == "__main__":
     parser.add_argument("--model-path", type=str, default="/srv/lby/llava_med/llava-med-v1.5-mistral-7b")
     parser.add_argument("--model-base", type=str, default=None)
     parser.add_argument("--image-folder", type=str, default="")
+    parser.add_argument("--use-cot", type=int, default=0)
     parser.add_argument("--output-path", type=str, default="./data/chest_xray/Chest-X-ray_llava_origin_val_ans.jsonl")
-    parser.add_argument("--class_path", type=str, default="./data/chest_xray/Chest-X-ray_classes.json")
+    parser.add_argument("--dataset", type=str, default="siim")
+    parser.add_argument("--chexpert-subset", type=str, default="False")
     parser.add_argument("--result-file", type=str, default="./result/chest_xray/Chest-X-ray_classify.json")
-    parser.add_argument("--question-file", type=str, default="./data/chest_xray/Chest-X-ray_llava_val.jsonl")
     parser.add_argument("--conv-mode", type=str, default="llava_v1")
     parser.add_argument("--num-chunks", type=int, default=1)
     parser.add_argument("--chunk-idx", type=int, default=0)
@@ -537,17 +597,18 @@ if __name__ == "__main__":
     # /srv/lby/llava_med/checkpoints/llava-llava-mistral_ft2
     
 
-        
+    classes,question_file = get_classes(args)
     if  args.inference == "clip":
-        clip_eval_model(args)
+        clip_eval_model(args,classes,question_file)
     else:
-        eval_model(args)
+        eval_model(args,classes,question_file)
+        get_metrics1(args,classes,question_file)
         
-        # 根据 model_path 选择合适的 metrics 计算方式
-        if "llava_med" in args.model_path.lower():
-            get_metrics1(args)
-        else:
-            if "sft" in args.model_path.lower():
-                get_metrics1(args)
-            else:
-                get_metrics2(args)  
+        # # 根据 model_path 选择合适的 metrics 计算方式
+        # if "llava_med" in args.model_path.lower():
+        #     get_metrics1(args,classes,question_file )
+        # else:
+        #     if "sft" in args.model_path.lower():
+        #         get_metrics1(args,classes,question_file)
+        #     else:
+        #         get_metrics2(args,classes,question_file)  

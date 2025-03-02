@@ -1,0 +1,11 @@
+{
+    "category_accuracies": {
+        "pneumonia": 100.0,
+        "normal": 32.5
+    },
+    "average_accuracy": 66.25,
+    "auc_micro": 0.38,
+    "auc_macro": 0.565625,
+    "f1_micro": 0.425925925925926,
+    "f1_macro": 0.4247104247104247
+}

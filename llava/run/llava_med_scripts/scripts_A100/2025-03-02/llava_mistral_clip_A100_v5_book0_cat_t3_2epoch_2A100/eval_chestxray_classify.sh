@@ -1,0 +1,145 @@
+###
+ # @Author: fly
+ # @Date: 2024-12-26 16:55:54
+ # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/scripts_A100/2025-03-02/llava_mistral_clip_A100_v5_book0_cat_t3_2epoch_2A100/eval_chestxray_classify.sh
+ # @Description: 
+### 
+
+# ========================
+# Testing/Evaluation
+# ========================
+echo "Starting evaluation process..."
+
+python -m llava.run.eval.eval_classify \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version5_3_2 \
+    --result-folder ./result/A100/2025_3_2/llava_mistral_clip_A100_v5_book0_cat_t3_2epoch_2A100/ \
+    --image-folder "/mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/" \
+    --dataset "siim" \
+    --conv-mode vicuna_v1 \
+    --Imgcls_count 4 \
+    --Txtcls_count 8 \
+    --hidden_dim 1024 \
+    --output_dim 4096 \
+    --img_mlp_type 0 \
+    --txt_mlp_type 0 \
+    --knowledge_mlp_type 0 \
+    --loss_threshold 0.5 \
+    --temperature 0.03 \
+    --use_local_loss True \
+    --feature_layer 2 \
+    --special_tokens_mlp_type 1 \
+    --use_ca_loss False \
+    --use_cat True \
+    --Book_choice 0
+
+python -m llava.run.eval.eval_classify \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version5_3_2 \
+    --result-folder ./result/A100/2025_3_2/llava_mistral_clip_A100_v5_book0_cat_t3_2epoch_2A100/ \
+    --image-folder "/mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/" \
+    --dataset "chestxray" \
+    --conv-mode vicuna_v1 \
+    --Imgcls_count 4 \
+    --Txtcls_count 8 \
+    --hidden_dim 1024 \
+    --output_dim 4096 \
+    --img_mlp_type 0 \
+    --txt_mlp_type 0 \
+    --knowledge_mlp_type 0 \
+    --loss_threshold 0.5 \
+    --temperature 0.03 \
+    --use_local_loss True \
+    --feature_layer 2 \
+    --special_tokens_mlp_type 1 \
+    --use_ca_loss False \
+    --use_cat True \
+    --Book_choice 0
+
+python -m llava.run.eval.eval_classify \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version5_3_2 \
+    --result-folder ./result/A100/2025_3_2/llava_mistral_clip_A100_v5_book0_cat_t3_2epoch_2A100/ \
+    --image-folder "/mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/" \
+    --chexpert-subset "True" \
+    --dataset "chexpert" \
+    --conv-mode vicuna_v1 \
+    --Imgcls_count 4 \
+    --Txtcls_count 8 \
+    --hidden_dim 1024 \
+    --output_dim 4096 \
+    --img_mlp_type 0 \
+    --txt_mlp_type 0 \
+    --knowledge_mlp_type 0 \
+    --loss_threshold 0.5 \
+    --temperature 0.03 \
+    --use_local_loss True \
+    --feature_layer 2 \
+    --special_tokens_mlp_type 1 \
+    --use_ca_loss False \
+    --use_cat True \
+    --Book_choice 0
+
+python -m llava.run.eval.eval_classify \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version5_3_2 \
+    --result-folder ./result/A100/2025_3_2/llava_mistral_clip_A100_v5_book0_cat_t3_2epoch_2A100/ \
+    --image-folder "/mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/" \
+    --chexpert-subset "False" \
+    --dataset "chexpert" \
+    --conv-mode vicuna_v1 \
+    --Imgcls_count 4 \
+    --Txtcls_count 8 \
+    --hidden_dim 1024 \
+    --output_dim 4096 \
+    --img_mlp_type 0 \
+    --txt_mlp_type 0 \
+    --knowledge_mlp_type 0 \
+    --loss_threshold 0.5 \
+    --temperature 0.03 \
+    --use_local_loss True \
+    --feature_layer 2 \
+    --special_tokens_mlp_type 1 \
+    --use_ca_loss False \
+    --use_cat True \
+    --Book_choice 0
+
+python -m llava.run.eval.eval_classify \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version5_3_2 \
+    --result-folder ./result/A100/2025_3_2/llava_mistral_clip_A100_v5_book0_cat_t3_2epoch_2A100/ \
+    --image-folder "/mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/" \
+    --dataset "rsna" \
+    --conv-mode vicuna_v1 \
+    --Imgcls_count 4 \
+    --Txtcls_count 8 \
+    --hidden_dim 1024 \
+    --output_dim 4096 \
+    --img_mlp_type 0 \
+    --txt_mlp_type 0 \
+    --knowledge_mlp_type 0 \
+    --loss_threshold 0.5 \
+    --temperature 0.03 \
+    --use_local_loss True \
+    --feature_layer 2 \
+    --special_tokens_mlp_type 1 \
+    --use_ca_loss False \
+    --use_cat True \
+    --Book_choice 0
+
+python -m llava.run.eval.eval_classify \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version5_3_2 \
+    --result-folder ./result/A100/2025_3_2/llava_mistral_clip_A100_v5_book0_cat_t3_2epoch_2A100/ \
+    --image-folder "/mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/" \
+    --dataset "covid-cxr2" \
+    --conv-mode vicuna_v1 \
+    --Imgcls_count 4 \
+    --Txtcls_count 8 \
+    --hidden_dim 1024 \
+    --output_dim 4096 \
+    --img_mlp_type 0 \
+    --txt_mlp_type 0 \
+    --knowledge_mlp_type 0 \
+    --loss_threshold 0.5 \
+    --temperature 0.03 \
+    --use_local_loss True \
+    --feature_layer 2 \
+    --special_tokens_mlp_type 1 \
+    --use_ca_loss False \
+    --use_cat True \
+    --Book_choice 0

@@ -13,7 +13,7 @@ echo "Starting evaluation process..."
 python -m llava.run.eval.eval_classify \
     --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version2_2_26 \
     --result-folder ./result/A100/2025_2_26/llava_mistral_clip_A100_v2_book1_cat_t5_2epoch_2A100/Chest_Xray_classify.txt \
-    --image-folder /mnt/nlp-ali/usr/zhaizijie/huangwx_ali/zijie_ali/ \
+    --image-folder /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/ \
     --dataset "chestxray" \
     --conv-mode vicuna_v1 \
     --Imgcls_count 4 \

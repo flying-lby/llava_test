@@ -1258,31 +1258,31 @@ class MistralForCausalLM(MistralPreTrainedModel):
         norm_disease_features = F.normalize(disease_features, p=2, dim=-1)
       
         # 计算类别知识引导的loss
-        # txt_to_disease_similarity = torch.matmul(norm_global_txtcls_features, norm_disease_features.T).squeeze(1) / self.temperature  # (8, 15)
-        # img_to_disease_similarity = torch.matmul(norm_global_imgcls_features, norm_disease_features.T).squeeze(1) / self.temperature
-        # batch_size = norm_global_txtcls_features.size(0)
-        # num_disease_classes = norm_disease_features.size(0)
+        txt_to_disease_similarity = torch.matmul(norm_global_txtcls_features, norm_disease_features.T).squeeze(1) / self.temperature  # (8, 15)
+        img_to_disease_similarity = torch.matmul(norm_global_imgcls_features, norm_disease_features.T).squeeze(1) / self.temperature
+        batch_size = norm_global_txtcls_features.size(0)
+        num_disease_classes = norm_disease_features.size(0)
 
-        # labels = torch.arange(batch_size, device=norm_global_txtcls_features.device) % num_disease_classes
+        labels = torch.arange(batch_size, device=norm_global_txtcls_features.device) % num_disease_classes
  
-        # loss_txt = F.cross_entropy(txt_to_disease_similarity, labels)
-        # loss_img = F.cross_entropy(img_to_disease_similarity, labels)
+        loss_txt = F.cross_entropy(txt_to_disease_similarity, labels)
+        loss_img = F.cross_entropy(img_to_disease_similarity, labels)
 
-        # CG_loss = (loss_txt + loss_img) / 2
+        CG_loss = (loss_txt + loss_img) / 2
         
 
-        txt2disease = torch.mm(norm_global_txtcls_features, norm_disease_features.t()) / self.temperature  # [B,C]
-        img2disease = torch.mm(norm_global_imgcls_features, norm_disease_features.t()) / self.temperature  # [B,C]
+        # txt2disease = torch.mm(norm_global_txtcls_features, norm_disease_features.t()) / self.temperature  # [B,C]
+        # img2disease = torch.mm(norm_global_imgcls_features, norm_disease_features.t()) / self.temperature  # [B,C]
 
-        # 构造对比学习目标
-        logits_per_txt = txt2disease @ img2disease.t()  # [B,B]
-        logits_per_img = logits_per_txt.t()  # [B,B]
+        # # 构造对比学习目标
+        # logits_per_txt = txt2disease @ img2disease.t()  # [B,B]
+        # logits_per_img = logits_per_txt.t()  # [B,B]
 
-        # 对称对比损失
-        labels = torch.arange(len(logits_per_txt), device=txt2disease.device)
-        loss_txt = F.cross_entropy(logits_per_txt, labels)
-        loss_img = F.cross_entropy(logits_per_img, labels)
-        CG_loss = (loss_txt + loss_img) / 2
+        # # 对称对比损失
+        # labels = torch.arange(len(logits_per_txt), device=txt2disease.device)
+        # loss_txt = F.cross_entropy(logits_per_txt, labels)
+        # loss_img = F.cross_entropy(logits_per_img, labels)
+        # CG_loss = (loss_txt + loss_img) / 2
         
         if self.use_cat:
             # Step 4: 计算全局图像和局部文本特征的 Loss

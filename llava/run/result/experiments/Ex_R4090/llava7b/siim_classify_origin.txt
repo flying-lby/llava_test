@@ -1,0 +1,12 @@
+mean_accuracy: 0.5
+mean_auc: 0.44904761904761903
+mean_f1: 0.6425339324542905
+mean_auprc: 0.4665936187115763
+mean_recall: 1.0
+mean_precision: 0.5
+accuracies_per_class: [0.3, 0.7]
+auc_scores_per_class: [0.4490476190476191, 0.449047619047619]
+auprc_scores_per_class: [0.2991872791820819, 0.6339999582410707]
+f1_scores_per_class: [0.4615384579881657, 0.8235294069204152]
+recall_scores_per_class: [1.0, 1.0]
+precision_scores_per_class: [0.3, 0.7]

@@ -27,7 +27,7 @@ deepspeed train/clip_train_mem.py \
     --group_by_modality_length True \
     --bf16 True \
     --mis_mlp_lr 5e-5 \
-    --output_dir /srv/lby/llava_med/checkpoints/llava-lora-new-clip-v10 \
+    --output_dir /srv/lby/llava_med/checkpoints/llava-lora-new-clip-v11 \
     --num_train_epochs 1 \
     --per_device_train_batch_size 8 \
     --per_device_eval_batch_size 8 \
@@ -46,7 +46,7 @@ deepspeed train/clip_train_mem.py \
     --gradient_checkpointing True \
     --dataloader_num_workers 2 \
     --lazy_preprocess True \
-    --report_to wandb \
+    --report_to none \
     --Imgcls_count 4 \
     --Txtcls_count 8 \
     --hidden_dim 1024 \
@@ -61,7 +61,7 @@ deepspeed train/clip_train_mem.py \
     --special_tokens_mlp_type 1 \
     --use_ca_loss False \
     --use_cat True \
-    --Book_choice 0
+    --Book_choice 1
     
 
 if [ $? -ne 0 ]; then

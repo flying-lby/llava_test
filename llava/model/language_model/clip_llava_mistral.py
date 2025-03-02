@@ -288,9 +288,9 @@ class ClipLlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             )
      
         self.cross_attention_module = CrossAttentionModule(hidden_size=config.hidden_size)
-        # self.logit_scale = nn.Parameter(
-        #     torch.tensor(0.1)
-        # )
+        
+        # self.temperature = nn.Parameter(torch.tensor(0.07))
+        
         self.img_mlp = img_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, img_mlp_type = self.img_mlp_type)
         self.txt_mlp = txt_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, txt_mlp_type = self.txt_mlp_type)
         self.knowledge_mlp = knowledge_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, knowledge_mlp_type = self.knowledge_mlp_type)
@@ -602,31 +602,7 @@ class ClipLlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
             # img2disease = torch.mm(norm_global_image_embedding, norm_disease_features.t()) / self.temperature  # [B,C]
             # fused_logits = img2disease @ txt2disease.t()
             # similarity_probs = torch.softmax(fused_logits, dim=1)
-        # if self.inference_type == 1:
-        #     # 计算余弦相似度矩阵
-        #     similarity_matrix = torch.matmul(norm_global_image_embedding, norm_global_category_embeddings_cache.T) / self.temperature  # 计算余弦相似度
-        #     # 将相似度矩阵转换为概率分布 
-        #     similarity_probs = similarity_matrix.softmax(dim=-1)
-        # elif self.inference_type == 2:
-        #     # 图像全局特征作为查询，文本局部特征作为键和值进行注意力计算
-        #     global_image_embedding = global_image_embedding.repeat(local_category_embeddings_cache.size(0), 1)  # (seq_len, hidden_size)
-        #     image_to_text_features, _ = self.cross_attention_module(global_image_embedding, local_category_embeddings_cache)
-        #     # 文本全局特征作为查询，图像局部特征作为键和值进行注意力计算
-        #     local_image_embedding = local_image_embedding.repeat(global_category_embeddings_cache.size(0), 1)  # (seq_len, hidden_size)
-        #     text_to_image_features, _ = self.cross_attention_module(global_category_embeddings_cache, local_image_embedding)
-        #     # 归一化特征向量到单位球面
-        #     image_to_text_features = F.normalize(image_to_text_features, p=2, dim=-1)  # (B, 4096)
-        #     text_to_image_features = F.normalize(text_to_image_features, p=2, dim=-1)  # (B, 4096)
 
-        #     # Step 1: 图像到文本的 similarity_matrix
-        #     similarity_matrix_image_to_text = torch.matmul(image_to_text_features, norm_global_category_embeddings_cache.T) / self.temperature  # (B, B)
-    
-        #     # Step 2: 文本到图像的 similarity_matrix
-        #     similarity_matrix_text_to_image = torch.matmul(text_to_image_features, norm_global_image_embedding.T) / self.temperature  # (B, B)
-            
-        #     similarity_matrix = (similarity_matrix_image_to_text + similarity_matrix_text_to_image) / 2  # (B, B)
-        #     similarity_probs = similarity_matrix.softmax(dim=-1)
-        #     print(similarity_probs)
 
         # 返回结果
         return similarity_probs
