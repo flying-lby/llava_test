@@ -123,7 +123,7 @@ def eval_model(args, classes,question_file):
 
     questions = [json.loads(q) for q in open(os.path.expanduser(question_file), "r")]
     questions = get_chunk(questions, args.num_chunks, args.chunk_idx)
-    questions = random.sample(questions, min(100, len(questions)))
+    # questions = random.sample(questions, min(100, len(questions)))
     
     answers_file = os.path.expanduser(args.output_path)
     os.makedirs(os.path.dirname(answers_file), exist_ok=True)
@@ -244,7 +244,7 @@ def clip_eval_model(args,classes,question_file):
         json.loads(q) for q in open(os.path.expanduser(question_file), "r")
     ]
     questions = get_chunk(questions, args.num_chunks, args.chunk_idx)
-    questions = random.sample(questions, min(100, len(questions)))
+    # questions = random.sample(questions, min(100, len(questions)))
 
     # 存储真实标签和预测结果
     all_labels = []
