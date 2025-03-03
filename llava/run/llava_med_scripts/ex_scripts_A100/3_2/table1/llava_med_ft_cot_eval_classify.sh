@@ -10,15 +10,15 @@
 # ========================
 echo "Starting evaluation process..."
 
-python -m llava.run.eval.origin_eval_classify \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_med_mistral_sft_v1_2_16 \
-    --output-path ./data/siim/llava_med_ft_cot/siim_llava_origin_val_ans.jsonl \
-    --dataset "siim" \
-    --result-file ./result/experiments/Ex_A100/2025_3_2/llava_med_ft_cot/siim_classify_origin.txt \
-    --inference origin \
-    --image-folder /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/ \
-    --use-cot 1 \
-    --conv-mode vicuna_v1 
+# python -m llava.run.eval.origin_eval_classify \
+#     --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_med_mistral_sft_v1_2_16 \
+#     --output-path ./data/siim/llava_med_ft_cot/siim_llava_origin_val_ans.jsonl \
+#     --dataset "siim" \
+#     --result-file ./result/experiments/Ex_A100/2025_3_2/llava_med_ft_cot/siim_classify_origin.txt \
+#     --inference origin \
+#     --image-folder /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/ \
+#     --use-cot 1 \
+#     --conv-mode vicuna_v1 
 
 
 python -m llava.run.eval.origin_eval_classify \
@@ -55,16 +55,16 @@ python -m llava.run.eval.origin_eval_classify \
     --use-cot 1 \
     --conv-mode vicuna_v1 
 
-python -m llava.run.eval.origin_eval_classify \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_med_mistral_sft_v1_2_16 \
-    --output-path ./data/rsna/llava_med_ft_cot/rsna_llava_origin_val_ans.jsonl \
-    --dataset "rsna" \
-    --chexpert-subset "True" \
-    --result-file ./result/experiments/Ex_A100/2025_3_2/llava_med_ft_cot/rsna_classify_origin.txt \
-    --inference origin \
-    --image-folder /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/ \
-    --use-cot 1 \
-    --conv-mode vicuna_v1 
+# python -m llava.run.eval.origin_eval_classify \
+#     --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_med_mistral_sft_v1_2_16 \
+#     --output-path ./data/rsna/llava_med_ft_cot/rsna_llava_origin_val_ans.jsonl \
+#     --dataset "rsna" \
+#     --chexpert-subset "True" \
+#     --result-file ./result/experiments/Ex_A100/2025_3_2/llava_med_ft_cot/rsna_classify_origin.txt \
+#     --inference origin \
+#     --image-folder /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/ \
+#     --use-cot 1 \
+#     --conv-mode vicuna_v1 
 
 python -m llava.run.eval.origin_eval_classify \
     --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_med_mistral_sft_v1_2_16 \

@@ -290,7 +290,8 @@ class ClipLlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         self.cross_attention_module = CrossAttentionModule(hidden_size=config.hidden_size)
         
         # self.temperature = nn.Parameter(torch.tensor(0.07))
-        
+        # self.img_mlp = nn.Linear(4096,512)
+        # self.txt_mlp = nn.Linear(4096,512)
         self.img_mlp = img_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, img_mlp_type = self.img_mlp_type)
         self.txt_mlp = txt_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, txt_mlp_type = self.txt_mlp_type)
         self.knowledge_mlp = knowledge_mlp(input_dim = config.hidden_size, hidden_dim = self.hidden_dim, output_dim = self.output_dim, knowledge_mlp_type = self.knowledge_mlp_type)

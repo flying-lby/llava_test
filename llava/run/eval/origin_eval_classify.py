@@ -153,21 +153,23 @@ def eval_model(args, classes,question_file):
 
         input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(0).cuda(0)
 
-       
-        if args.dataset == 'rsna':
-            img = pydicom.dcmread(image_file).pixel_array  # 读取 DICOM 图像数据
-            img = img.astype(float) / 255.0  # 归一化图像
-            img = exposure.equalize_hist(img)  # 直方图均衡化
+        try:
+            if args.dataset == 'rsna':
+                img = pydicom.dcmread(image_file).pixel_array  # 读取 DICOM 图像数据
+                img = img.astype(float) / 255.0  # 归一化图像
+                img = exposure.equalize_hist(img)  # 直方图均衡化
 
-            # 转换为 PIL 图像并应用预处理
-            img = (255 * img).astype(np.uint8)  # 转换为 uint8 类型
-            image = Image.fromarray(img).convert('RGB') 
-            # image = Image.open(os.path.join(args.image_folder, image_file)).convert("RGB")
-            image_tensor = process_images([image], image_processor, model.config)[0].cuda(0)
-        else:
-            image = Image.open(image_file).convert("RGB")
-            image_tensor = process_images([image], image_processor, model.config)[0].to(device)
-
+                # 转换为 PIL 图像并应用预处理
+                img = (255 * img).astype(np.uint8)  # 转换为 uint8 类型
+                image = Image.fromarray(img).convert('RGB') 
+                # image = Image.open(os.path.join(args.image_folder, image_file)).convert("RGB")
+                image_tensor = process_images([image], image_processor, model.config)[0].cuda(0)
+            else:
+                image = Image.open(image_file).convert("RGB")
+                image_tensor = process_images([image], image_processor, model.config)[0].to(device)
+        except Exception as e:
+            print(f"Warning: Skipping image {image_file} due to error: {e}")
+            continue 
         # stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
         # keywords = [stop_str]
         # stopping_criteria = KeywordsStoppingCriteria(keywords, tokenizer, input_ids)
