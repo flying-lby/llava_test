@@ -1,0 +1,23 @@
+{
+    "category_accuracies": {
+        "no finding": 0.0,
+        "enlarged cardiomediastinum": 0.7905138339920948,
+        "cardiomegaly": 50.331125827814574,
+        "lung opacity": 2.6515151515151514,
+        "lung lesion": 37.5,
+        "edema": 3.8461538461538463,
+        "consolidation": 0.0,
+        "pneumonia": 9.090909090909092,
+        "atelectasis": 0.0,
+        "pneumothorax": 0.0,
+        "pleural effusion": 0.9615384615384616,
+        "pleural other": 0.0,
+        "fracture": 20.0,
+        "support devices": 0.0
+    },
+    "average_accuracy": 8.940839729423086,
+    "auc_micro": 0.4970311295849935,
+    "auc_macro": 0.5095496461138683,
+    "f1_micro": 0.09905163329820864,
+    "f1_macro": 0.06873060324382238
+}

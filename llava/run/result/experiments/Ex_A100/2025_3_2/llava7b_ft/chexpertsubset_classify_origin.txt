@@ -1,0 +1,14 @@
+{
+    "category_accuracies": {
+        "cardiomegaly": 5.298013245033113,
+        "edema": 55.12820512820513,
+        "consolidation": 13.793103448275861,
+        "atelectasis": 16.99346405228758,
+        "pleural effusion": 76.92307692307693
+    },
+    "average_accuracy": 33.62717255937572,
+    "auc_micro": 0.5291066493849502,
+    "auc_macro": 0.5483722583064526,
+    "f1_micro": 0.27265029635901783,
+    "f1_macro": 0.23621994356067105
+}

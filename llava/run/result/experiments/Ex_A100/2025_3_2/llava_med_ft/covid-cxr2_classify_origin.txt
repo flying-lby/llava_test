@@ -1,0 +1,11 @@
+{
+    "category_accuracies": {
+        "covid19": 6.557377049180328,
+        "non-covid19": 0.0
+    },
+    "average_accuracy": 3.278688524590164,
+    "auc_micro": 0.505,
+    "auc_macro": 0.4971626733921816,
+    "f1_micro": 0.07476635514018691,
+    "f1_macro": 0.05882352941176471
+}
