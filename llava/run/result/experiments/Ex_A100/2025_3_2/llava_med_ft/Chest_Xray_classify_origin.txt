@@ -1,24 +1,24 @@
 {
     "category_accuracies": {
-        "fibrosis": 0.0,
-        "edema": 0.0,
-        "pneumothorax": 100.0,
-        "cardiomegaly": 0.0,
-        "atelectasis": 25.0,
-        "nodule": 0.0,
-        "emphysema": 0.0,
-        "no finding": 0.0,
-        "mass": 0.0,
+        "fibrosis": 0.45977011494252873,
+        "edema": 44.108108108108105,
+        "pneumothorax": 93.35834896810506,
+        "cardiomegaly": 12.628624883068287,
+        "atelectasis": 16.193961573650505,
+        "nodule": 1.0474430067775724,
+        "emphysema": 6.77035681610247,
+        "no finding": 0.42592029205962884,
+        "mass": 5.778032036613272,
         "pleural_thickening": 0.0,
-        "effusion": 95.45454545454545,
-        "infiltration": 0.0,
-        "pneumonia": 0,
-        "hernia": 0,
-        "consolidation": 50.0
+        "effusion": 88.62172606268784,
+        "infiltration": 0.016361256544502618,
+        "pneumonia": 22.162162162162165,
+        "hernia": 1.1627906976744187,
+        "consolidation": 28.81542699724518
     },
-    "average_accuracy": 18.030303030303028,
-    "auc_micro": 0.5358573519379123,
-    "auc_macro": 0.5113824902286488,
-    "f1_micro": 0.18095238095238095,
-    "f1_macro": 0.06996028395409201
+    "average_accuracy": 21.436602198382772,
+    "auc_micro": 0.5342827133249808,
+    "auc_macro": 0.5246119810616832,
+    "f1_micro": 0.16796450295318976,
+    "f1_macro": 0.09005808011809852
 }

@@ -1,11 +1,11 @@
 {
     "category_accuracies": {
-        "pneumothorax": 88.71715610510046,
-        "non-pneumothorax": 0.0
+        "normal": 46.2874251497006,
+        "pneumothorax": 69.08809891808346
     },
-    "average_accuracy": 44.35857805255023,
-    "auc_micro": 0.3131204143288735,
-    "auc_macro": 0.506224027987302,
-    "f1_micro": 0.2650658046640499,
-    "f1_macro": 0.21570838030815484
+    "average_accuracy": 57.68776203389203,
+    "auc_micro": 0.552870090634441,
+    "auc_macro": 0.6038989254875102,
+    "f1_micro": 0.5407801418439716,
+    "f1_macro": 0.5311457376189744
 }
