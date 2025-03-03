@@ -67,9 +67,9 @@ def get_classes(args):
         else:
             chexpert_cls = ['cardiomegaly','edema', 'consolidation', 'atelectasis','pleural effusion']
 
-    siim_cls = ['pneumothorax', 'non-pneumothorax']
-    rsna_cls = ['pneumonia','normal']
-    covid_cls = ['covid19','non-covid19']
+    siim_cls = ['normal','pneumothorax']
+    rsna_cls = ['normal','pneumonia']
+    covid_cls = ['normal','covid-19']
 
     
     original_class = [
@@ -427,8 +427,15 @@ def get_metrics1(args,classes,question_file):
         # 获取预测的 text
         text = item["text"].lower()
 
-        # 预测每个疾病是否在 text 中
-        predicted_categories = [1 if disease in text else 0 for disease in disease_list]
+        if len(disease_list) == 2:
+            predicted_categories = [0] * len(disease_list)  # 初始化为全0
+            for disease in disease_list:
+                if disease in text:
+                    predicted_categories[disease_list.index(disease)] = 1
+                    break  # 匹配到第一个就跳出循环
+        else:
+            # 预测每个疾病是否在 text 中
+            predicted_categories = [1 if disease in text else 0 for disease in disease_list]
 
         # 生成真实标签向量
         true_labels = torch.zeros(len(disease_list))  # 假设 `classes` 是类别列表
