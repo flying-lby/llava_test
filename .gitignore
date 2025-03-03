@@ -9,3 +9,4 @@ llava/run/data/train/
 llava/run/data/chest_xray/
 llava/run/data/eval/
 llava/run/wandb/
+llava/run/eval/gpt_eval/
