@@ -2,7 +2,7 @@
 ###
  # @Author: fly
  # @Date: 2024-12-26 16:50:23
- # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/scripts_A100/2025-02-09/llava_mistral_clip_A100_v1_img4_txt8_lr2e5_layer2_2epoch_2A100/train_merge_lora.sh
+ # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/scripts_A100/2025-03-03/llava_mistral_clip_A100_v6_book1_cat_t5_loss7_2epoch_2A100/train_merge_lora.sh
  # @Description: 
 ### 
 
@@ -12,7 +12,7 @@
 # ========================
 echo "Starting training process..."
 
-deepspeed train/train_mem.py \
+deepspeed train/clip_train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-6 \
     --deepspeed train/zero3.json \
     --model_name_or_path /mnt/nlp-ali/usr/huangwenxuan/home/official_llava_med/llava-med-v1.5-mistral-7b \
@@ -76,7 +76,7 @@ echo "Training completed successfully."
 # ========================
 echo "Starting merge process..."
 
-python -m llava.run.train.merge_lora_weights \
+python -m llava.run.train.clip_merge_lora_weights \
     --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava-lora-new-clip-A100-version6_3_3 \
     --model-base /mnt/nlp-ali/usr/huangwenxuan/home/official_llava_med/llava-med-v1.5-mistral-7b \
     --save-model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version6_3_3 \
