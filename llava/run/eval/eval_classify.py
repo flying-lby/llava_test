@@ -106,9 +106,10 @@ def test(args, sparse_args):
             chexpert_cls = ['cardiomegaly','edema', 'consolidation', 'atelectasis','pleural effusion']
 
     siim_cls = ['pneumothorax', 'non-pneumothorax']
+    # siim_cls = ['pneumothorax', 'normal']
     rsna_cls = ['pneumonia','normal']
     covid_cls = ['covid19','non-covid19']
-
+    # covid_cls = ['covid19','normal']
     padchest_seen_class = ['normal', 'pleural effusion', 'pacemaker', 'atelectasis', 'pneumonia', 'consolidation', 'cardiomegaly', 'emphysema', 
                            'nodule', 'edema', 'pneumothorax', 'fracture', 'mass', 'catheter']
 

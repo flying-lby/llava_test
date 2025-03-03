@@ -69,7 +69,7 @@ python -m llava.run.eval.eval_classify \
     --txt_mlp_type 0 \
     --knowledge_mlp_type 0 \
     --loss_threshold 0.5 \
-    --temperature 0.05 \
+    --temperature 0.05 \2
     --use_local_loss True \
     --feature_layer 2 \
     --special_tokens_mlp_type 1 \

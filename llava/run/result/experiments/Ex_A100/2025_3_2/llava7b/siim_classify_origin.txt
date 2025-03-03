@@ -1,0 +1,11 @@
+{
+    "category_accuracies": {
+        "normal": 0.47904191616766467,
+        "pneumothorax": 100.0
+    },
+    "average_accuracy": 50.23952095808383,
+    "auc_micro": 0.28269313767803195,
+    "auc_macro": 0.5023952095808384,
+    "f1_micro": 0.28269313767803195,
+    "f1_macro": 0.22364444107538295
+}

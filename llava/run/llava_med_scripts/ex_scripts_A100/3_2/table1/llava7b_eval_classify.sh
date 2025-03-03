@@ -20,26 +20,26 @@ python -m llava.run.eval.origin_eval_classify \
     --conv-mode vicuna_v1 
 
 
-python -m llava.run.eval.origin_eval_classify \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/official_llava/llava_mistral_7b_official \
-    --output-path ./data/chexpert/llava7b/chexpert_llava_origin_val_ans.jsonl \
-    --dataset "chexpert" \
-    --chexpert-subset "False" \
-    --result-file ./result/experiments/Ex_A100/2025_3_2/llava7b/chexpert_classify_origin.txt \
-    --inference origin \
-    --image-folder /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/ \
-    --conv-mode vicuna_v1 
+# python -m llava.run.eval.origin_eval_classify \
+#     --model-path /mnt/nlp-ali/usr/huangwenxuan/home/official_llava/llava_mistral_7b_official \
+#     --output-path ./data/chexpert/llava7b/chexpert_llava_origin_val_ans.jsonl \
+#     --dataset "chexpert" \
+#     --chexpert-subset "False" \
+#     --result-file ./result/experiments/Ex_A100/2025_3_2/llava7b/chexpert_classify_origin.txt \
+#     --inference origin \
+#     --image-folder /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/ \
+#     --conv-mode vicuna_v1 
 
 
-python -m llava.run.eval.origin_eval_classify \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/official_llava/llava_mistral_7b_official \
-    --output-path ./data/chexpert/llava7b/chexpertsubset_llava_origin_val_ans.jsonl \
-    --dataset "chexpert" \
-    --chexpert-subset "True" \
-    --result-file ./result/experiments/Ex_A100/2025_3_2/llava7b/chexpertsubset_classify_origin.txt \
-    --inference origin \
-    --image-folder /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/ \
-    --conv-mode vicuna_v1 
+# python -m llava.run.eval.origin_eval_classify \
+#     --model-path /mnt/nlp-ali/usr/huangwenxuan/home/official_llava/llava_mistral_7b_official \
+#     --output-path ./data/chexpert/llava7b/chexpertsubset_llava_origin_val_ans.jsonl \
+#     --dataset "chexpert" \
+#     --chexpert-subset "True" \
+#     --result-file ./result/experiments/Ex_A100/2025_3_2/llava7b/chexpertsubset_classify_origin.txt \
+#     --inference origin \
+#     --image-folder /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/ \
+#     --conv-mode vicuna_v1 
 
 python -m llava.run.eval.origin_eval_classify \
     --model-path /mnt/nlp-ali/usr/huangwenxuan/home/official_llava/llava_mistral_7b_official \
@@ -61,11 +61,11 @@ python -m llava.run.eval.origin_eval_classify \
     --image-folder /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/ \
     --conv-mode vicuna_v1 
 
-python -m llava.run.eval.origin_eval_classify \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/official_llava/llava_mistral_7b_official \
-    --output-path ./data/chest_xray/llava7b/Chest-X-ray_llava_origin_val_ans.jsonl \
-    --dataset "chestxray" \
-    --result-file ./result/experiments/Ex_A100/2025_3_2/llava7b/Chest_Xray_classify_origin.txt \
-    --inference origin \
-    --image-folder /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/ \
-    --conv-mode vicuna_v1 
+# python -m llava.run.eval.origin_eval_classify \
+#     --model-path /mnt/nlp-ali/usr/huangwenxuan/home/official_llava/llava_mistral_7b_official \
+#     --output-path ./data/chest_xray/llava7b/Chest-X-ray_llava_origin_val_ans.jsonl \
+#     --dataset "chestxray" \
+#     --result-file ./result/experiments/Ex_A100/2025_3_2/llava7b/Chest_Xray_classify_origin.txt \
+#     --inference origin \
+#     --image-folder /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/ \
+#     --conv-mode vicuna_v1 
