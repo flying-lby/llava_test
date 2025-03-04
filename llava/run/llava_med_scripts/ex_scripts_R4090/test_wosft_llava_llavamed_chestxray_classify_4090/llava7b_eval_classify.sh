@@ -14,12 +14,12 @@
 #     --image-folder "/srv/lby/" \
 #     --conv-mode vicuna_v1 
 
-python -m llava.run.eval.origin_eval_classify_chestxray \
-    --model-path /srv/lby/llava_mistral_7b_official \
-    --output-path ./data/chest_xray/Chest-X-ray_llava_origin_val_ans.jsonl \
+python -m llava.run.eval.origin_eval_classify \
+    --model-path /srv/lby/llava_med/checkpoints/llava_med_mistral_sft_v1 \
+    --output-path ./data/chexpert/llava7b/chexpert_llava_origin_val_ans.jsonl \
     --dataset "chexpert" \
-    --result-file ./result/experiments/Ex_R4090/llava7b_Chest_Xray_classify_test_origin.txt \
-    --question-file ./data/chest_xray/Chest-X-ray_llava_origin_val.jsonl \
+    --chexpert-subset "False" \
+    --result-file ./result/experiments/Ex_R4090/llava7b/chexpert_classify_origin.txt \
     --inference origin \
     --image-folder "/srv/lby/" \
     --conv-mode vicuna_v1 

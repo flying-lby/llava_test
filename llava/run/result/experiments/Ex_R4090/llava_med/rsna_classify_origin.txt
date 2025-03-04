@@ -1,11 +1,11 @@
 {
     "category_accuracies": {
-        "pneumonia": 100.0,
-        "normal": 0.0
+        "normal": 91.93979121145908,
+        "pneumonia": 15.517241379310345
     },
-    "average_accuracy": 50.0,
-    "auc_micro": 0.22821810005621135,
-    "auc_macro": 0.5,
-    "f1_micro": 0.22821810005621135,
-    "f1_macro": 0.18581235697940504
+    "average_accuracy": 53.728516295384715,
+    "auc_micro": 0.7449878208731497,
+    "auc_macro": 0.5372851629538471,
+    "f1_micro": 0.7449878208731496,
+    "f1_macro": 0.5325219872743953
 }

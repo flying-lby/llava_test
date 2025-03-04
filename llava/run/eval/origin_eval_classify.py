@@ -404,86 +404,107 @@ def clip_eval_model(args,classes,question_file):
 
 
 # 通过疾病名字计算指标
-def get_metrics1(args,classes,question_file):
+def get_metrics1(args, classes, question_file):
+    import json
+    import torch
+    import numpy as np
+    from sklearn.metrics import roc_auc_score
+
     # 读取数据
-
     answers = [json.loads(line) for line in open(args.output_path)]
-
     disease_list = classes
-    
     print(f"Total number of answers: {len(answers)}")
-
-    disease_to_idx = {disease: idx for idx, disease in enumerate(disease_list)}
 
     # 存储真实标签和预测标签
     y_true = []
     y_pred = []
 
-    # 遍历每个 answer，提取 labels 和预测类别
+    # 遍历每个 answer，提取真实标签和预测类别
     for item in answers:
-        # 获取标签（label），可能包含多个标签
         labels = item["question_id"]
-
-        # 获取预测的 text
         text = item["text"].lower()
 
-        if len(disease_list) == 2:
-            predicted_categories = [0] * len(disease_list)  # 初始化为全0
+        # 预测类别
+        if len(disease_list) == 2:  # 二分类
+            predicted_categories = [0] * len(disease_list)
             for disease in disease_list:
                 if disease in text:
                     predicted_categories[disease_list.index(disease)] = 1
-                    break  # 匹配到第一个就跳出循环
-        else:
-            # 预测每个疾病是否在 text 中
+                    break
+        else:  # 多标签分类
             predicted_categories = [1 if disease in text else 0 for disease in disease_list]
 
         # 生成真实标签向量
-        true_labels = torch.zeros(len(disease_list))  # 假设 `classes` 是类别列表
+        true_labels = torch.zeros(len(disease_list))
         for disease, value in labels.items():
             if value == 1 and disease in disease_list:
                 true_labels[disease_list.index(disease)] = 1
-        y_true.append(true_labels)
+
+        y_true.append(true_labels.numpy())
         y_pred.append(predicted_categories)
 
     # 转换为 NumPy 数组
     y_true = np.array(y_true)
     y_pred = np.array(y_pred)
 
-    # 计算 AUC（先筛选掉全 0 或全 1 的类别）
-    valid_indices = [i for i in range(len(disease_list)) if len(set(y_true[:, i])) > 1]
+    # 计算 AUC 指标
+    try:
+        if len(disease_list) > 2:
+            valid_indices = [i for i in range(len(disease_list)) if len(set(y_true[:, i])) > 1]
+            if valid_indices:
+                auc_micro = roc_auc_score(y_true[:, valid_indices], y_pred[:, valid_indices], average='micro')
+                auc_macro = roc_auc_score(y_true[:, valid_indices], y_pred[:, valid_indices], average='macro')
+            else:
+                auc_micro, auc_macro = 0, 0
+        else:
+            auc_micro = roc_auc_score(y_true[:, 1], y_pred[:, 1])
+            auc_macro = auc_micro
+    except ValueError:
+        auc_micro, auc_macro = 0, 0
 
-    if valid_indices:
-        auc_micro = roc_auc_score(y_true[:, valid_indices], y_pred[:, valid_indices], average='micro')
-        auc_macro = roc_auc_score(y_true[:, valid_indices], y_pred[:, valid_indices], average='macro')
-    else:
-        auc_micro, auc_macro = 0, 0  # 避免计算错误
+    # -------------------------------
+    # 按样本层面计算自定义的平均准确率和 F1 分数
+    # -------------------------------
 
-    # 计算 F1 分数
-    f1_micro = f1_score(y_true, y_pred, average='micro')
-    f1_macro = f1_score(y_true, y_pred, average='macro')
+    total_correct = 0
+    total_true_labels = 0
+    sample_f1_scores = []
 
-    # 计算每个类别的准确率
-    category_accuracies = (y_true * y_pred).sum(axis=0) / y_true.sum(axis=0) * 100
-    category_accuracies = {disease: acc if not np.isnan(acc) else 0 for disease, acc in zip(disease_list, category_accuracies)}
+    for i in range(y_true.shape[0]):
+        true_labels = y_true[i]
+        pred_labels = y_pred[i]
+        
+        # 计算当前样本中正确预测正标签的个数和真实正标签总数
+        correct_count = np.sum((true_labels == 1) & (pred_labels == 1))
+        true_count = np.sum(true_labels == 1)
+        total_correct += correct_count
+        total_true_labels += true_count
 
-    # 计算类别平均准确率
-    average_accuracy = sum(category_accuracies.values()) / len(category_accuracies)
+        # 计算当前样本的 F1 分数
+        # 如果当前样本没有任何真实标签或预测标签，则定义 F1 为 0
+        pred_count = np.sum(pred_labels == 1)
+        if true_count == 0 or pred_count == 0:
+            sample_f1 = 0
+        else:
+            precision = correct_count / pred_count
+            recall = correct_count / true_count
+            sample_f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0
+        sample_f1_scores.append(sample_f1)
+
+    custom_acc = total_correct / total_true_labels if total_true_labels > 0 else 0
+    custom_f1 = np.mean(sample_f1_scores)
 
     # 输出结果
-    print(f"Category accuracies: {category_accuracies}")
-    print(f"Average accuracy: {average_accuracy}%")
+    print(f"Custom Average Accuracy: {custom_acc * 100:.2f}%")
+    print(f"Custom Average F1 Score: {custom_f1:.4f}")
     print(f"AUC (Micro): {auc_micro}")
     print(f"AUC (Macro): {auc_macro}")
-    print(f"F1 Score (Micro): {f1_micro}")
-    print(f"F1 Score (Macro): {f1_macro}")
 
     result = {
-        "category_accuracies": category_accuracies,
-        "average_accuracy": average_accuracy,
+        "average_accuracy": custom_acc,
         "auc_micro": auc_micro,
         "auc_macro": auc_macro,
-        "f1_micro": f1_micro,
-        "f1_macro": f1_macro
+        "f1": custom_f1
     }
 
     result_dir = os.path.dirname(args.result_file)
