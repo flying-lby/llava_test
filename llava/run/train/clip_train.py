@@ -804,8 +804,9 @@ class LazySupervisedDataset(Dataset):
                     image = Image.fromarray(img).convert('RGB')
                 else:
                     image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
-            except:
-                pass
+            except Exception as e:
+                print(f"Warning: Failed to load image {image_file}, skipping. Error: {e}")
+                return self.__getitem__((i + 1) % len(self.list_data_dict))
                     
             if self.data_args.image_aspect_ratio == 'pad':
                 def expand2square(pil_img, background_color):
