@@ -1,7 +1,7 @@
 [
     {
         "id": 0,
-        "image": "COVIDx_CXR-4/test/81db439d-2da7-4b7b-b6d9-a3312540c574.png",
+        "image": "COVIDx_CXR-4/train/81db439d-2da7-4b7b-b6d9-a3312540c574.png",
         "conversations": [
             {
                 "from": "human",
@@ -15,7 +15,7 @@
     },
     {
         "id": 1,
-        "image": "COVIDx_CXR-4/test/98210fa6-3780-4640-ae65-bb3e83fd99ac.png",
+        "image": "COVIDx_CXR-4/train/98210fa6-3780-4640-ae65-bb3e83fd99ac.png",
         "conversations": [
             {
                 "from": "human",
@@ -29,7 +29,7 @@
     },
     {
         "id": 2,
-        "image": "COVIDx_CXR-4/test/2b70a757-4dff-4d97-baf5-f41b8d3ab4da.png",
+        "image": "COVIDx_CXR-4/train/2b70a757-4dff-4d97-baf5-f41b8d3ab4da.png",
         "conversations": [
             {
                 "from": "human",
@@ -43,7 +43,7 @@
     },
     {
         "id": 3,
-        "image": "COVIDx_CXR-4/test/c9e42d59-92ab-4e5f-a0fa-c728193684d4.png",
+        "image": "COVIDx_CXR-4/train/c9e42d59-92ab-4e5f-a0fa-c728193684d4.png",
         "conversations": [
             {
                 "from": "human",
@@ -57,7 +57,7 @@
     },
     {
         "id": 4,
-        "image": "COVIDx_CXR-4/test/83a9ae1b-36be-4a4c-a0cf-00e76a4f0463.png",
+        "image": "COVIDx_CXR-4/train/83a9ae1b-36be-4a4c-a0cf-00e76a4f0463.png",
         "conversations": [
             {
                 "from": "human",
@@ -71,7 +71,7 @@
     },
     {
         "id": 5,
-        "image": "COVIDx_CXR-4/test/f5886232-1874-4b66-948e-a0c086d4c853.png",
+        "image": "COVIDx_CXR-4/train/f5886232-1874-4b66-948e-a0c086d4c853.png",
         "conversations": [
             {
                 "from": "human",
@@ -85,7 +85,7 @@
     },
     {
         "id": 6,
-        "image": "COVIDx_CXR-4/test/A221230-01-08-1901-NA-CHEST_AP_PORT-91669-1.000000-AP-47478-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A221230-01-08-1901-NA-CHEST_AP_PORT-91669-1.000000-AP-47478-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -99,7 +99,7 @@
     },
     {
         "id": 7,
-        "image": "COVIDx_CXR-4/test/14cc479c-1385-46a1-9559-638c7da6f02d.png",
+        "image": "COVIDx_CXR-4/train/14cc479c-1385-46a1-9559-638c7da6f02d.png",
         "conversations": [
             {
                 "from": "human",
@@ -113,7 +113,7 @@
     },
     {
         "id": 8,
-        "image": "COVIDx_CXR-4/test/A769593-01-09-1901-NA-CHEST_AP_VIEWONLY-16065-4.000000-AP-05314-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A769593-01-09-1901-NA-CHEST_AP_VIEWONLY-16065-4.000000-AP-05314-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -127,7 +127,7 @@
     },
     {
         "id": 9,
-        "image": "COVIDx_CXR-4/test/COVID(43).png",
+        "image": "COVIDx_CXR-4/train/COVID(43).png",
         "conversations": [
             {
                 "from": "human",
@@ -141,7 +141,7 @@
     },
     {
         "id": 10,
-        "image": "COVIDx_CXR-4/test/7727e022-82ec-4b7d-b667-bc83c5fca668.png",
+        "image": "COVIDx_CXR-4/train/7727e022-82ec-4b7d-b667-bc83c5fca668.png",
         "conversations": [
             {
                 "from": "human",
@@ -155,7 +155,7 @@
     },
     {
         "id": 11,
-        "image": "COVIDx_CXR-4/test/A937900-12-31-1900-NA-CHEST_AP_PORT-87560-1.000000-AP-11305-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A937900-12-31-1900-NA-CHEST_AP_PORT-87560-1.000000-AP-11305-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -169,7 +169,7 @@
     },
     {
         "id": 12,
-        "image": "COVIDx_CXR-4/test/COVID(170).png",
+        "image": "COVIDx_CXR-4/train/COVID(170).png",
         "conversations": [
             {
                 "from": "human",
@@ -183,7 +183,7 @@
     },
     {
         "id": 13,
-        "image": "COVIDx_CXR-4/test/ae909ea7-5fde-4d40-8295-337f5fe62d29.png",
+        "image": "COVIDx_CXR-4/train/ae909ea7-5fde-4d40-8295-337f5fe62d29.png",
         "conversations": [
             {
                 "from": "human",
@@ -197,7 +197,7 @@
     },
     {
         "id": 14,
-        "image": "COVIDx_CXR-4/test/58d1ec20-645b-4bed-a31e-1f08051a90c0.png",
+        "image": "COVIDx_CXR-4/train/58d1ec20-645b-4bed-a31e-1f08051a90c0.png",
         "conversations": [
             {
                 "from": "human",
@@ -211,7 +211,7 @@
     },
     {
         "id": 15,
-        "image": "COVIDx_CXR-4/test/COVID(730).png",
+        "image": "COVIDx_CXR-4/train/COVID(730).png",
         "conversations": [
             {
                 "from": "human",
@@ -225,7 +225,7 @@
     },
     {
         "id": 16,
-        "image": "COVIDx_CXR-4/test/COVID(576).png",
+        "image": "COVIDx_CXR-4/train/COVID(576).png",
         "conversations": [
             {
                 "from": "human",
@@ -239,7 +239,7 @@
     },
     {
         "id": 17,
-        "image": "COVIDx_CXR-4/test/A199199-12-31-1900-NA-CHEST_AP_VIEWONLY-48351-1.000000-AP-57195-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A199199-12-31-1900-NA-CHEST_AP_VIEWONLY-48351-1.000000-AP-57195-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -253,7 +253,7 @@
     },
     {
         "id": 18,
-        "image": "COVIDx_CXR-4/test/db798a1e-84b8-43ff-b4d5-990470c2579d.png",
+        "image": "COVIDx_CXR-4/train/db798a1e-84b8-43ff-b4d5-990470c2579d.png",
         "conversations": [
             {
                 "from": "human",
@@ -267,7 +267,7 @@
     },
     {
         "id": 19,
-        "image": "COVIDx_CXR-4/test/COVID(386).png",
+        "image": "COVIDx_CXR-4/train/COVID(386).png",
         "conversations": [
             {
                 "from": "human",
@@ -281,7 +281,7 @@
     },
     {
         "id": 20,
-        "image": "COVIDx_CXR-4/test/A538433-01-03-1901-NA-CHEST_AP_PORT-04402-2.000000-AP-07736-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A538433-01-03-1901-NA-CHEST_AP_PORT-04402-2.000000-AP-07736-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -295,7 +295,7 @@
     },
     {
         "id": 21,
-        "image": "COVIDx_CXR-4/test/8be6c294-7297-4b1c-947d-11816b0ad1e4.png",
+        "image": "COVIDx_CXR-4/train/8be6c294-7297-4b1c-947d-11816b0ad1e4.png",
         "conversations": [
             {
                 "from": "human",
@@ -309,7 +309,7 @@
     },
     {
         "id": 22,
-        "image": "COVIDx_CXR-4/test/ca315c36-fd74-46dd-9307-0524e6b937bb.png",
+        "image": "COVIDx_CXR-4/train/ca315c36-fd74-46dd-9307-0524e6b937bb.png",
         "conversations": [
             {
                 "from": "human",
@@ -323,7 +323,7 @@
     },
     {
         "id": 23,
-        "image": "COVIDx_CXR-4/test/A257079-01-07-1901-NA-CHEST_AP_PORT-17049-1.000000-AP-69613-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A257079-01-07-1901-NA-CHEST_AP_PORT-17049-1.000000-AP-69613-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -337,7 +337,7 @@
     },
     {
         "id": 24,
-        "image": "COVIDx_CXR-4/test/A399216-01-04-1901-NA-CHEST_AP_PORT-70566-1.000000-AP-56087-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A399216-01-04-1901-NA-CHEST_AP_PORT-70566-1.000000-AP-56087-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -351,7 +351,7 @@
     },
     {
         "id": 25,
-        "image": "COVIDx_CXR-4/test/A832393-01-23-1901-NA-CHEST_AP_PORT_CENTRAL_LINE_PL-22056-1.000000-AP-67682-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A832393-01-23-1901-NA-CHEST_AP_PORT_CENTRAL_LINE_PL-22056-1.000000-AP-67682-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -365,7 +365,7 @@
     },
     {
         "id": 26,
-        "image": "COVIDx_CXR-4/test/7bfcdf16-2730-4b80-bebb-d5889a8fa71e.png",
+        "image": "COVIDx_CXR-4/train/7bfcdf16-2730-4b80-bebb-d5889a8fa71e.png",
         "conversations": [
             {
                 "from": "human",
@@ -379,7 +379,7 @@
     },
     {
         "id": 27,
-        "image": "COVIDx_CXR-4/test/A030428-12-31-1900-NA-CHEST_AP_VIEWONLY-63225-1.000000-AP-40528-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A030428-12-31-1900-NA-CHEST_AP_VIEWONLY-63225-1.000000-AP-40528-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -393,7 +393,7 @@
     },
     {
         "id": 28,
-        "image": "COVIDx_CXR-4/test/24f3c2b2-ba69-4822-85d0-f292bd32336a.png",
+        "image": "COVIDx_CXR-4/train/24f3c2b2-ba69-4822-85d0-f292bd32336a.png",
         "conversations": [
             {
                 "from": "human",
@@ -407,7 +407,7 @@
     },
     {
         "id": 29,
-        "image": "COVIDx_CXR-4/test/A158867-01-02-1901-NA-CHEST_AP_PORT-05506-1.000000-AP-23023-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A158867-01-02-1901-NA-CHEST_AP_PORT-05506-1.000000-AP-23023-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -421,7 +421,7 @@
     },
     {
         "id": 30,
-        "image": "COVIDx_CXR-4/test/bd5c5bfb-67de-4696-b4a9-c50ba34f0fbc.png",
+        "image": "COVIDx_CXR-4/train/bd5c5bfb-67de-4696-b4a9-c50ba34f0fbc.png",
         "conversations": [
             {
                 "from": "human",
@@ -435,7 +435,7 @@
     },
     {
         "id": 31,
-        "image": "COVIDx_CXR-4/test/A079250-12-31-1900-NA-CHEST_AP_PORT-01248-2.000000-AP-86931-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A079250-12-31-1900-NA-CHEST_AP_PORT-01248-2.000000-AP-86931-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -449,7 +449,7 @@
     },
     {
         "id": 32,
-        "image": "COVIDx_CXR-4/test/A358591-02-25-1901-NA-CHEST_AP_PORT-52665-3.000000-AP-31478-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A358591-02-25-1901-NA-CHEST_AP_PORT-52665-3.000000-AP-31478-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -463,7 +463,7 @@
     },
     {
         "id": 33,
-        "image": "COVIDx_CXR-4/test/729c9ee1-d716-4b76-b5e7-690d6e914ea8.png",
+        "image": "COVIDx_CXR-4/train/729c9ee1-d716-4b76-b5e7-690d6e914ea8.png",
         "conversations": [
             {
                 "from": "human",
@@ -477,7 +477,7 @@
     },
     {
         "id": 34,
-        "image": "COVIDx_CXR-4/test/A379944-01-10-1901-NA-CHEST_AP_PORT-74485-3.000000-AP-51625-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A379944-01-10-1901-NA-CHEST_AP_PORT-74485-3.000000-AP-51625-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -491,7 +491,7 @@
     },
     {
         "id": 35,
-        "image": "COVIDx_CXR-4/test/A713279-01-01-1901-NA-CHEST_AP_VIEWONLY-87163-1.000000-AP-55382-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A713279-01-01-1901-NA-CHEST_AP_VIEWONLY-87163-1.000000-AP-55382-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -505,7 +505,7 @@
     },
     {
         "id": 36,
-        "image": "COVIDx_CXR-4/test/A441566-12-30-1900-NA-CHEST_AP_PORT-04034-3.000000-AP-01950-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A441566-12-30-1900-NA-CHEST_AP_PORT-04034-3.000000-AP-01950-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -519,7 +519,7 @@
     },
     {
         "id": 37,
-        "image": "COVIDx_CXR-4/test/bec78094-d857-42e0-b4fb-c6a67ec1da8e.png",
+        "image": "COVIDx_CXR-4/train/bec78094-d857-42e0-b4fb-c6a67ec1da8e.png",
         "conversations": [
             {
                 "from": "human",
@@ -533,7 +533,7 @@
     },
     {
         "id": 38,
-        "image": "COVIDx_CXR-4/test/14a17c79-36ac-4794-8f6b-797df627ea4d.png",
+        "image": "COVIDx_CXR-4/train/14a17c79-36ac-4794-8f6b-797df627ea4d.png",
         "conversations": [
             {
                 "from": "human",
@@ -547,7 +547,7 @@
     },
     {
         "id": 39,
-        "image": "COVIDx_CXR-4/test/4013c4b4-5cd7-41bd-bed5-59c003251ea7.png",
+        "image": "COVIDx_CXR-4/train/4013c4b4-5cd7-41bd-bed5-59c003251ea7.png",
         "conversations": [
             {
                 "from": "human",
@@ -561,7 +561,7 @@
     },
     {
         "id": 40,
-        "image": "COVIDx_CXR-4/test/a95c830d-b00d-40cd-abd4-1e256ce80721.png",
+        "image": "COVIDx_CXR-4/train/a95c830d-b00d-40cd-abd4-1e256ce80721.png",
         "conversations": [
             {
                 "from": "human",
@@ -575,7 +575,7 @@
     },
     {
         "id": 41,
-        "image": "COVIDx_CXR-4/test/A416909-02-22-1901-NA-CHEST_AP_PORT-11080-2.000000-AP-46834-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A416909-02-22-1901-NA-CHEST_AP_PORT-11080-2.000000-AP-46834-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -589,7 +589,7 @@
     },
     {
         "id": 42,
-        "image": "COVIDx_CXR-4/test/A151238-01-23-1901-NA-CHEST_AP_PORT-00036-5.000000-AP-32989-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A151238-01-23-1901-NA-CHEST_AP_PORT-00036-5.000000-AP-32989-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -603,7 +603,7 @@
     },
     {
         "id": 43,
-        "image": "COVIDx_CXR-4/test/fed14c6f-8c53-43dc-9c1b-fde62ddef146.png",
+        "image": "COVIDx_CXR-4/train/fed14c6f-8c53-43dc-9c1b-fde62ddef146.png",
         "conversations": [
             {
                 "from": "human",
@@ -617,7 +617,7 @@
     },
     {
         "id": 44,
-        "image": "COVIDx_CXR-4/test/A922673-12-31-1900-NA-CHEST_AP_PORT-69296-1.000000-AP-65189-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A922673-12-31-1900-NA-CHEST_AP_PORT-69296-1.000000-AP-65189-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -631,7 +631,7 @@
     },
     {
         "id": 45,
-        "image": "COVIDx_CXR-4/test/A973206-02-04-1901-NA-CHEST_AP_PORT-41734-3.000000-AP-60027-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A973206-02-04-1901-NA-CHEST_AP_PORT-41734-3.000000-AP-60027-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -645,7 +645,7 @@
     },
     {
         "id": 46,
-        "image": "COVIDx_CXR-4/test/A860258-12-31-1900-NA-CHEST_AP_VIEWONLY-67336-2.000000-AP-39563-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A860258-12-31-1900-NA-CHEST_AP_VIEWONLY-67336-2.000000-AP-39563-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -659,7 +659,7 @@
     },
     {
         "id": 47,
-        "image": "COVIDx_CXR-4/test/0bed2d9d-8a11-41d9-b312-41f8c93791f7.png",
+        "image": "COVIDx_CXR-4/train/0bed2d9d-8a11-41d9-b312-41f8c93791f7.png",
         "conversations": [
             {
                 "from": "human",
@@ -673,7 +673,7 @@
     },
     {
         "id": 48,
-        "image": "COVIDx_CXR-4/test/A901257-01-01-1901-NA-CHEST_AP_VIEWONLY-20041-1.000000-AP-99542-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A901257-01-01-1901-NA-CHEST_AP_VIEWONLY-20041-1.000000-AP-99542-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -687,7 +687,7 @@
     },
     {
         "id": 49,
-        "image": "COVIDx_CXR-4/test/6186e217-86ef-4140-8b7f-ae056a4eaf3b.png",
+        "image": "COVIDx_CXR-4/train/6186e217-86ef-4140-8b7f-ae056a4eaf3b.png",
         "conversations": [
             {
                 "from": "human",
@@ -701,7 +701,7 @@
     },
     {
         "id": 50,
-        "image": "COVIDx_CXR-4/test/fc728913-01d5-4954-ab5c-125c19e0f310.png",
+        "image": "COVIDx_CXR-4/train/fc728913-01d5-4954-ab5c-125c19e0f310.png",
         "conversations": [
             {
                 "from": "human",
@@ -715,7 +715,7 @@
     },
     {
         "id": 51,
-        "image": "COVIDx_CXR-4/test/179c5fc6-32a7-4144-91e9-58c2371616d7.png",
+        "image": "COVIDx_CXR-4/train/179c5fc6-32a7-4144-91e9-58c2371616d7.png",
         "conversations": [
             {
                 "from": "human",
@@ -729,7 +729,7 @@
     },
     {
         "id": 52,
-        "image": "COVIDx_CXR-4/test/2f873371-c1a7-4c07-9470-3bbcc201832d.png",
+        "image": "COVIDx_CXR-4/train/2f873371-c1a7-4c07-9470-3bbcc201832d.png",
         "conversations": [
             {
                 "from": "human",
@@ -743,7 +743,7 @@
     },
     {
         "id": 53,
-        "image": "COVIDx_CXR-4/test/877b9210-bba9-4c32-acb4-82498f175a2b.png",
+        "image": "COVIDx_CXR-4/train/877b9210-bba9-4c32-acb4-82498f175a2b.png",
         "conversations": [
             {
                 "from": "human",
@@ -757,7 +757,7 @@
     },
     {
         "id": 54,
-        "image": "COVIDx_CXR-4/test/bb1e0002-241f-4b8d-83f9-dc3954dc3cd7.png",
+        "image": "COVIDx_CXR-4/train/bb1e0002-241f-4b8d-83f9-dc3954dc3cd7.png",
         "conversations": [
             {
                 "from": "human",
@@ -771,7 +771,7 @@
     },
     {
         "id": 55,
-        "image": "COVIDx_CXR-4/test/A679473-12-31-1900-NA-CHEST_AP_PORT-64555-2.000000-AP-36764-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A679473-12-31-1900-NA-CHEST_AP_PORT-64555-2.000000-AP-36764-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -785,7 +785,7 @@
     },
     {
         "id": 56,
-        "image": "COVIDx_CXR-4/test/fb771e55-ad38-4f26-8eee-30573851bc48.png",
+        "image": "COVIDx_CXR-4/train/fb771e55-ad38-4f26-8eee-30573851bc48.png",
         "conversations": [
             {
                 "from": "human",
@@ -799,7 +799,7 @@
     },
     {
         "id": 57,
-        "image": "COVIDx_CXR-4/test/A775003-01-10-1901-NA-CHEST_OVER_PENETRATED_PA_AP_PORTABLE-42321-2.000000-AP-70017-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A775003-01-10-1901-NA-CHEST_OVER_PENETRATED_PA_AP_PORTABLE-42321-2.000000-AP-70017-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -813,7 +813,7 @@
     },
     {
         "id": 58,
-        "image": "COVIDx_CXR-4/test/A222026-12-27-1900-NA-CHEST_AP_PORT-04372-2.000000-AP-87128-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A222026-12-27-1900-NA-CHEST_AP_PORT-04372-2.000000-AP-87128-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -827,7 +827,7 @@
     },
     {
         "id": 59,
-        "image": "COVIDx_CXR-4/test/ae066c81-2464-44cf-990a-d5e2f9a0eaf8.png",
+        "image": "COVIDx_CXR-4/train/ae066c81-2464-44cf-990a-d5e2f9a0eaf8.png",
         "conversations": [
             {
                 "from": "human",
@@ -841,7 +841,7 @@
     },
     {
         "id": 60,
-        "image": "COVIDx_CXR-4/test/A097839-01-02-1901-NA-CHEST_AP_PORT-55249-1.000000-AP-37483-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A097839-01-02-1901-NA-CHEST_AP_PORT-55249-1.000000-AP-37483-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -855,7 +855,7 @@
     },
     {
         "id": 61,
-        "image": "COVIDx_CXR-4/test/A689562-12-31-1900-NA-CHEST_AP_PORT-40630-2.000000-AP-37411-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A689562-12-31-1900-NA-CHEST_AP_PORT-40630-2.000000-AP-37411-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -869,7 +869,7 @@
     },
     {
         "id": 62,
-        "image": "COVIDx_CXR-4/test/A389295-12-31-1900-NA-CHEST_AP_PORT-25275-1.000000-AP-77924-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A389295-12-31-1900-NA-CHEST_AP_PORT-25275-1.000000-AP-77924-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -883,7 +883,7 @@
     },
     {
         "id": 63,
-        "image": "COVIDx_CXR-4/test/3df3ed06-02ba-49b0-9c46-d146e71cad5d.png",
+        "image": "COVIDx_CXR-4/train/3df3ed06-02ba-49b0-9c46-d146e71cad5d.png",
         "conversations": [
             {
                 "from": "human",
@@ -897,7 +897,7 @@
     },
     {
         "id": 64,
-        "image": "COVIDx_CXR-4/test/A742291-12-27-1900-NA-CHEST_AP_VIEWONLY-16371-1.000000-AP-75066-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A742291-12-27-1900-NA-CHEST_AP_VIEWONLY-16371-1.000000-AP-75066-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -911,7 +911,7 @@
     },
     {
         "id": 65,
-        "image": "COVIDx_CXR-4/test/b241dfb4-3ba4-40b0-93de-2eaafaa13dfc.png",
+        "image": "COVIDx_CXR-4/train/b241dfb4-3ba4-40b0-93de-2eaafaa13dfc.png",
         "conversations": [
             {
                 "from": "human",
@@ -925,7 +925,7 @@
     },
     {
         "id": 66,
-        "image": "COVIDx_CXR-4/test/329e55d1-2e27-4ffe-95b1-df5f5015aae6.png",
+        "image": "COVIDx_CXR-4/train/329e55d1-2e27-4ffe-95b1-df5f5015aae6.png",
         "conversations": [
             {
                 "from": "human",
@@ -939,7 +939,7 @@
     },
     {
         "id": 67,
-        "image": "COVIDx_CXR-4/test/COVID(796).png",
+        "image": "COVIDx_CXR-4/train/COVID(796).png",
         "conversations": [
             {
                 "from": "human",
@@ -953,7 +953,7 @@
     },
     {
         "id": 68,
-        "image": "COVIDx_CXR-4/test/MIDRC-RICORD-1C-SITE2-000285-32471-0.png",
+        "image": "COVIDx_CXR-4/train/MIDRC-RICORD-1C-SITE2-000285-32471-0.png",
         "conversations": [
             {
                 "from": "human",
@@ -967,7 +967,7 @@
     },
     {
         "id": 69,
-        "image": "COVIDx_CXR-4/test/0ae738d0-5bdd-4ebf-9c1f-6b10a25be92a.png",
+        "image": "COVIDx_CXR-4/train/0ae738d0-5bdd-4ebf-9c1f-6b10a25be92a.png",
         "conversations": [
             {
                 "from": "human",
@@ -981,7 +981,7 @@
     },
     {
         "id": 70,
-        "image": "COVIDx_CXR-4/test/A336129-12-31-1900-NA-CHEST_AP_PORTABLE-91263-1.000000-AP-44395-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A336129-12-31-1900-NA-CHEST_AP_PORTABLE-91263-1.000000-AP-44395-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -995,7 +995,7 @@
     },
     {
         "id": 71,
-        "image": "COVIDx_CXR-4/test/A601967-01-09-1901-NA-CHEST_AP_PORT-93994-2.000000-AP-27361-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A601967-01-09-1901-NA-CHEST_AP_PORT-93994-2.000000-AP-27361-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1009,7 +1009,7 @@
     },
     {
         "id": 72,
-        "image": "COVIDx_CXR-4/test/A953733-01-05-1901-NA-CHEST_AP_PORT-59661-2.000000-AP-37860-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A953733-01-05-1901-NA-CHEST_AP_PORT-59661-2.000000-AP-37860-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1023,7 +1023,7 @@
     },
     {
         "id": 73,
-        "image": "COVIDx_CXR-4/test/A416909-02-25-1901-NA-CHEST_AP_PORT-28359-1.000000-AP-36025-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A416909-02-25-1901-NA-CHEST_AP_PORT-28359-1.000000-AP-36025-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1037,7 +1037,7 @@
     },
     {
         "id": 74,
-        "image": "COVIDx_CXR-4/test/A134763-01-07-1901-NA-CHEST_AP_PORT-44227-6.000000-AP-23097-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A134763-01-07-1901-NA-CHEST_AP_PORT-44227-6.000000-AP-23097-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1051,7 +1051,7 @@
     },
     {
         "id": 75,
-        "image": "COVIDx_CXR-4/test/A357185-12-31-1900-NA-CHEST_AP_PORT-47556-1.000000-AP-80386-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A357185-12-31-1900-NA-CHEST_AP_PORT-47556-1.000000-AP-80386-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1065,7 +1065,7 @@
     },
     {
         "id": 76,
-        "image": "COVIDx_CXR-4/test/74192b5f-7e82-4636-9886-c2c1750d833a.png",
+        "image": "COVIDx_CXR-4/train/74192b5f-7e82-4636-9886-c2c1750d833a.png",
         "conversations": [
             {
                 "from": "human",
@@ -1079,7 +1079,7 @@
     },
     {
         "id": 77,
-        "image": "COVIDx_CXR-4/test/A818679-12-31-1900-NA-CHEST_AP_VIEWONLY-65800-2.000000-AP-47481-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A818679-12-31-1900-NA-CHEST_AP_VIEWONLY-65800-2.000000-AP-47481-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1093,7 +1093,7 @@
     },
     {
         "id": 78,
-        "image": "COVIDx_CXR-4/test/A610315-12-31-1900-NA-CHEST_AP_VIEWONLY-48019-2.000000-AP-58947-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A610315-12-31-1900-NA-CHEST_AP_VIEWONLY-48019-2.000000-AP-58947-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1107,7 +1107,7 @@
     },
     {
         "id": 79,
-        "image": "COVIDx_CXR-4/test/A512163-01-06-1901-NA-CHEST_AP_PORT-81104-2.000000-AP-43738-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A512163-01-06-1901-NA-CHEST_AP_PORT-81104-2.000000-AP-43738-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1121,7 +1121,7 @@
     },
     {
         "id": 80,
-        "image": "COVIDx_CXR-4/test/COVID(290).png",
+        "image": "COVIDx_CXR-4/train/COVID(290).png",
         "conversations": [
             {
                 "from": "human",
@@ -1135,7 +1135,7 @@
     },
     {
         "id": 81,
-        "image": "COVIDx_CXR-4/test/6470a79b-e277-4f10-80ab-5d5484a010af.png",
+        "image": "COVIDx_CXR-4/train/6470a79b-e277-4f10-80ab-5d5484a010af.png",
         "conversations": [
             {
                 "from": "human",
@@ -1149,7 +1149,7 @@
     },
     {
         "id": 82,
-        "image": "COVIDx_CXR-4/test/A416909-01-14-1901-NA-CHEST_AP_VIEWONLY-20510-1.000000-AP-14599-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A416909-01-14-1901-NA-CHEST_AP_VIEWONLY-20510-1.000000-AP-14599-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1163,7 +1163,7 @@
     },
     {
         "id": 83,
-        "image": "COVIDx_CXR-4/test/A151238-01-11-1901-NA-CHEST_AP_PORT-93131-2.000000-AP-62169-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A151238-01-11-1901-NA-CHEST_AP_PORT-93131-2.000000-AP-62169-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1177,7 +1177,7 @@
     },
     {
         "id": 84,
-        "image": "COVIDx_CXR-4/test/ab63d180-48e5-4a46-8915-ab78d5a79bc3.png",
+        "image": "COVIDx_CXR-4/train/ab63d180-48e5-4a46-8915-ab78d5a79bc3.png",
         "conversations": [
             {
                 "from": "human",
@@ -1191,7 +1191,7 @@
     },
     {
         "id": 85,
-        "image": "COVIDx_CXR-4/test/A498797-12-25-1900-NA-CHEST_AP_VIEWONLY-57112-2.000000-AP-81048-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A498797-12-25-1900-NA-CHEST_AP_VIEWONLY-57112-2.000000-AP-81048-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1205,7 +1205,7 @@
     },
     {
         "id": 86,
-        "image": "COVIDx_CXR-4/test/COVID(844).png",
+        "image": "COVIDx_CXR-4/train/COVID(844).png",
         "conversations": [
             {
                 "from": "human",
@@ -1219,7 +1219,7 @@
     },
     {
         "id": 87,
-        "image": "COVIDx_CXR-4/test/A797424-12-29-1900-NA-CHEST_AP_VIEWONLY-84781-2.000000-AP-26238-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A797424-12-29-1900-NA-CHEST_AP_VIEWONLY-84781-2.000000-AP-26238-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1233,7 +1233,7 @@
     },
     {
         "id": 88,
-        "image": "COVIDx_CXR-4/test/A816452-12-31-1900-NA-CHEST_AP_VIEWONLY-00093-2.000000-AP-22546-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A816452-12-31-1900-NA-CHEST_AP_VIEWONLY-00093-2.000000-AP-22546-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1247,7 +1247,7 @@
     },
     {
         "id": 89,
-        "image": "COVIDx_CXR-4/test/bdc61d06-50cb-4f97-914e-eba06a7f6552.png",
+        "image": "COVIDx_CXR-4/train/bdc61d06-50cb-4f97-914e-eba06a7f6552.png",
         "conversations": [
             {
                 "from": "human",
@@ -1261,7 +1261,7 @@
     },
     {
         "id": 90,
-        "image": "COVIDx_CXR-4/test/82edc80d-0b41-45e4-8460-e46f64c67dbf.png",
+        "image": "COVIDx_CXR-4/train/82edc80d-0b41-45e4-8460-e46f64c67dbf.png",
         "conversations": [
             {
                 "from": "human",
@@ -1275,7 +1275,7 @@
     },
     {
         "id": 91,
-        "image": "COVIDx_CXR-4/test/e319ed0d-cd63-4bd0-828e-9acca7997565.png",
+        "image": "COVIDx_CXR-4/train/e319ed0d-cd63-4bd0-828e-9acca7997565.png",
         "conversations": [
             {
                 "from": "human",
@@ -1289,7 +1289,7 @@
     },
     {
         "id": 92,
-        "image": "COVIDx_CXR-4/test/fe02ac25-6a2a-4c6b-909e-c8a9c7c67f53.png",
+        "image": "COVIDx_CXR-4/train/fe02ac25-6a2a-4c6b-909e-c8a9c7c67f53.png",
         "conversations": [
             {
                 "from": "human",
@@ -1303,7 +1303,7 @@
     },
     {
         "id": 93,
-        "image": "COVIDx_CXR-4/test/A827232-01-22-1901-NA-CHEST_AP_PORT-06804-3.000000-AP-44439-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A827232-01-22-1901-NA-CHEST_AP_PORT-06804-3.000000-AP-44439-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1317,7 +1317,7 @@
     },
     {
         "id": 94,
-        "image": "COVIDx_CXR-4/test/A358591-02-21-1901-NA-CHEST_AP_PORT-48927-5.000000-AP-38424-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A358591-02-21-1901-NA-CHEST_AP_PORT-48927-5.000000-AP-38424-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1331,7 +1331,7 @@
     },
     {
         "id": 95,
-        "image": "COVIDx_CXR-4/test/b0790eba-d296-45b8-8d14-6c500f6adfb2.png",
+        "image": "COVIDx_CXR-4/train/b0790eba-d296-45b8-8d14-6c500f6adfb2.png",
         "conversations": [
             {
                 "from": "human",
@@ -1345,7 +1345,7 @@
     },
     {
         "id": 96,
-        "image": "COVIDx_CXR-4/test/MIDRC-RICORD-1C-SITE2-000274-89058-0.png",
+        "image": "COVIDx_CXR-4/train/MIDRC-RICORD-1C-SITE2-000274-89058-0.png",
         "conversations": [
             {
                 "from": "human",
@@ -1359,7 +1359,7 @@
     },
     {
         "id": 97,
-        "image": "COVIDx_CXR-4/test/A701587-12-31-1900-NA-CHEST_AP_VIEWONLY-78420-5.000000-AP-54297-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A701587-12-31-1900-NA-CHEST_AP_VIEWONLY-78420-5.000000-AP-54297-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1373,7 +1373,7 @@
     },
     {
         "id": 98,
-        "image": "COVIDx_CXR-4/test/0b323a31-28e6-45b2-a07c-cc9b60571053.png",
+        "image": "COVIDx_CXR-4/train/0b323a31-28e6-45b2-a07c-cc9b60571053.png",
         "conversations": [
             {
                 "from": "human",
@@ -1387,7 +1387,7 @@
     },
     {
         "id": 99,
-        "image": "COVIDx_CXR-4/test/a0ed1bbf-c2da-4c12-a1d8-d0d0c64ffd08.png",
+        "image": "COVIDx_CXR-4/train/a0ed1bbf-c2da-4c12-a1d8-d0d0c64ffd08.png",
         "conversations": [
             {
                 "from": "human",
@@ -1401,7 +1401,7 @@
     },
     {
         "id": 100,
-        "image": "COVIDx_CXR-4/test/a663c486-b367-462d-bd33-ba415987c4b1.png",
+        "image": "COVIDx_CXR-4/train/a663c486-b367-462d-bd33-ba415987c4b1.png",
         "conversations": [
             {
                 "from": "human",
@@ -1415,7 +1415,7 @@
     },
     {
         "id": 101,
-        "image": "COVIDx_CXR-4/test/f7446ce3-2bd4-48f1-a068-522b4f531c3f.png",
+        "image": "COVIDx_CXR-4/train/f7446ce3-2bd4-48f1-a068-522b4f531c3f.png",
         "conversations": [
             {
                 "from": "human",
@@ -1429,7 +1429,7 @@
     },
     {
         "id": 102,
-        "image": "COVIDx_CXR-4/test/COVID(41).png",
+        "image": "COVIDx_CXR-4/train/COVID(41).png",
         "conversations": [
             {
                 "from": "human",
@@ -1443,7 +1443,7 @@
     },
     {
         "id": 103,
-        "image": "COVIDx_CXR-4/test/bd449993-b9a0-4cad-8cbf-780ad345c3f9.png",
+        "image": "COVIDx_CXR-4/train/bd449993-b9a0-4cad-8cbf-780ad345c3f9.png",
         "conversations": [
             {
                 "from": "human",
@@ -1457,7 +1457,7 @@
     },
     {
         "id": 104,
-        "image": "COVIDx_CXR-4/test/A243413-01-11-1901-NA-CHEST_AP_PORT-98276-2.000000-AP-61013-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A243413-01-11-1901-NA-CHEST_AP_PORT-98276-2.000000-AP-61013-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1471,7 +1471,7 @@
     },
     {
         "id": 105,
-        "image": "COVIDx_CXR-4/test/A476289-12-31-1900-NA-CHEST_AP_PORT-90594-1.000000-AP-75995-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A476289-12-31-1900-NA-CHEST_AP_PORT-90594-1.000000-AP-75995-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1485,7 +1485,7 @@
     },
     {
         "id": 106,
-        "image": "COVIDx_CXR-4/test/6d2371e4-f8cd-4f6f-bf9e-1e8773b3960a.png",
+        "image": "COVIDx_CXR-4/train/6d2371e4-f8cd-4f6f-bf9e-1e8773b3960a.png",
         "conversations": [
             {
                 "from": "human",
@@ -1499,7 +1499,7 @@
     },
     {
         "id": 107,
-        "image": "COVIDx_CXR-4/test/0f0bc2f0-761b-4d4e-a0ae-a6f5a628ab1c.png",
+        "image": "COVIDx_CXR-4/train/0f0bc2f0-761b-4d4e-a0ae-a6f5a628ab1c.png",
         "conversations": [
             {
                 "from": "human",
@@ -1513,7 +1513,7 @@
     },
     {
         "id": 108,
-        "image": "COVIDx_CXR-4/test/c8d43f45-f21f-4e7b-96bf-2fc068be6310.png",
+        "image": "COVIDx_CXR-4/train/c8d43f45-f21f-4e7b-96bf-2fc068be6310.png",
         "conversations": [
             {
                 "from": "human",
@@ -1527,7 +1527,7 @@
     },
     {
         "id": 109,
-        "image": "COVIDx_CXR-4/test/A856738-12-31-1900-NA-CHEST_AP_PORT-07480-2.000000-AP-41564-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A856738-12-31-1900-NA-CHEST_AP_PORT-07480-2.000000-AP-41564-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1541,7 +1541,7 @@
     },
     {
         "id": 110,
-        "image": "COVIDx_CXR-4/test/sub-S03084_ses-E06756_run-1_bp-chest_vp-pa_dx-corrected.png",
+        "image": "COVIDx_CXR-4/train/sub-S03084_ses-E06756_run-1_bp-chest_vp-pa_dx-corrected.png",
         "conversations": [
             {
                 "from": "human",
@@ -1555,7 +1555,7 @@
     },
     {
         "id": 111,
-        "image": "COVIDx_CXR-4/test/f9471bff-686b-4d20-932b-bb0c76c8b77f.png",
+        "image": "COVIDx_CXR-4/train/f9471bff-686b-4d20-932b-bb0c76c8b77f.png",
         "conversations": [
             {
                 "from": "human",
@@ -1569,7 +1569,7 @@
     },
     {
         "id": 112,
-        "image": "COVIDx_CXR-4/test/A923527-01-27-1901-NA-CHEST_AP_VIEWONLY-19602-1.000000-AP-61585-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A923527-01-27-1901-NA-CHEST_AP_VIEWONLY-19602-1.000000-AP-61585-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1583,7 +1583,7 @@
     },
     {
         "id": 113,
-        "image": "COVIDx_CXR-4/test/MIDRC-RICORD-1C-440808-000012-8.400-0.png",
+        "image": "COVIDx_CXR-4/train/MIDRC-RICORD-1C-440808-000012-8.400-0.png",
         "conversations": [
             {
                 "from": "human",
@@ -1597,7 +1597,7 @@
     },
     {
         "id": 114,
-        "image": "COVIDx_CXR-4/test/A030428-01-13-1901-NA-CHEST_AP_PORT-05559-1.000000-AP-99597-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A030428-01-13-1901-NA-CHEST_AP_PORT-05559-1.000000-AP-99597-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1611,7 +1611,7 @@
     },
     {
         "id": 115,
-        "image": "COVIDx_CXR-4/test/A549196-12-29-1900-NA-CHEST_AP_VIEWONLY-40425-1.000000-AP-40524-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A549196-12-29-1900-NA-CHEST_AP_VIEWONLY-40425-1.000000-AP-40524-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1625,7 +1625,7 @@
     },
     {
         "id": 116,
-        "image": "COVIDx_CXR-4/test/8ccd3bde-4f32-4339-a35f-74918a8ff1b4.png",
+        "image": "COVIDx_CXR-4/train/8ccd3bde-4f32-4339-a35f-74918a8ff1b4.png",
         "conversations": [
             {
                 "from": "human",
@@ -1639,7 +1639,7 @@
     },
     {
         "id": 117,
-        "image": "COVIDx_CXR-4/test/3b4b5587-e5b3-4609-83a7-acf33a0b5803.png",
+        "image": "COVIDx_CXR-4/train/3b4b5587-e5b3-4609-83a7-acf33a0b5803.png",
         "conversations": [
             {
                 "from": "human",
@@ -1653,7 +1653,7 @@
     },
     {
         "id": 118,
-        "image": "COVIDx_CXR-4/test/covid-19-pneumonia-93.png",
+        "image": "COVIDx_CXR-4/train/covid-19-pneumonia-93.png",
         "conversations": [
             {
                 "from": "human",
@@ -1667,7 +1667,7 @@
     },
     {
         "id": 119,
-        "image": "COVIDx_CXR-4/test/A256889-01-19-1901-NA-CHEST_AP_PORT-80026-1.000000-AP-08632-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A256889-01-19-1901-NA-CHEST_AP_PORT-80026-1.000000-AP-08632-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1681,7 +1681,7 @@
     },
     {
         "id": 120,
-        "image": "COVIDx_CXR-4/test/3f55962b-e0d8-4b8e-b44a-23009ccaab33.png",
+        "image": "COVIDx_CXR-4/train/3f55962b-e0d8-4b8e-b44a-23009ccaab33.png",
         "conversations": [
             {
                 "from": "human",
@@ -1695,7 +1695,7 @@
     },
     {
         "id": 121,
-        "image": "COVIDx_CXR-4/test/ae49d7bc-7d7d-4622-a4bf-9aaaa6128015.png",
+        "image": "COVIDx_CXR-4/train/ae49d7bc-7d7d-4622-a4bf-9aaaa6128015.png",
         "conversations": [
             {
                 "from": "human",
@@ -1709,7 +1709,7 @@
     },
     {
         "id": 122,
-        "image": "COVIDx_CXR-4/test/A403529-01-21-1901-NA-CHEST_AP_VIEWONLY-65836-1.000000-AP-66306-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A403529-01-21-1901-NA-CHEST_AP_VIEWONLY-65836-1.000000-AP-66306-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1723,7 +1723,7 @@
     },
     {
         "id": 123,
-        "image": "COVIDx_CXR-4/test/A855469-11-10-1900-NA-CHEST_AP_VIEWONLY-60829-4.000000-AP-07110-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A855469-11-10-1900-NA-CHEST_AP_VIEWONLY-60829-4.000000-AP-07110-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1737,7 +1737,7 @@
     },
     {
         "id": 124,
-        "image": "COVIDx_CXR-4/test/4a699c93-97ed-4b6e-b36b-e58088eb24e4.png",
+        "image": "COVIDx_CXR-4/train/4a699c93-97ed-4b6e-b36b-e58088eb24e4.png",
         "conversations": [
             {
                 "from": "human",
@@ -1751,7 +1751,7 @@
     },
     {
         "id": 125,
-        "image": "COVIDx_CXR-4/test/6732e2b6-1aa2-4731-89fa-6e2dd58c3195.png",
+        "image": "COVIDx_CXR-4/train/6732e2b6-1aa2-4731-89fa-6e2dd58c3195.png",
         "conversations": [
             {
                 "from": "human",
@@ -1765,7 +1765,7 @@
     },
     {
         "id": 126,
-        "image": "COVIDx_CXR-4/test/A293330-12-29-1900-NA-CHEST_AP_PORT-60346-4.000000-AP-78383-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A293330-12-29-1900-NA-CHEST_AP_PORT-60346-4.000000-AP-78383-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1779,7 +1779,7 @@
     },
     {
         "id": 127,
-        "image": "COVIDx_CXR-4/test/3d777b7d-4dd4-40f2-96cd-0652a37dbc51.png",
+        "image": "COVIDx_CXR-4/train/3d777b7d-4dd4-40f2-96cd-0652a37dbc51.png",
         "conversations": [
             {
                 "from": "human",
@@ -1793,7 +1793,7 @@
     },
     {
         "id": 128,
-        "image": "COVIDx_CXR-4/test/A593019-01-03-1901-NA-CHEST_AP_VIEWONLY-26005-2.000000-AP-50767-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A593019-01-03-1901-NA-CHEST_AP_VIEWONLY-26005-2.000000-AP-50767-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1807,7 +1807,7 @@
     },
     {
         "id": 129,
-        "image": "COVIDx_CXR-4/test/A766483-02-25-1901-NA-CHEST_AP_PORT-06583-1.000000-AP-18464-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A766483-02-25-1901-NA-CHEST_AP_PORT-06583-1.000000-AP-18464-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1821,7 +1821,7 @@
     },
     {
         "id": 130,
-        "image": "COVIDx_CXR-4/test/3b0e8d0a-230a-4483-96c9-d91bb17be632.png",
+        "image": "COVIDx_CXR-4/train/3b0e8d0a-230a-4483-96c9-d91bb17be632.png",
         "conversations": [
             {
                 "from": "human",
@@ -1835,7 +1835,7 @@
     },
     {
         "id": 131,
-        "image": "COVIDx_CXR-4/test/A492240-02-12-1901-NA-CHEST_AP_PORT-52174-1.000000-AP-84253-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A492240-02-12-1901-NA-CHEST_AP_PORT-52174-1.000000-AP-84253-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1849,7 +1849,7 @@
     },
     {
         "id": 132,
-        "image": "COVIDx_CXR-4/test/A264703-01-22-1901-NA-CHEST_AP_PORT-17633-1.000000-AP-58985-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A264703-01-22-1901-NA-CHEST_AP_PORT-17633-1.000000-AP-58985-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1863,7 +1863,7 @@
     },
     {
         "id": 133,
-        "image": "COVIDx_CXR-4/test/424ad99a-335c-4113-9278-a33e920b0164.png",
+        "image": "COVIDx_CXR-4/train/424ad99a-335c-4113-9278-a33e920b0164.png",
         "conversations": [
             {
                 "from": "human",
@@ -1877,7 +1877,7 @@
     },
     {
         "id": 134,
-        "image": "COVIDx_CXR-4/test/b829458e-0a00-4d7f-9b19-0efd59f2cd7a.png",
+        "image": "COVIDx_CXR-4/train/b829458e-0a00-4d7f-9b19-0efd59f2cd7a.png",
         "conversations": [
             {
                 "from": "human",
@@ -1891,7 +1891,7 @@
     },
     {
         "id": 135,
-        "image": "COVIDx_CXR-4/test/A860070-01-13-1901-NA-CHEST_AP_PORT-32999-3.000000-AP-58480-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A860070-01-13-1901-NA-CHEST_AP_PORT-32999-3.000000-AP-58480-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -1905,7 +1905,7 @@
     },
     {
         "id": 136,
-        "image": "COVIDx_CXR-4/test/0d1b742e-71fb-4eaa-88eb-b70e403ee565.png",
+        "image": "COVIDx_CXR-4/train/0d1b742e-71fb-4eaa-88eb-b70e403ee565.png",
         "conversations": [
             {
                 "from": "human",
@@ -1919,7 +1919,7 @@
     },
     {
         "id": 137,
-        "image": "COVIDx_CXR-4/test/3f20c5bb-e534-42fe-b3f7-b6c3c4ec01ed.png",
+        "image": "COVIDx_CXR-4/train/3f20c5bb-e534-42fe-b3f7-b6c3c4ec01ed.png",
         "conversations": [
             {
                 "from": "human",
@@ -1933,7 +1933,7 @@
     },
     {
         "id": 138,
-        "image": "COVIDx_CXR-4/test/34baaab0-0f22-4556-b860-97e1c18d0583.png",
+        "image": "COVIDx_CXR-4/train/34baaab0-0f22-4556-b860-97e1c18d0583.png",
         "conversations": [
             {
                 "from": "human",
@@ -1947,7 +1947,7 @@
     },
     {
         "id": 139,
-        "image": "COVIDx_CXR-4/test/sub-S03229_ses-E06380_run-1_bp-chest_vp-pa_dx-corrected.png",
+        "image": "COVIDx_CXR-4/train/sub-S03229_ses-E06380_run-1_bp-chest_vp-pa_dx-corrected.png",
         "conversations": [
             {
                 "from": "human",
@@ -1961,7 +1961,7 @@
     },
     {
         "id": 140,
-        "image": "COVIDx_CXR-4/test/7934f518-dbaa-4201-922b-1bc93a245e84.png",
+        "image": "COVIDx_CXR-4/train/7934f518-dbaa-4201-922b-1bc93a245e84.png",
         "conversations": [
             {
                 "from": "human",
@@ -1975,7 +1975,7 @@
     },
     {
         "id": 141,
-        "image": "COVIDx_CXR-4/test/4afbc897-69d2-4074-9690-c3410ff4706c.png",
+        "image": "COVIDx_CXR-4/train/4afbc897-69d2-4074-9690-c3410ff4706c.png",
         "conversations": [
             {
                 "from": "human",
@@ -1989,7 +1989,7 @@
     },
     {
         "id": 142,
-        "image": "COVIDx_CXR-4/test/A390754-01-07-1901-NA-CHEST_AP_PORT-97006-1.000000-AP-80450-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A390754-01-07-1901-NA-CHEST_AP_PORT-97006-1.000000-AP-80450-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2003,7 +2003,7 @@
     },
     {
         "id": 143,
-        "image": "COVIDx_CXR-4/test/MIDRC-RICORD-1C-419639-001245-74987-0.png",
+        "image": "COVIDx_CXR-4/train/MIDRC-RICORD-1C-419639-001245-74987-0.png",
         "conversations": [
             {
                 "from": "human",
@@ -2017,7 +2017,7 @@
     },
     {
         "id": 144,
-        "image": "COVIDx_CXR-4/test/A329601-01-03-1901-NA-CHEST_AP_PORTABLE-95188-3.000000-AP-98796-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A329601-01-03-1901-NA-CHEST_AP_PORTABLE-95188-3.000000-AP-98796-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2031,7 +2031,7 @@
     },
     {
         "id": 145,
-        "image": "COVIDx_CXR-4/test/A349708-01-29-1901-NA-CHEST_AP_PORT_CENTRAL_LINE_PL-92700-4.000000-AP-61808-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A349708-01-29-1901-NA-CHEST_AP_PORT_CENTRAL_LINE_PL-92700-4.000000-AP-61808-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2045,7 +2045,7 @@
     },
     {
         "id": 146,
-        "image": "COVIDx_CXR-4/test/a522d9a6-5460-44c0-aa7e-219d2143feb4.png",
+        "image": "COVIDx_CXR-4/train/a522d9a6-5460-44c0-aa7e-219d2143feb4.png",
         "conversations": [
             {
                 "from": "human",
@@ -2059,7 +2059,7 @@
     },
     {
         "id": 147,
-        "image": "COVIDx_CXR-4/test/A362446-01-11-1901-NA-CHEST_AP_PORT-60983-3.000000-AP-68273-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A362446-01-11-1901-NA-CHEST_AP_PORT-60983-3.000000-AP-68273-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2073,7 +2073,7 @@
     },
     {
         "id": 148,
-        "image": "COVIDx_CXR-4/test/A134763-01-04-1901-NA-CHEST_AP_PORT-13259-1.000000-AP-02125-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A134763-01-04-1901-NA-CHEST_AP_PORT-13259-1.000000-AP-02125-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2087,7 +2087,7 @@
     },
     {
         "id": 149,
-        "image": "COVIDx_CXR-4/test/A138005-12-31-1900-NA-CHEST_AP_VIEWONLY-04823-2.000000-AP-19345-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A138005-12-31-1900-NA-CHEST_AP_VIEWONLY-04823-2.000000-AP-19345-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2101,7 +2101,7 @@
     },
     {
         "id": 150,
-        "image": "COVIDx_CXR-4/test/A097839-01-07-1901-NA-CHEST_AP_VIEWONLY-72048-2.000000-AP-38038-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A097839-01-07-1901-NA-CHEST_AP_VIEWONLY-72048-2.000000-AP-38038-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2115,7 +2115,7 @@
     },
     {
         "id": 151,
-        "image": "COVIDx_CXR-4/test/e53ea41a.jpg",
+        "image": "COVIDx_CXR-4/train/e53ea41a.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2129,7 +2129,7 @@
     },
     {
         "id": 152,
-        "image": "COVIDx_CXR-4/test/X-ray_of_cyst_in_pneumocystis_pneumonia_1.jpg",
+        "image": "COVIDx_CXR-4/train/X-ray_of_cyst_in_pneumocystis_pneumonia_1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2143,7 +2143,7 @@
     },
     {
         "id": 153,
-        "image": "COVIDx_CXR-4/test/A587516-01-05-1901-NA-CHEST_AP_PORT-98730-1.000000-AP-55428-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A587516-01-05-1901-NA-CHEST_AP_PORT-98730-1.000000-AP-55428-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2157,7 +2157,7 @@
     },
     {
         "id": 154,
-        "image": "COVIDx_CXR-4/test/A096081-01-10-1901-NA-CHEST_AP_VIEWONLY-65046-1.000000-AP-85160-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A096081-01-10-1901-NA-CHEST_AP_VIEWONLY-65046-1.000000-AP-85160-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2171,7 +2171,7 @@
     },
     {
         "id": 155,
-        "image": "COVIDx_CXR-4/test/9ca1a6ca-efb6-4d59-b829-76350431b766.png",
+        "image": "COVIDx_CXR-4/train/9ca1a6ca-efb6-4d59-b829-76350431b766.png",
         "conversations": [
             {
                 "from": "human",
@@ -2185,7 +2185,7 @@
     },
     {
         "id": 156,
-        "image": "COVIDx_CXR-4/test/A130408-01-26-1901-NA-CHEST_AP_PORT-17564-3.000000-AP-54144-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A130408-01-26-1901-NA-CHEST_AP_PORT-17564-3.000000-AP-54144-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2199,7 +2199,7 @@
     },
     {
         "id": 157,
-        "image": "COVIDx_CXR-4/test/A813160-12-31-1900-NA-CHEST_AP_VIEWONLY-49719-2.000000-AP-85497-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A813160-12-31-1900-NA-CHEST_AP_VIEWONLY-49719-2.000000-AP-85497-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2213,7 +2213,7 @@
     },
     {
         "id": 158,
-        "image": "COVIDx_CXR-4/test/9dcfa483-4ed7-4cc8-954e-eb7c188e914d.png",
+        "image": "COVIDx_CXR-4/train/9dcfa483-4ed7-4cc8-954e-eb7c188e914d.png",
         "conversations": [
             {
                 "from": "human",
@@ -2227,7 +2227,7 @@
     },
     {
         "id": 159,
-        "image": "COVIDx_CXR-4/test/9754a55f-5e11-4465-81f6-c69677943375.png",
+        "image": "COVIDx_CXR-4/train/9754a55f-5e11-4465-81f6-c69677943375.png",
         "conversations": [
             {
                 "from": "human",
@@ -2241,7 +2241,7 @@
     },
     {
         "id": 160,
-        "image": "COVIDx_CXR-4/test/45841aa4-bf0e-4f6f-92ef-13b0c35d9787.png",
+        "image": "COVIDx_CXR-4/train/45841aa4-bf0e-4f6f-92ef-13b0c35d9787.png",
         "conversations": [
             {
                 "from": "human",
@@ -2255,7 +2255,7 @@
     },
     {
         "id": 161,
-        "image": "COVIDx_CXR-4/test/fa68dbe4-1da4-48f3-b88d-bc0f8a6d0af9.png",
+        "image": "COVIDx_CXR-4/train/fa68dbe4-1da4-48f3-b88d-bc0f8a6d0af9.png",
         "conversations": [
             {
                 "from": "human",
@@ -2269,7 +2269,7 @@
     },
     {
         "id": 162,
-        "image": "COVIDx_CXR-4/test/8488fbce-0fd7-41e4-b374-1dbf2e07060a.png",
+        "image": "COVIDx_CXR-4/train/8488fbce-0fd7-41e4-b374-1dbf2e07060a.png",
         "conversations": [
             {
                 "from": "human",
@@ -2283,7 +2283,7 @@
     },
     {
         "id": 163,
-        "image": "COVIDx_CXR-4/test/35ef8c74-74d5-49ae-8b45-98d349344628.png",
+        "image": "COVIDx_CXR-4/train/35ef8c74-74d5-49ae-8b45-98d349344628.png",
         "conversations": [
             {
                 "from": "human",
@@ -2297,7 +2297,7 @@
     },
     {
         "id": 164,
-        "image": "COVIDx_CXR-4/test/91d27278-e329-4065-bc04-1e69f9ee2db0.png",
+        "image": "COVIDx_CXR-4/train/91d27278-e329-4065-bc04-1e69f9ee2db0.png",
         "conversations": [
             {
                 "from": "human",
@@ -2311,7 +2311,7 @@
     },
     {
         "id": 165,
-        "image": "COVIDx_CXR-4/test/A923527-01-16-1901-NA-CHEST_AP_PORT-60454-1.000000-AP-22983-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A923527-01-16-1901-NA-CHEST_AP_PORT-60454-1.000000-AP-22983-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2325,7 +2325,7 @@
     },
     {
         "id": 166,
-        "image": "COVIDx_CXR-4/test/64d18b36-074a-409f-8a7e-7bb0103d6725.png",
+        "image": "COVIDx_CXR-4/train/64d18b36-074a-409f-8a7e-7bb0103d6725.png",
         "conversations": [
             {
                 "from": "human",
@@ -2339,7 +2339,7 @@
     },
     {
         "id": 167,
-        "image": "COVIDx_CXR-4/test/A390403-12-31-1900-NA-CHEST_AP_VIEWONLY-32747-2.000000-AP-25275-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A390403-12-31-1900-NA-CHEST_AP_VIEWONLY-32747-2.000000-AP-25275-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2353,7 +2353,7 @@
     },
     {
         "id": 168,
-        "image": "COVIDx_CXR-4/test/A981055-01-26-1901-NA-CHEST_AP_PORT-16528-3.000000-AP-02851-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A981055-01-26-1901-NA-CHEST_AP_PORT-16528-3.000000-AP-02851-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2367,7 +2367,7 @@
     },
     {
         "id": 169,
-        "image": "COVIDx_CXR-4/test/f76c9846-d88a-4d7c-b887-2759a4333f7c.png",
+        "image": "COVIDx_CXR-4/train/f76c9846-d88a-4d7c-b887-2759a4333f7c.png",
         "conversations": [
             {
                 "from": "human",
@@ -2381,7 +2381,7 @@
     },
     {
         "id": 170,
-        "image": "COVIDx_CXR-4/test/8d8d2dd7-b0b0-444f-b4a9-885382c8c668.png",
+        "image": "COVIDx_CXR-4/train/8d8d2dd7-b0b0-444f-b4a9-885382c8c668.png",
         "conversations": [
             {
                 "from": "human",
@@ -2395,7 +2395,7 @@
     },
     {
         "id": 171,
-        "image": "COVIDx_CXR-4/test/ff91fe68-b870-4efa-a0a8-3de999ef71a2.png",
+        "image": "COVIDx_CXR-4/train/ff91fe68-b870-4efa-a0a8-3de999ef71a2.png",
         "conversations": [
             {
                 "from": "human",
@@ -2409,7 +2409,7 @@
     },
     {
         "id": 172,
-        "image": "COVIDx_CXR-4/test/dcdf34fb-bf38-4a91-af40-3cb16829efbb.png",
+        "image": "COVIDx_CXR-4/train/dcdf34fb-bf38-4a91-af40-3cb16829efbb.png",
         "conversations": [
             {
                 "from": "human",
@@ -2423,7 +2423,7 @@
     },
     {
         "id": 173,
-        "image": "COVIDx_CXR-4/test/A507869-01-12-1901-NA-CHEST_AP_VIEWONLY-87352-2.000000-AP-68588-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A507869-01-12-1901-NA-CHEST_AP_VIEWONLY-87352-2.000000-AP-68588-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2437,7 +2437,7 @@
     },
     {
         "id": 174,
-        "image": "COVIDx_CXR-4/test/f0ec1c0c-9c72-4edf-8c98-251a44eff025.png",
+        "image": "COVIDx_CXR-4/train/f0ec1c0c-9c72-4edf-8c98-251a44eff025.png",
         "conversations": [
             {
                 "from": "human",
@@ -2451,7 +2451,7 @@
     },
     {
         "id": 175,
-        "image": "COVIDx_CXR-4/test/5f4eb911-ad6e-46da-bc76-2029fcb9dc74.png",
+        "image": "COVIDx_CXR-4/train/5f4eb911-ad6e-46da-bc76-2029fcb9dc74.png",
         "conversations": [
             {
                 "from": "human",
@@ -2465,7 +2465,7 @@
     },
     {
         "id": 176,
-        "image": "COVIDx_CXR-4/test/A966882-01-09-1901-NA-CHEST_AP_PORT-98858-1.000000-AP-84813-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A966882-01-09-1901-NA-CHEST_AP_PORT-98858-1.000000-AP-84813-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2479,7 +2479,7 @@
     },
     {
         "id": 177,
-        "image": "COVIDx_CXR-4/test/A724189-12-31-1900-NA-CHEST_AP_VIEWONLY-37729-1.000000-AP-69757-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A724189-12-31-1900-NA-CHEST_AP_VIEWONLY-37729-1.000000-AP-69757-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2493,7 +2493,7 @@
     },
     {
         "id": 178,
-        "image": "COVIDx_CXR-4/test/A793505-01-15-1901-NA-CHEST_AP_PORT-40784-1.000000-AP-94072-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A793505-01-15-1901-NA-CHEST_AP_PORT-40784-1.000000-AP-94072-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2507,7 +2507,7 @@
     },
     {
         "id": 179,
-        "image": "COVIDx_CXR-4/test/A128514-12-31-1900-NA-CHEST_AP_VIEWONLY-71998-1.000000-AP-12529-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A128514-12-31-1900-NA-CHEST_AP_VIEWONLY-71998-1.000000-AP-12529-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2521,7 +2521,7 @@
     },
     {
         "id": 180,
-        "image": "COVIDx_CXR-4/test/A485648-12-31-1900-NA-CHEST_AP_VIEWONLY-90217-1.000000-AP-90190-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A485648-12-31-1900-NA-CHEST_AP_VIEWONLY-90217-1.000000-AP-90190-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2535,7 +2535,7 @@
     },
     {
         "id": 181,
-        "image": "COVIDx_CXR-4/test/A603249-01-20-1901-NA-CHEST_AP_PORT_CENTRAL_LINE_PL-47853-1.000000-AP-19062-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A603249-01-20-1901-NA-CHEST_AP_PORT_CENTRAL_LINE_PL-47853-1.000000-AP-19062-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2549,7 +2549,7 @@
     },
     {
         "id": 182,
-        "image": "COVIDx_CXR-4/test/9ec6e281-84bf-4b6b-be0d-0ccd279257cc.png",
+        "image": "COVIDx_CXR-4/train/9ec6e281-84bf-4b6b-be0d-0ccd279257cc.png",
         "conversations": [
             {
                 "from": "human",
@@ -2563,7 +2563,7 @@
     },
     {
         "id": 183,
-        "image": "COVIDx_CXR-4/test/MIDRC-RICORD-1C-440808-000014-8.278-0.png",
+        "image": "COVIDx_CXR-4/train/MIDRC-RICORD-1C-440808-000014-8.278-0.png",
         "conversations": [
             {
                 "from": "human",
@@ -2577,7 +2577,7 @@
     },
     {
         "id": 184,
-        "image": "COVIDx_CXR-4/test/8a4673b4-243c-432d-b2d6-fbc7500c2cd9.png",
+        "image": "COVIDx_CXR-4/train/8a4673b4-243c-432d-b2d6-fbc7500c2cd9.png",
         "conversations": [
             {
                 "from": "human",
@@ -2591,7 +2591,7 @@
     },
     {
         "id": 185,
-        "image": "COVIDx_CXR-4/test/A526021-02-12-1901-NA-CHEST_AP_PORT-35899-3.000000-AP-73325-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A526021-02-12-1901-NA-CHEST_AP_PORT-35899-3.000000-AP-73325-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2605,7 +2605,7 @@
     },
     {
         "id": 186,
-        "image": "COVIDx_CXR-4/test/A747051-01-01-1901-NA-CHEST_AP_VIEWONLY-67680-1.000000-AP-88378-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A747051-01-01-1901-NA-CHEST_AP_VIEWONLY-67680-1.000000-AP-88378-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2619,7 +2619,7 @@
     },
     {
         "id": 187,
-        "image": "COVIDx_CXR-4/test/A221570-12-31-1900-NA-CHEST_AP_VIEWONLY-55669-1.000000-AP-38245-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A221570-12-31-1900-NA-CHEST_AP_VIEWONLY-55669-1.000000-AP-38245-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2633,7 +2633,7 @@
     },
     {
         "id": 188,
-        "image": "COVIDx_CXR-4/test/COVID(210).png",
+        "image": "COVIDx_CXR-4/train/COVID(210).png",
         "conversations": [
             {
                 "from": "human",
@@ -2647,7 +2647,7 @@
     },
     {
         "id": 189,
-        "image": "COVIDx_CXR-4/test/A860070-02-06-1901-NA-CHEST_AP_PORT-16211-3.000000-AP-53974-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A860070-02-06-1901-NA-CHEST_AP_PORT-16211-3.000000-AP-53974-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2661,7 +2661,7 @@
     },
     {
         "id": 190,
-        "image": "COVIDx_CXR-4/test/195ddf15-9620-4827-97da-01a44d5842f7.png",
+        "image": "COVIDx_CXR-4/train/195ddf15-9620-4827-97da-01a44d5842f7.png",
         "conversations": [
             {
                 "from": "human",
@@ -2675,7 +2675,7 @@
     },
     {
         "id": 191,
-        "image": "COVIDx_CXR-4/test/7f69dad4-92ff-47eb-ab3d-b2f41a0b7199.png",
+        "image": "COVIDx_CXR-4/train/7f69dad4-92ff-47eb-ab3d-b2f41a0b7199.png",
         "conversations": [
             {
                 "from": "human",
@@ -2689,7 +2689,7 @@
     },
     {
         "id": 192,
-        "image": "COVIDx_CXR-4/test/MIDRC-RICORD-1C-SITE2-000163-65449-0.png",
+        "image": "COVIDx_CXR-4/train/MIDRC-RICORD-1C-SITE2-000163-65449-0.png",
         "conversations": [
             {
                 "from": "human",
@@ -2703,7 +2703,7 @@
     },
     {
         "id": 193,
-        "image": "COVIDx_CXR-4/test/A533789-01-03-1901-NA-CHEST_AP_VIEWONLY-14645-2.000000-AP-61665-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A533789-01-03-1901-NA-CHEST_AP_VIEWONLY-14645-2.000000-AP-61665-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2717,7 +2717,7 @@
     },
     {
         "id": 194,
-        "image": "COVIDx_CXR-4/test/A221230-01-12-1901-NA-CHEST_AP_PORT-65377-2.000000-AP-31779-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A221230-01-12-1901-NA-CHEST_AP_PORT-65377-2.000000-AP-31779-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2731,7 +2731,7 @@
     },
     {
         "id": 195,
-        "image": "COVIDx_CXR-4/test/9083a390-7a73-4406-a3be-7d7888ad159a.png",
+        "image": "COVIDx_CXR-4/train/9083a390-7a73-4406-a3be-7d7888ad159a.png",
         "conversations": [
             {
                 "from": "human",
@@ -2745,7 +2745,7 @@
     },
     {
         "id": 196,
-        "image": "COVIDx_CXR-4/test/387126a9-0e30-4e23-94cf-e2a6811e6d47.png",
+        "image": "COVIDx_CXR-4/train/387126a9-0e30-4e23-94cf-e2a6811e6d47.png",
         "conversations": [
             {
                 "from": "human",
@@ -2759,7 +2759,7 @@
     },
     {
         "id": 197,
-        "image": "COVIDx_CXR-4/test/ef2fc783-b9d7-4bbc-b0b3-f811daad5b56.png",
+        "image": "COVIDx_CXR-4/train/ef2fc783-b9d7-4bbc-b0b3-f811daad5b56.png",
         "conversations": [
             {
                 "from": "human",
@@ -2773,7 +2773,7 @@
     },
     {
         "id": 198,
-        "image": "COVIDx_CXR-4/test/0ae12060-f38f-43ad-8a88-a06322f920ab.png",
+        "image": "COVIDx_CXR-4/train/0ae12060-f38f-43ad-8a88-a06322f920ab.png",
         "conversations": [
             {
                 "from": "human",
@@ -2787,7 +2787,7 @@
     },
     {
         "id": 199,
-        "image": "COVIDx_CXR-4/test/A766483-01-30-1901-NA-CHEST_AP_VIEWONLY-59476-3.000000-AP-67037-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A766483-01-30-1901-NA-CHEST_AP_VIEWONLY-59476-3.000000-AP-67037-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2801,7 +2801,7 @@
     },
     {
         "id": 200,
-        "image": "COVIDx_CXR-4/test/ca7f1652-0b68-4cfe-95ff-85a03a533d42.png",
+        "image": "COVIDx_CXR-4/train/ca7f1652-0b68-4cfe-95ff-85a03a533d42.png",
         "conversations": [
             {
                 "from": "human",
@@ -2815,7 +2815,7 @@
     },
     {
         "id": 201,
-        "image": "COVIDx_CXR-4/test/A349708-01-21-1901-NA-CHEST_AP_PORT-23074-2.000000-AP-63619-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A349708-01-21-1901-NA-CHEST_AP_PORT-23074-2.000000-AP-63619-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2829,7 +2829,7 @@
     },
     {
         "id": 202,
-        "image": "COVIDx_CXR-4/test/A274721-01-03-1901-NA-CHEST_AP_PORT-38602-3.000000-AP-29087-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A274721-01-03-1901-NA-CHEST_AP_PORT-38602-3.000000-AP-29087-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2843,7 +2843,7 @@
     },
     {
         "id": 203,
-        "image": "COVIDx_CXR-4/test/b0780603-efa4-453c-a51c-a23c4efedfc1.png",
+        "image": "COVIDx_CXR-4/train/b0780603-efa4-453c-a51c-a23c4efedfc1.png",
         "conversations": [
             {
                 "from": "human",
@@ -2857,7 +2857,7 @@
     },
     {
         "id": 204,
-        "image": "COVIDx_CXR-4/test/A763364-02-02-1901-NA-CHEST_AP_PORT-44103-3.000000-AP-27686-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A763364-02-02-1901-NA-CHEST_AP_PORT-44103-3.000000-AP-27686-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2871,7 +2871,7 @@
     },
     {
         "id": 205,
-        "image": "COVIDx_CXR-4/test/000001.jpg",
+        "image": "COVIDx_CXR-4/train/000001.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2885,7 +2885,7 @@
     },
     {
         "id": 206,
-        "image": "COVIDx_CXR-4/test/6bc8aad2-30ea-4daf-94cb-4b65c6e8d0c2.png",
+        "image": "COVIDx_CXR-4/train/6bc8aad2-30ea-4daf-94cb-4b65c6e8d0c2.png",
         "conversations": [
             {
                 "from": "human",
@@ -2899,7 +2899,7 @@
     },
     {
         "id": 207,
-        "image": "COVIDx_CXR-4/test/A361904-12-24-1900-NA-CHEST_AP_PORT-40523-1.000000-AP-72387-1-1.jpg",
+        "image": "COVIDx_CXR-4/train/A361904-12-24-1900-NA-CHEST_AP_PORT-40523-1.000000-AP-72387-1-1.jpg",
         "conversations": [
             {
                 "from": "human",
@@ -2913,7 +2913,7 @@
     },
     {
         "id": 208,
-        "image": "COVIDx_CXR-4/test/90ec4fa0-4405-4fcd-926c-6323158fded2.png",
+        "image": "COVIDx_CXR-4/train/90ec4fa0-4405-4fcd-926c-6323158fded2.png",
         "conversations": [
             {
                 "from": "human",
@@ -2927,7 +2927,7 @@
     },
     {
         "id": 209,
-        "image": "COVIDx_CXR-4/test/5f7cbe92-d4b4-456e-a38c-e2f370570e99.png",
+        "image": "COVIDx_CXR-4/train/5f7cbe92-d4b4-456e-a38c-e2f370570e99.png",
         "conversations": [
             {
                 "from": "human",

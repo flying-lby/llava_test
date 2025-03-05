@@ -31,7 +31,7 @@ deepspeed train/clip_train_mem.py \
     --deepspeed train/zero3.json \
     --model_name_or_path /srv/lby/llava_med/llava-med-v1.5-mistral-7b \
     --version v1 \
-    --data_path ./data/fine_tuning/rsna_train.json \
+    --data_path ./data/fine_tuning/covid/covid_train_1.json \
     --image_folder /srv/lby/ \
     --vision_tower /srv/lby/clip-vit-large-patch14-336 \
     --mm_projector_type mlp2x_gelu \
