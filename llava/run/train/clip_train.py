@@ -793,16 +793,20 @@ class LazySupervisedDataset(Dataset):
             image_file = self.list_data_dict[i]['image']
             image_folder = self.data_args.image_folder
             processor = self.data_args.image_processor
-            if image_file.split('.')[-1] == "dcm":
-               img = pydicom.dcmread(os.path.join(image_folder, image_file)).pixel_array  # 读取 DICOM 图像数据
-               img = img.astype(float) / 255.0  # 归一化图像
-               img = exposure.equalize_hist(img)  # 直方图均衡化
+            try:
+                if image_file.split('.')[-1] == "dcm":
+                    img = pydicom.dcmread(os.path.join(image_folder, image_file)).pixel_array  # 读取 DICOM 图像数据
+                    img = img.astype(float) / 255.0  # 归一化图像
+                    img = exposure.equalize_hist(img)  # 直方图均衡化
 
-                # 转换为 PIL 图像并应用预处理
-               img = (255 * img).astype(np.uint8)  # 转换为 uint8 类型
-               image = Image.fromarray(img).convert('RGB')
-            else:
-                image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
+                        # 转换为 PIL 图像并应用预处理
+                    img = (255 * img).astype(np.uint8)  # 转换为 uint8 类型
+                    image = Image.fromarray(img).convert('RGB')
+                else:
+                    image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
+            except:
+                pass
+                    
             if self.data_args.image_aspect_ratio == 'pad':
                 def expand2square(pil_img, background_color):
                     width, height = pil_img.size
