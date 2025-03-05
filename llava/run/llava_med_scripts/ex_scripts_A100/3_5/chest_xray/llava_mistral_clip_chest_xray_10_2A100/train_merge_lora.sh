@@ -18,7 +18,7 @@ deepspeed train/clip_train_mem.py \
     --model_name_or_path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_2_9 \
     --version v1 \
     --data_path ./data/fine_tuning/chest_xray/chest_xray_train_10.json \
-    --image_folder /srv/lby/ \
+    --image_folder /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/ \
     --vision_tower /mnt/nlp-ali/usr/huangwenxuan/home/vision_tower/clip-vit-large-patch14-336 \
     --mm_projector_type mlp2x_gelu \
     --mm_vision_select_layer -2 \
