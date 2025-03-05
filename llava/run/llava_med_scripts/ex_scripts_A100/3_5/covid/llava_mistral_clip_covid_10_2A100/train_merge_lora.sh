@@ -2,7 +2,7 @@
 ###
  # @Author: fly
  # @Date: 2024-12-26 16:50:23
- # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/ex_scripts_A100/3_5/rsna/llava_mistral_clip_rsna_1_2A100/train_merge_lora.sh
+ # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/ex_scripts_A100/3_5/covid/llava_mistral_clip_covid_10_2A100/train_merge_lora.sh
  # @Description: 
 ### 
 
@@ -17,7 +17,7 @@ deepspeed train/clip_train_mem.py \
     --deepspeed train/zero3.json \
     --model_name_or_path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_2_9 \
     --version v1 \
-    --data_path ./data/fine_tuning/covid_train_10.json \
+    --data_path ./data/fine_tuning/covid/covid_train_10.json \
     --image_folder /srv/lby/ \
     --vision_tower /mnt/nlp-ali/usr/huangwenxuan/home/vision_tower/clip-vit-large-patch14-336 \
     --mm_projector_type mlp2x_gelu \

@@ -11,6 +11,21 @@
 # ========================
 echo "Starting training process..."
 
+
+#!/bin/bash
+###
+ # @Author: fly
+ # @Date: 2024-12-26 16:50:23
+ # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/ex_scripts_A100/3_5/chest_xray/llava_mistral_clip_chest_xray_100_2A100/train_merge_lora.sh
+ # @Description: 
+### 
+
+# ========================
+# Training 
+# mlp 3
+# ========================
+echo "Starting training process..."
+
 deepspeed train/clip_train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 5e-5 \
     --deepspeed train/zero3.json \
