@@ -1,0 +1,2704 @@
+[
+    {
+        "id": 4989,
+        "image": "RSNA_Pneumonia/stage_2_train_images/21d50009-6fea-47e1-8af4-e60aca364ec8.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1554,
+        "image": "RSNA_Pneumonia/stage_2_train_images/ec5a8435-f892-4a3a-af62-0cbb14f56783.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 9260,
+        "image": "RSNA_Pneumonia/stage_2_train_images/c955a70c-63da-4054-b0db-389c6dec87af.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 13476,
+        "image": "RSNA_Pneumonia/stage_2_train_images/6f7ad9a6-aeb8-49ec-ac6c-0bdbcf28fbd6.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 2225,
+        "image": "RSNA_Pneumonia/stage_2_train_images/56c529d6-a358-4556-b9a0-315fd0ca1446.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 8764,
+        "image": "RSNA_Pneumonia/stage_2_train_images/0fc4edec-08ea-4cd4-bf21-a6319ef0b44d.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 7834,
+        "image": "RSNA_Pneumonia/stage_2_train_images/ca8b395d-7ca0-4dc4-8b56-ff519b4edb89.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 7969,
+        "image": "RSNA_Pneumonia/stage_2_train_images/9f7bd17a-57aa-483d-90d5-be6a4b5e92b9.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1815,
+        "image": "RSNA_Pneumonia/stage_2_train_images/0f5460cd-0847-4977-9bbf-01de53f44f45.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 18305,
+        "image": "RSNA_Pneumonia/stage_2_train_images/cfbe870f-3ed6-429b-a0f3-c65118aacd3e.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 10275,
+        "image": "RSNA_Pneumonia/stage_2_train_images/fd46ed8c-00eb-41f6-b3da-e11b3e4982e7.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 13597,
+        "image": "RSNA_Pneumonia/stage_2_train_images/804df40a-0ae0-4d28-a353-dd634bfc736e.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5653,
+        "image": "RSNA_Pneumonia/stage_2_train_images/1748e4e2-5c73-4794-81fe-2c5fe4af8cdd.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 3522,
+        "image": "RSNA_Pneumonia/stage_2_train_images/fb99325c-b1f6-422f-8b20-b6fab98c8fcc.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3213,
+        "image": "RSNA_Pneumonia/stage_2_train_images/d1425230-2b69-4a98-9a98-ceb29b40e039.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3547,
+        "image": "RSNA_Pneumonia/stage_2_train_images/b77669dd-8554-4531-9903-9719747fdb63.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 7070,
+        "image": "RSNA_Pneumonia/stage_2_train_images/b776a863-b1da-4a7e-b688-b9a6ce6c3e75.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 6415,
+        "image": "RSNA_Pneumonia/stage_2_train_images/7d6ee401-a84e-4cb0-81f8-ae94de0b5269.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5954,
+        "image": "RSNA_Pneumonia/stage_2_train_images/701c90b1-cd25-4083-b742-595a49f453bd.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 16708,
+        "image": "RSNA_Pneumonia/stage_2_train_images/7bd0b304-617b-4ad5-9eaf-47d440a330ab.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 6844,
+        "image": "RSNA_Pneumonia/stage_2_train_images/5a2f8c86-f21d-4815-98a3-1bb5fa6d9f44.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 14298,
+        "image": "RSNA_Pneumonia/stage_2_train_images/036a1ed9-6ce8-4a5c-80aa-4790abe94dfc.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 17751,
+        "image": "RSNA_Pneumonia/stage_2_train_images/a924e647-a3ff-4e00-a9ee-75c6313c32d4.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 14341,
+        "image": "RSNA_Pneumonia/stage_2_train_images/e73cc27e-c2a0-42f9-84cd-5463e97fae0b.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 6193,
+        "image": "RSNA_Pneumonia/stage_2_train_images/1c98cf85-1e50-4def-a8e7-6749808339ff.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 15731,
+        "image": "RSNA_Pneumonia/stage_2_train_images/b23173b4-4f5f-40d5-9f4c-8ba668824514.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 200,
+        "image": "RSNA_Pneumonia/stage_2_train_images/cee7adc5-7a3d-4f2b-bd2e-f633d201261a.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3948,
+        "image": "RSNA_Pneumonia/stage_2_train_images/a3d9e81b-9de4-4d4c-8449-327ba2875585.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 18014,
+        "image": "RSNA_Pneumonia/stage_2_train_images/e13739bf-ff9c-44eb-8839-fa8c61bf8a14.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 17422,
+        "image": "RSNA_Pneumonia/stage_2_train_images/32bba2f6-0701-4646-87cc-9ddc27439be4.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 326,
+        "image": "RSNA_Pneumonia/stage_2_train_images/d8578918-1047-496a-b9f1-36ae4d0e53da.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 10769,
+        "image": "RSNA_Pneumonia/stage_2_train_images/84321b1c-3284-4ce4-89a7-fa42d6d9f997.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 1328,
+        "image": "RSNA_Pneumonia/stage_2_train_images/1c63da74-f68a-498d-a4b8-fc637227a4fa.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 438,
+        "image": "RSNA_Pneumonia/stage_2_train_images/c93f9fee-9ad2-43a8-9071-ba769cbbdf8a.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 13945,
+        "image": "RSNA_Pneumonia/stage_2_train_images/4c832db7-85f5-453e-bdbf-f1978eb78a4f.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3341,
+        "image": "RSNA_Pneumonia/stage_2_train_images/6f37008d-c8a4-45b0-a1cd-7b215df62cfc.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 10261,
+        "image": "RSNA_Pneumonia/stage_2_train_images/85d878f8-6828-4952-bd30-319bc4698358.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1272,
+        "image": "RSNA_Pneumonia/stage_2_train_images/ef868205-5194-4860-9396-7c4c91316e74.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 10216,
+        "image": "RSNA_Pneumonia/stage_2_train_images/bd164f7a-a3a5-40d0-933c-0d623be3ad94.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 14258,
+        "image": "RSNA_Pneumonia/stage_2_train_images/9e20e76e-22e1-4965-b0b3-d2562348ad21.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 16563,
+        "image": "RSNA_Pneumonia/stage_2_train_images/165bc884-61e3-4fd8-a799-643a8626c7e5.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 13613,
+        "image": "RSNA_Pneumonia/stage_2_train_images/2dce719f-1702-406f-a471-03f033f1822a.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 12269,
+        "image": "RSNA_Pneumonia/stage_2_train_images/a408115c-3467-4141-b2a4-48c90b05883e.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 18165,
+        "image": "RSNA_Pneumonia/stage_2_train_images/a3d92122-8745-4b88-930e-922b0b602f8d.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 16328,
+        "image": "RSNA_Pneumonia/stage_2_train_images/45a1e0ab-3eb3-4587-b679-2b2310635804.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 3919,
+        "image": "RSNA_Pneumonia/stage_2_train_images/b9e89b84-5cb2-4005-b654-a3e13c544923.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 11893,
+        "image": "RSNA_Pneumonia/stage_2_train_images/7845cd45-c899-4220-ab6d-e969ed2e1cf3.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 15016,
+        "image": "RSNA_Pneumonia/stage_2_train_images/e0cc1c8b-2dd6-49fa-834c-94fcf8a9a0ee.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 4170,
+        "image": "RSNA_Pneumonia/stage_2_train_images/4d246f03-3d83-45e3-aba6-80edecc444db.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 15864,
+        "image": "RSNA_Pneumonia/stage_2_train_images/18774506-f9cb-497c-898f-0bade580f342.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 6246,
+        "image": "RSNA_Pneumonia/stage_2_train_images/49dcbed5-1a06-477c-ae64-46b6391d7774.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 12587,
+        "image": "RSNA_Pneumonia/stage_2_train_images/fc76e52c-6302-48b2-8750-2f8584fb704c.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 9690,
+        "image": "RSNA_Pneumonia/stage_2_train_images/87cb5aac-ec60-4d29-8f0f-63ee1a43c5c5.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 12042,
+        "image": "RSNA_Pneumonia/stage_2_train_images/80e47299-126f-4743-ac49-74f4d746ed65.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 7019,
+        "image": "RSNA_Pneumonia/stage_2_train_images/4b1a60c2-40e4-4cc5-9fb2-d0a3e4fe8a4f.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 9967,
+        "image": "RSNA_Pneumonia/stage_2_train_images/230adb79-3015-4657-86d3-fa3f146a10f5.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 13106,
+        "image": "RSNA_Pneumonia/stage_2_train_images/3bc56686-1c63-4d08-b2ec-8e112db205a2.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5022,
+        "image": "RSNA_Pneumonia/stage_2_train_images/759add8c-3802-46f2-9cb6-06b092c4e9bb.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 9853,
+        "image": "RSNA_Pneumonia/stage_2_train_images/9252b66c-825c-474a-81e2-c75919cfc8ee.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 19102,
+        "image": "RSNA_Pneumonia/stage_2_train_images/df2d185c-9107-44ad-ad65-cde2a7a8991b.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 11913,
+        "image": "RSNA_Pneumonia/stage_2_train_images/55b3bd78-091c-4c00-b83e-ad37e43a1ce5.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 936,
+        "image": "RSNA_Pneumonia/stage_2_train_images/da214328-3a8e-4e8d-8801-7e14c0da0de3.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 9636,
+        "image": "RSNA_Pneumonia/stage_2_train_images/41159056-4cb8-4937-aa38-ad56a362c673.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 4400,
+        "image": "RSNA_Pneumonia/stage_2_train_images/8804ca6a-c3df-4962-8945-2c334f9c1e08.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3481,
+        "image": "RSNA_Pneumonia/stage_2_train_images/63590dff-7b12-4aeb-b747-6f7f7ad23f23.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 13088,
+        "image": "RSNA_Pneumonia/stage_2_train_images/56224d10-e854-4563-abbb-ed952fab26ed.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5548,
+        "image": "RSNA_Pneumonia/stage_2_train_images/f862a9e3-b63f-4dda-86ee-cde5be5f3dce.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 4115,
+        "image": "RSNA_Pneumonia/stage_2_train_images/eb0cc4c8-4ce7-46b9-9ad2-c4bb71fcbf59.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 7484,
+        "image": "RSNA_Pneumonia/stage_2_train_images/6518f095-9599-4dcb-bbba-5cc260babfef.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 15640,
+        "image": "RSNA_Pneumonia/stage_2_train_images/ecbf2243-ebb0-462d-99fc-01cb417efa17.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 12157,
+        "image": "RSNA_Pneumonia/stage_2_train_images/58d1ec20-645b-4bed-a31e-1f08051a90c0.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 15367,
+        "image": "RSNA_Pneumonia/stage_2_train_images/9e149c3a-0dbc-4d4d-a7f6-939c4e4d8688.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 14173,
+        "image": "RSNA_Pneumonia/stage_2_train_images/53645011-e495-4bc3-a3fa-087aa3cde971.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 7719,
+        "image": "RSNA_Pneumonia/stage_2_train_images/f477d62a-f037-4a8e-9749-ae8d43558c69.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5894,
+        "image": "RSNA_Pneumonia/stage_2_train_images/d0e84fc9-e88c-4fe1-92d5-74a96b87ddb1.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 15065,
+        "image": "RSNA_Pneumonia/stage_2_train_images/62419684-59fa-41c2-a663-73ac0b9b0b5f.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 13268,
+        "image": "RSNA_Pneumonia/stage_2_train_images/5aa43eef-1877-40eb-ba8c-6001452f7d89.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 3886,
+        "image": "RSNA_Pneumonia/stage_2_train_images/c8c5799a-9a86-4c70-9263-15c588d01449.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 13655,
+        "image": "RSNA_Pneumonia/stage_2_train_images/7e5673a6-f9fd-40ee-87b3-bea2c84a0575.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 4467,
+        "image": "RSNA_Pneumonia/stage_2_train_images/5b80895c-63a9-4cdc-a869-5ca00043e862.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 8395,
+        "image": "RSNA_Pneumonia/stage_2_train_images/2f686840-18b3-45ac-a2bb-6140e3b0ac73.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 4564,
+        "image": "RSNA_Pneumonia/stage_2_train_images/81c790b9-e83f-4d5d-8831-c0c5414348ea.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 6467,
+        "image": "RSNA_Pneumonia/stage_2_train_images/d129ade5-d54c-4d3d-bf6b-a1de107fcc1b.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 11792,
+        "image": "RSNA_Pneumonia/stage_2_train_images/43b42736-57c4-447d-9c50-19b92dcde9e3.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 313,
+        "image": "RSNA_Pneumonia/stage_2_train_images/97e1f1c3-b9d4-4b02-acb0-d2ddf26cad16.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 4461,
+        "image": "RSNA_Pneumonia/stage_2_train_images/35f287e7-12d7-41f4-a5e9-711086bd031d.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 17901,
+        "image": "RSNA_Pneumonia/stage_2_train_images/770ee884-c29b-4e94-92d4-eb3a5431d976.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 12868,
+        "image": "RSNA_Pneumonia/stage_2_train_images/6cfa8138-b222-4573-8148-42c2490f1721.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 10683,
+        "image": "RSNA_Pneumonia/stage_2_train_images/9ee2b533-9bd1-461d-acbc-ac74aa13818b.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 17290,
+        "image": "RSNA_Pneumonia/stage_2_train_images/81f8b5af-6ae0-4206-9d40-9647a53b4bae.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 17421,
+        "image": "RSNA_Pneumonia/stage_2_train_images/71efdae6-9529-4740-8f7d-a7e5e788676d.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 17569,
+        "image": "RSNA_Pneumonia/stage_2_train_images/759a11de-da95-4cb8-a373-ab848ae74171.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 13400,
+        "image": "RSNA_Pneumonia/stage_2_train_images/20b8b7c9-258a-4a3f-9f1d-2548fd996b46.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 2232,
+        "image": "RSNA_Pneumonia/stage_2_train_images/cbf90d22-07ba-40c0-b043-55ab73851ba3.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 13674,
+        "image": "RSNA_Pneumonia/stage_2_train_images/76c9e6e4-9cb5-4475-89cf-23b20b0be522.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 6459,
+        "image": "RSNA_Pneumonia/stage_2_train_images/52017ad1-0344-46e4-9b0a-47a5a38d7e71.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 15122,
+        "image": "RSNA_Pneumonia/stage_2_train_images/a2125c20-d6da-428f-8b08-ed473861107c.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 16718,
+        "image": "RSNA_Pneumonia/stage_2_train_images/68644ba7-8699-4b76-aac3-6237c3b2f20d.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 736,
+        "image": "RSNA_Pneumonia/stage_2_train_images/c8ad32ab-daa1-4ab6-843f-d9bd4fe81400.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 6868,
+        "image": "RSNA_Pneumonia/stage_2_train_images/1db7e52d-7a40-49ff-9f24-bc72a33f9c23.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 2677,
+        "image": "RSNA_Pneumonia/stage_2_train_images/fa1996ec-770e-4004-8d23-27b7a6cbaaa8.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 15532,
+        "image": "RSNA_Pneumonia/stage_2_train_images/4cd5215c-acf1-4ee9-8790-b9500b3ef404.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1453,
+        "image": "RSNA_Pneumonia/stage_2_train_images/eef875e3-f6ce-457d-bb4f-7c42bf3cce09.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 13738,
+        "image": "RSNA_Pneumonia/stage_2_train_images/954d091a-3c7f-4d02-83cc-9e7b6a8d74de.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 18110,
+        "image": "RSNA_Pneumonia/stage_2_train_images/96bcdd46-679d-42e8-b6b0-a11803ad5c1d.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 6950,
+        "image": "RSNA_Pneumonia/stage_2_train_images/c2eefdda-ae58-46e6-9923-42d4d084ebbc.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 9357,
+        "image": "RSNA_Pneumonia/stage_2_train_images/3cf312c7-2d29-463b-bcc2-2a7e074d1d06.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 4336,
+        "image": "RSNA_Pneumonia/stage_2_train_images/ae33eaf1-14db-4dd0-8a22-6bef55522fd1.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 10212,
+        "image": "RSNA_Pneumonia/stage_2_train_images/6951acfe-67a2-4dcf-a1a7-638dbd3ed528.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 9159,
+        "image": "RSNA_Pneumonia/stage_2_train_images/5b6f828f-98b3-4a29-b93c-763594d135fd.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 9242,
+        "image": "RSNA_Pneumonia/stage_2_train_images/5eaceedc-ba7d-49aa-91f4-2029dfddb831.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5948,
+        "image": "RSNA_Pneumonia/stage_2_train_images/349f10b4-dc3e-4f3f-b2e4-a5b81448ce87.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 4852,
+        "image": "RSNA_Pneumonia/stage_2_train_images/2bdfab0d-4192-4a7f-a366-587c379ecdba.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 19113,
+        "image": "RSNA_Pneumonia/stage_2_train_images/0cac04c6-c4b6-48e5-9b28-b0a6c44289a5.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 16256,
+        "image": "RSNA_Pneumonia/stage_2_train_images/bf999eaa-6bce-46f8-be87-1dc34ca20e97.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 6932,
+        "image": "RSNA_Pneumonia/stage_2_train_images/be9624bc-824f-4951-9f81-087d6528eeec.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 19109,
+        "image": "RSNA_Pneumonia/stage_2_train_images/a6c4a07c-164c-45a0-ba43-8bfb6afba4f9.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 11540,
+        "image": "RSNA_Pneumonia/stage_2_train_images/e5f214d1-2842-4a26-9a2e-fd05b15fb8b3.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 8471,
+        "image": "RSNA_Pneumonia/stage_2_train_images/020a16e3-baf9-4cf0-859c-c79b5253d717.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 19277,
+        "image": "RSNA_Pneumonia/stage_2_train_images/8214be18-4b1c-4042-a3f9-c1929c516ffb.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 11919,
+        "image": "RSNA_Pneumonia/stage_2_train_images/4f34c638-80de-4e77-92c7-87ccd0453b32.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 6934,
+        "image": "RSNA_Pneumonia/stage_2_train_images/727090e4-885c-483c-915f-475c7c0b8aff.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5107,
+        "image": "RSNA_Pneumonia/stage_2_train_images/3a23c1d9-6a57-4760-bfc4-ab335af23a91.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 11977,
+        "image": "RSNA_Pneumonia/stage_2_train_images/e04808e4-4c7c-4176-ab83-31d41b8a9766.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 17369,
+        "image": "RSNA_Pneumonia/stage_2_train_images/f39755d7-a28a-41f8-81d7-b46633eb4610.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 10477,
+        "image": "RSNA_Pneumonia/stage_2_train_images/725dfd3a-f07b-4a09-9245-601ad57d182e.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 10346,
+        "image": "RSNA_Pneumonia/stage_2_train_images/0d1b2c45-309a-407f-8224-36761e8451c4.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5512,
+        "image": "RSNA_Pneumonia/stage_2_train_images/ebde7b85-e1cd-4428-b6d2-c9e5088b00a0.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 13642,
+        "image": "RSNA_Pneumonia/stage_2_train_images/cd841461-3b42-4d79-9448-9cbd03eca5e1.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 15460,
+        "image": "RSNA_Pneumonia/stage_2_train_images/7bb89736-04ce-4cfc-bdf1-bf7a92b4e575.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 14959,
+        "image": "RSNA_Pneumonia/stage_2_train_images/36d7ebd2-a4e5-42d1-bde0-c7699da0b152.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 2571,
+        "image": "RSNA_Pneumonia/stage_2_train_images/21e9c794-01b6-4193-86f5-b07f03323ad3.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 12643,
+        "image": "RSNA_Pneumonia/stage_2_train_images/a5b3340e-0054-48c2-9966-fe9e2af21da7.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 16386,
+        "image": "RSNA_Pneumonia/stage_2_train_images/76b93616-f7ab-419e-a4f4-dc3d49e43dd5.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 16699,
+        "image": "RSNA_Pneumonia/stage_2_train_images/fde4a8e7-6fd7-4f21-ad56-1faa74ca6517.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3120,
+        "image": "RSNA_Pneumonia/stage_2_train_images/e26cf6fb-62dd-4079-88c5-9ef5af285e8e.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 19300,
+        "image": "RSNA_Pneumonia/stage_2_train_images/7286efff-9cbf-49fa-8d22-12608fca60ee.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 6258,
+        "image": "RSNA_Pneumonia/stage_2_train_images/f2a78be0-4397-4b01-8357-c2596406edd1.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 8147,
+        "image": "RSNA_Pneumonia/stage_2_train_images/75a91833-89f4-4c05-8661-393ec6bcabae.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 16357,
+        "image": "RSNA_Pneumonia/stage_2_train_images/b852140e-62d4-4ddb-b344-bc694bf9f167.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 6384,
+        "image": "RSNA_Pneumonia/stage_2_train_images/0bc7f47a-ecea-4b66-811e-096004721a63.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 5922,
+        "image": "RSNA_Pneumonia/stage_2_train_images/ca70ad74-6cf5-4935-b0c6-05edbea4c65c.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 2267,
+        "image": "RSNA_Pneumonia/stage_2_train_images/43477aa6-e681-4e9d-b479-28f659570dce.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 17445,
+        "image": "RSNA_Pneumonia/stage_2_train_images/350e7ec1-9468-4056-9455-746888fcf817.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 7514,
+        "image": "RSNA_Pneumonia/stage_2_train_images/8000975e-2a81-43b9-8c72-ba5eba37e84e.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 12239,
+        "image": "RSNA_Pneumonia/stage_2_train_images/3febbe1c-f386-4ced-b8a6-2047f56f33d5.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 14471,
+        "image": "RSNA_Pneumonia/stage_2_train_images/4ad69283-4761-4acf-94bd-6d7c482b28d9.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 8489,
+        "image": "RSNA_Pneumonia/stage_2_train_images/f174000f-f9e2-4f80-941b-a11c1ca45c4d.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 18632,
+        "image": "RSNA_Pneumonia/stage_2_train_images/e626d891-0a76-4cad-9671-1d1f2993ecef.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 2312,
+        "image": "RSNA_Pneumonia/stage_2_train_images/fd676e0b-14e6-40d4-8c4a-85d028559ad1.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 13513,
+        "image": "RSNA_Pneumonia/stage_2_train_images/459ef256-48ff-4456-b5f6-e2383bfbdc33.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 4032,
+        "image": "RSNA_Pneumonia/stage_2_train_images/6222a1ce-4597-4fff-ae9b-269d4c8df5d8.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3433,
+        "image": "RSNA_Pneumonia/stage_2_train_images/5e8cb001-aee9-4eda-9973-66f4796a1926.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 18405,
+        "image": "RSNA_Pneumonia/stage_2_train_images/c4834e61-5916-4bfc-996e-60521890e1a8.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 322,
+        "image": "RSNA_Pneumonia/stage_2_train_images/73ab0684-4fe8-4223-8b4a-29d50e607111.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 12829,
+        "image": "RSNA_Pneumonia/stage_2_train_images/0f938aa7-9459-4c95-9b99-d0bf94cc789e.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 6497,
+        "image": "RSNA_Pneumonia/stage_2_train_images/6349bcae-b88a-4d59-a4c4-f3ccf0eb520d.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3739,
+        "image": "RSNA_Pneumonia/stage_2_train_images/448c6151-2bb5-4df3-b07e-7f86f3a5737a.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 4907,
+        "image": "RSNA_Pneumonia/stage_2_train_images/56da6217-43d3-4a42-9ac9-780f0036803a.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 9478,
+        "image": "RSNA_Pneumonia/stage_2_train_images/35e2f247-6930-4b7d-bc43-baaa622cce2c.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 2647,
+        "image": "RSNA_Pneumonia/stage_2_train_images/0851431b-cad7-436f-acb8-06aed97e5339.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 7599,
+        "image": "RSNA_Pneumonia/stage_2_train_images/2cb272c0-90db-4e36-8a78-ed072efcdaa2.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 257,
+        "image": "RSNA_Pneumonia/stage_2_train_images/b1c0e005-6c1f-4231-b878-415b4cf1b578.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 8122,
+        "image": "RSNA_Pneumonia/stage_2_train_images/03a9b990-18bb-4370-ac03-7fa385ea72bf.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 11532,
+        "image": "RSNA_Pneumonia/stage_2_train_images/b4823a54-2c30-43e1-9662-bc830404fdcd.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 16747,
+        "image": "RSNA_Pneumonia/stage_2_train_images/fd47d2fd-6474-475c-b5be-4a9edfc823b5.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5761,
+        "image": "RSNA_Pneumonia/stage_2_train_images/9e98ccb4-e0b8-44de-acd0-4927030264d3.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 6880,
+        "image": "RSNA_Pneumonia/stage_2_train_images/98f04248-c591-4d8a-bb4e-38033233cd21.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 13670,
+        "image": "RSNA_Pneumonia/stage_2_train_images/7ef28198-53a4-408e-8a54-1d421c97edba.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 13034,
+        "image": "RSNA_Pneumonia/stage_2_train_images/9dd1fff0-2f72-4d3e-8d71-e69d73765aad.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 115,
+        "image": "RSNA_Pneumonia/stage_2_train_images/722816d0-3d58-4fbc-8e0f-a2ef699efbc6.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 9892,
+        "image": "RSNA_Pneumonia/stage_2_train_images/2dff430f-e5e9-4d90-9139-14f64a68fb15.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 11370,
+        "image": "RSNA_Pneumonia/stage_2_train_images/0695a0d8-d4b6-4dbe-bc04-497897e4516a.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 10092,
+        "image": "RSNA_Pneumonia/stage_2_train_images/b359c695-5814-4c1e-a7c0-200509182a4f.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 6735,
+        "image": "RSNA_Pneumonia/stage_2_train_images/12fd0651-0275-4d15-8868-35ba85ea70f0.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 16455,
+        "image": "RSNA_Pneumonia/stage_2_train_images/29e4656b-0648-470c-ace8-cef7398e0fc5.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3310,
+        "image": "RSNA_Pneumonia/stage_2_train_images/3ec704b7-82b3-4a0b-a5c8-cbce731fcb51.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 6647,
+        "image": "RSNA_Pneumonia/stage_2_train_images/f12565af-43de-4bc9-9dba-a8a3e9c8331e.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 12656,
+        "image": "RSNA_Pneumonia/stage_2_train_images/dc3e3098-bbd1-443b-ba9b-6a60993ca0f0.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 7554,
+        "image": "RSNA_Pneumonia/stage_2_train_images/705540af-bc50-4164-bb2b-02e0317955f5.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 18885,
+        "image": "RSNA_Pneumonia/stage_2_train_images/db1d0350-1fe5-496b-bfca-f58b60546d0b.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 9893,
+        "image": "RSNA_Pneumonia/stage_2_train_images/a74e083b-dee4-4006-bbab-cd5a18598200.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 9834,
+        "image": "RSNA_Pneumonia/stage_2_train_images/b606ef06-60ed-48b2-b450-b689fee2097a.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 11092,
+        "image": "RSNA_Pneumonia/stage_2_train_images/316fab3c-9214-470b-9fac-594f87ab92bf.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 18508,
+        "image": "RSNA_Pneumonia/stage_2_train_images/b6903524-50b4-46dc-8ff7-497ac903a43c.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 18917,
+        "image": "RSNA_Pneumonia/stage_2_train_images/7306d9f8-2cb2-4864-bee8-6d0d3e5de27d.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 8425,
+        "image": "RSNA_Pneumonia/stage_2_train_images/3ea07f33-3cd8-4a27-b680-8e1bc57aa1b8.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 7580,
+        "image": "RSNA_Pneumonia/stage_2_train_images/7a391371-52fb-4f1b-af7d-3305c528d33d.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 15755,
+        "image": "RSNA_Pneumonia/stage_2_train_images/9a80d9b0-c59e-435b-9b65-6cb88d457a6b.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5943,
+        "image": "RSNA_Pneumonia/stage_2_train_images/79f29a4d-fa0a-4977-abae-346d8ee33aa9.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumonia"
+            }
+        ]
+    },
+    {
+        "id": 2129,
+        "image": "RSNA_Pneumonia/stage_2_train_images/43dfdae3-1a86-48cd-b361-13cd19f47692.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 385,
+        "image": "RSNA_Pneumonia/stage_2_train_images/0821fe84-360a-4924-81c6-b8db9d345709.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 8365,
+        "image": "RSNA_Pneumonia/stage_2_train_images/f1d94ffb-f4ee-4e30-a376-90c51b843f90.dcm",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    }
+]

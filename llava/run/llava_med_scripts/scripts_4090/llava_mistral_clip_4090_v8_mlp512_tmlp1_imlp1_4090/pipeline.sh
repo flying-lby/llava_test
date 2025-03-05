@@ -16,8 +16,8 @@ deepspeed train/clip_train_mem.py \
     --deepspeed train/zero3.json \
     --model_name_or_path /srv/lby/llava_med/llava-med-v1.5-mistral-7b \
     --version v1 \
-    --data_path ./data/chest_xray/new_classify_mimic_file_clip.json \
-    --image_folder /srv/lby/physionet.org/files/mimic-cxr-jpg/2.0.0/files \
+    --data_path ./data/fine_tuning/rsna_train.json \
+    --image_folder /srv/lby/ \
     --vision_tower /srv/lby/clip-vit-large-patch14-336 \
     --mm_projector_type mlp2x_gelu \
     --mm_vision_select_layer -2 \

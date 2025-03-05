@@ -1,0 +1,968 @@
+[
+    {
+        "id": 6022,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.1735.1517875169.165453.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 4365,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.3437.1517875177.839420.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 6594,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.4477.1517875183.63931.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3945,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.3748.1517875179.264008.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5979,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.14209.1517875250.247490.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1566,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.13058.1517875243.342160.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    },
+    {
+        "id": 4652,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.1858.1517875169.946702.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3505,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.3907.1517875180.74268.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3771,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.5019.1517875185.975789.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 2445,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.31963.1517875157.737353.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3964,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.32460.1517875160.718249.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 2691,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.14414.1517875251.984282.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    },
+    {
+        "id": 2753,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.3946.1517875180.275055.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3298,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.4972.1517875185.791317.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 2531,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.1752.1517875169.253566.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 239,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.520.1517875163.292114.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1869,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.4447.1517875182.904519.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1465,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.2353.1517875172.311548.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    },
+    {
+        "id": 4210,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.551.1517875163.393692.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    },
+    {
+        "id": 6673,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.10470.1517875223.855420.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1905,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.3670.1517875178.925960.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 6533,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.13481.1517875245.513947.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 2881,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.5342.1517875187.687668.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    },
+    {
+        "id": 2132,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.10060.1517875221.792744.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    },
+    {
+        "id": 230,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.3194.1517875176.539150.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 2233,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.10496.1517875223.953095.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    },
+    {
+        "id": 2781,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.2682.1517875174.24249.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    },
+    {
+        "id": 3370,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.14227.1517875250.321383.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1732,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.32440.1517875160.602513.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 177,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.31900.1517875157.391804.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 4657,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.12892.1517875242.411217.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    },
+    {
+        "id": 2375,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.13191.1517875244.85391.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5405,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.11076.1517875230.932012.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 6137,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.12296.1517875238.439802.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 4994,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.13824.1517875248.127888.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1090,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.4749.1517875184.578320.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1009,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.12906.1517875242.471193.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 468,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.12058.1517875237.164472.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 2476,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.31693.1517875156.354041.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1740,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.32703.1517875161.876097.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    },
+    {
+        "id": 4076,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.10693.1517875225.111346.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 833,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.14253.1517875250.443788.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    },
+    {
+        "id": 6354,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.14351.1517875251.481169.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    },
+    {
+        "id": 3706,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.3951.1517875180.298037.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3102,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.2144.1517875171.362910.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    },
+    {
+        "id": 101,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.5095.1517875186.390250.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 2413,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.11856.1517875236.54874.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1420,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.5563.1517875188.818824.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1966,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.31667.1517875156.221085.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 2272,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.1421.1517875167.689908.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 4205,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.12565.1517875239.750735.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3599,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.13681.1517875247.197556.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5673,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.12385.1517875238.894587.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    },
+    {
+        "id": 2916,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.11048.1517875230.126436.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 132,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.12229.1517875238.89475.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 4536,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.5753.1517875190.155732.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1916,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.13520.1517875246.420359.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 217,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.32374.1517875160.272970.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    },
+    {
+        "id": 3213,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.1828.1517875169.776930.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5900,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.1864.1517875169.974548.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3450,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.3180.1517875176.460634.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5852,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.11226.1517875231.815437.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 263,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.10090.1517875221.916484.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 3143,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.12220.1517875238.33367.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 5681,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.13042.1517875243.269657.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1783,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.11238.1517875231.905900.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 2585,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.3572.1517875178.481737.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 1075,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.5348.1517875187.727918.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing normal"
+            }
+        ]
+    },
+    {
+        "id": 4332,
+        "image": "SIIM_Pneumothorax/processed-images-train/1.2.276.0.7230010.3.1.4.8323329.10567.1517875224.320689.png",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "What disease is indicated by the chest X-ray?\n<image>"
+            },
+            {
+                "from": "gpt",
+                "value": "This is a chest X-ray showing pneumothorax"
+            }
+        ]
+    }
+]
