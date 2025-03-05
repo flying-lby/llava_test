@@ -29,7 +29,7 @@ deepspeed train/clip_train_mem.py \
     --bf16 True \
     --mis_mlp_lr 2e-5 \
     --output_dir /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava-lora-covid-A100-version1_3_5 \
-    --num_train_epochs 2 \
+    --num_train_epochs 5 \
     --per_device_train_batch_size 8 \
     --per_device_eval_batch_size 8 \
     --gradient_accumulation_steps 1 \
