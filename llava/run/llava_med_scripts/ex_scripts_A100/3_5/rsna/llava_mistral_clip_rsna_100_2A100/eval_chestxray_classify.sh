@@ -13,8 +13,8 @@ echo "Starting evaluation process..."
 echo "Starting evaluation process..."
 
 python -m llava.run.eval.eval_classify \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_rsna-A100-version1_3_5 \
-    --result-folder ./result/experiments/Ex_A100/2025_3_5/rsna/rsna_1_classify.txt \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_rsna-A100-version100_3_5 \
+    --result-folder ./result/experiments/Ex_A100/2025_3_5/rsna/rsna_100_classify.txt \
     --image-folder "/mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/" \
     --dataset "rsna" \
     --conv-mode vicuna_v1 \

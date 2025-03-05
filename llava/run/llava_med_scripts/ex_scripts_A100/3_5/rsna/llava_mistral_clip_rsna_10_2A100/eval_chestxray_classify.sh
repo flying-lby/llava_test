@@ -1,7 +1,7 @@
 ###
  # @Author: fly
  # @Date: 2024-12-26 16:55:54
- # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/ex_scripts_A100/3_5/llava_mistral_clip_A100_v2_book1_cat_t5_2epoch_2A100/eval_chestxray_classify.sh
+ # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/ex_scripts_A100/3_5/rsna/llava_mistral_clip_rsna_1_2A100/eval_chestxray_classify.sh
  # @Description: 
 ### 
 
@@ -13,8 +13,8 @@ echo "Starting evaluation process..."
 echo "Starting evaluation process..."
 
 python -m llava.run.eval.eval_classify \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_rsna-A100-version1_3_5 \
-    --result-folder ./result/experiments/Ex_A100/2025_3_5/rsna/rsna_1_classify.txt \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_rsna-A100-version10_3_5 \
+    --result-folder ./result/experiments/Ex_A100/2025_3_5/rsna/rsna_10_classify.txt \
     --image-folder "/mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/" \
     --dataset "rsna" \
     --conv-mode vicuna_v1 \
