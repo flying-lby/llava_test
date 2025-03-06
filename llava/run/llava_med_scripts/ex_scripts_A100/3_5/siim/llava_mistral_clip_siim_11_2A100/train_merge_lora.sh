@@ -2,7 +2,7 @@
 ###
  # @Author: fly
  # @Date: 2024-12-26 16:50:23
- # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/ex_scripts_A100/3_5/siim/llava_mistral_clip_siim_10_2A100/train_merge_lora.sh
+ # @FilePath: /llava_med/LLaVA-Med/llava/run/llava_med_scripts/ex_scripts_A100/3_5/siim/llava_mistral_clip_siim_11_2A100/train_merge_lora.sh
  # @Description: 
 ### 
 
@@ -28,8 +28,8 @@ deepspeed train/clip_train_mem.py \
     --group_by_modality_length True \
     --bf16 True \
     --mis_mlp_lr 2e-5 \
-    --output_dir /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava-lora-siim-A100-version10_3_5 \
-    --num_train_epochs 9 \
+    --output_dir /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava-lora-siim-A100-version11_3_5 \
+    --num_train_epochs 11 \
     --per_device_train_batch_size 32 \
     --per_device_eval_batch_size 32 \
     --gradient_accumulation_steps 1 \
@@ -77,9 +77,9 @@ echo "Training completed successfully."
 echo "Starting merge process..."
 
 python -m llava.run.train.clip_merge_lora_weights \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava-lora-siim-A100-version10_3_5 \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava-lora-siim-A100-version11_3_5 \
     --model-base /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_2_9 \
-    --save-model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_siim-A100-version10_3_5 \
+    --save-model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_siim-A100-version11_3_5 \
     --Imgcls_count 4 \
     --Txtcls_count 8 \
     --hidden_dim 1024 \
