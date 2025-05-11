@@ -28,7 +28,7 @@ deepspeed train/train_mem.py \
     --group_by_modality_length True \
     --bf16 True \
     --mis_mlp_lr 2e-5 \
-    --output_dir /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava-lora-new-clip-A100-version1_5_11 \
+    --output_dir /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava-lora-new-clip-A100-version1_3_4 \
     --num_train_epochs 2 \
     --per_device_train_batch_size 64 \
     --per_device_eval_batch_size 64 \
@@ -76,9 +76,9 @@ echo "Training completed successfully."
 echo "Starting merge process..."
 
 python -m llava.run.train.merge_lora_weights \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava-lora-new-clip-A100-version1_5_11 \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava-lora-new-clip-A100-version1_2_9 \
     --model-base /mnt/nlp-ali/usr/huangwenxuan/home/official_llava_med/llava-med-v1.5-mistral-7b \
-    --save-model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_5_11 \
+    --save-model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_2_9 \
     --Imgcls_count 4 \
     --Txtcls_count 8 \
     --hidden_dim 1024 \

@@ -606,7 +606,7 @@ class ClipLlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
 
 
         # 返回结果
-        return similarity_probs
+        return similarity_probs,global_image_embedding
     
     @torch.no_grad()
     def generate(

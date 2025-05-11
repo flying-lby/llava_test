@@ -1283,31 +1283,61 @@ class MistralForCausalLM(MistralPreTrainedModel):
         # loss_txt = F.cross_entropy(logits_per_txt, labels)
         # loss_img = F.cross_entropy(logits_per_img, labels)
         # CG_loss = (loss_txt + loss_img) / 2
+
+        # if self.use_cat:
+        #     # Step 4: 计算全局图像和局部文本特征的 Loss
+        #     temperature = self.temperature
+        #     global_img_to_local_txt_similarity = torch.matmul(norm_global_imgcls_features, norm_local_txt_features.T) / temperature  # (B, B)
+
+        #     # 生成标签，正样本是对角线上的元素
+        #     labels = torch.arange(global_img_to_local_txt_similarity.size(0), device=global_img_to_local_txt_similarity.device)
+
+        #     # 计算 InfoNCE 损失
+        #     global_img_to_local_txt_loss = F.cross_entropy(global_img_to_local_txt_similarity, labels)
+        #     local_txt_to_global_img_loss = F.cross_entropy(global_img_to_local_txt_similarity.T, labels)
+
+        #     # 取两个方向损失的平均值
+        #     img_to_local_txt_loss = (global_img_to_local_txt_loss + local_txt_to_global_img_loss) / 2
+
+        #     # Step 5: 计算局部图像和全局文本特征的 Loss
+        #     local_img_to_global_txt_similarity = torch.matmul(norm_local_img_features, norm_global_txtcls_features.T) / temperature  # (B, B)
+
+        #     # 计算 InfoNCE 损失
+        #     local_img_to_global_txt_loss = F.cross_entropy(local_img_to_global_txt_similarity, labels)
+        #     global_txt_to_local_img_loss = F.cross_entropy(local_img_to_global_txt_similarity.T, labels)
+
+        #     # 取两个方向损失的平均值
+        #     local_img_to_txt_loss = (local_img_to_global_txt_loss + global_txt_to_local_img_loss) / 2
+
+        #     # total_loss = self.loss_threshold * img_to_local_txt_loss + (1 - self.loss_threshold) * local_img_to_txt_loss
+        #     ca_loss = (img_to_local_txt_loss +  local_img_to_txt_loss) * 0.5
+    
+        #     total_loss = self.loss_threshold * ca_loss + (1 - self.loss_threshold) * CG_loss
         
         if self.use_cat:
             # Step 4: 计算全局图像和局部文本特征的 Loss
             temperature = self.temperature
-            global_img_to_local_txt_similarity = torch.matmul(norm_global_imgcls_features, norm_local_txt_features.T) / temperature  # (B, B)
+            global_img_to_global_txt_similarity = torch.matmul(norm_global_imgcls_features, norm_global_txtcls_features.T) / temperature  # (B, B)
 
             # 生成标签，正样本是对角线上的元素
-            labels = torch.arange(global_img_to_local_txt_similarity.size(0), device=global_img_to_local_txt_similarity.device)
+            labels = torch.arange(global_img_to_global_txt_similarity.size(0), device=global_img_to_global_txt_similarity.device)
 
             # 计算 InfoNCE 损失
-            global_img_to_local_txt_loss = F.cross_entropy(global_img_to_local_txt_similarity, labels)
-            local_txt_to_global_img_loss = F.cross_entropy(global_img_to_local_txt_similarity.T, labels)
+            global_img_to_global_txt_loss = F.cross_entropy(global_img_to_global_txt_similarity, labels)
+            global_txt_to_global_img_loss = F.cross_entropy(global_img_to_global_txt_similarity.T, labels)
 
             # 取两个方向损失的平均值
-            img_to_local_txt_loss = (global_img_to_local_txt_loss + local_txt_to_global_img_loss) / 2
+            img_to_local_txt_loss = (global_img_to_global_txt_loss + global_txt_to_global_img_loss) / 2
 
             # Step 5: 计算局部图像和全局文本特征的 Loss
-            local_img_to_global_txt_similarity = torch.matmul(norm_local_img_features, norm_global_txtcls_features.T) / temperature  # (B, B)
+            local_img_to_local_txt_similarity = torch.matmul(norm_local_img_features, norm_local_txt_features.T) / temperature  # (B, B)
 
             # 计算 InfoNCE 损失
-            local_img_to_global_txt_loss = F.cross_entropy(local_img_to_global_txt_similarity, labels)
-            global_txt_to_local_img_loss = F.cross_entropy(local_img_to_global_txt_similarity.T, labels)
+            local_img_to_local_txt_loss = F.cross_entropy(local_img_to_local_txt_similarity, labels)
+            local_txt_to_local_img_loss = F.cross_entropy(local_img_to_local_txt_similarity.T, labels)
 
             # 取两个方向损失的平均值
-            local_img_to_txt_loss = (local_img_to_global_txt_loss + global_txt_to_local_img_loss) / 2
+            local_img_to_txt_loss = (local_img_to_local_txt_loss + local_txt_to_local_img_loss) / 2
 
             # total_loss = self.loss_threshold * img_to_local_txt_loss + (1 - self.loss_threshold) * local_img_to_txt_loss
             ca_loss = (img_to_local_txt_loss +  local_img_to_txt_loss) * 0.5

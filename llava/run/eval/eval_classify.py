@@ -29,7 +29,7 @@ import argparse
 from dataclasses import asdict
 from transformers import HfArgumentParser
 from sklearn.metrics import accuracy_score, auc, precision_recall_curve, recall_score, f1_score, roc_auc_score
-
+import pandas as pd
 import pydicom
 from skimage import exposure
 
@@ -256,7 +256,7 @@ def test(args, sparse_args):
     # 存储真实标签和预测结果
     all_labels = []
     all_probs = []
-
+    all_image_embeddings = []
     for line in tqdm(questions):
         img_path = args.image_folder + line["image"]
         qs = line["text"]
@@ -307,7 +307,7 @@ def test(args, sparse_args):
             continue 
         
         with torch.inference_mode():
-            outputs = model.module.inference_pipeline(
+            outputs,global_image_embedding = model.module.inference_pipeline(
                 input_ids=input_ids,
                 attention_mask=attention_mask, 
                 global_category_embeddings_cache=global_category_embeddings_cache,
@@ -339,12 +339,24 @@ def test(args, sparse_args):
             # 将标签和预测概率存储到全局变量
             all_labels.append(true_labels.cpu().numpy())
             all_probs.append(similarity_probs.cpu().numpy())
+            
+             # 保存global_image_embedding
+            global_image_embedding_numpy = global_image_embedding.cpu().numpy()
+            all_image_embeddings.append(global_image_embedding_numpy.flatten())  # Flatten to a single vector for each image
+
 
     # 将 all_labels 和 all_probs 转换为 numpy 数组
     all_labels = np.array(all_labels)  # shape: (num_samples, num_classes)
     all_probs = np.array(all_probs).squeeze(1)  # shape: (num_samples, num_classes)
 
     result_metrics = {}
+    embedding_df = pd.DataFrame(all_image_embeddings)
+    embedding_df.to_csv("llava_med_rsna.csv", index=False)
+
+    # 保存标签到CSV文件
+    labels_df = pd.DataFrame(all_labels, columns=target_class)  # 设置列名为类别名
+    labels_df.to_csv("label_rsna.csv", index=False)
+
 
     # 计算每个类别的准确率、AUC、AUPRC、F1、精确度、召回率
     accuracies, auc_scores, auprc_scores, f1_scores, recall_scores, precision_scores = [], [], [], [], [], []

@@ -11,7 +11,7 @@
 echo "Starting evaluation process..."
 
 python -m llava.run.eval.eval_classify \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_2_9 \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_5_11 \
     --result-folder ./result/experiments/Ex_A100/2025_3_1/v1/ \
     --image-folder "/mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/" \
     --dataset "siim" \
@@ -33,7 +33,7 @@ python -m llava.run.eval.eval_classify \
     --Book_choice 0
 
 python -m llava.run.eval.eval_classify \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_2_9 \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_5_11 \
     --result-folder ./result/experiments/Ex_A100/2025_3_1/v1/ \
     --image-folder "/mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/" \
     --dataset "chestxray" \
@@ -54,7 +54,7 @@ python -m llava.run.eval.eval_classify \
     --use_cat True
 
 python -m llava.run.eval.eval_classify \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_2_9 \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_5_11 \
     --result-folder ./result/experiments/Ex_A100/2025_3_1/v1/ \
     --image-folder "/mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/" \
     --chexpert-subset "True" \
@@ -77,7 +77,7 @@ python -m llava.run.eval.eval_classify \
     --Book_choice 1
 
 python -m llava.run.eval.eval_classify \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_2_9 \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_5_11 \
     --result-folder ./result/experiments/Ex_A100/2025_3_1/v1/ \
     --image-folder "/mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/" \
     --chexpert-subset "False" \
@@ -100,7 +100,7 @@ python -m llava.run.eval.eval_classify \
     --Book_choice 1
 
 python -m llava.run.eval.eval_classify \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_2_9 \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_5_11 \
     --result-folder ./result/experiments/Ex_A100/2025_3_1/v1/ \
     --image-folder "/mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/" \
     --dataset "rsna" \
@@ -122,7 +122,7 @@ python -m llava.run.eval.eval_classify \
     --Book_choice 0
 
 python -m llava.run.eval.eval_classify \
-    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_2_9 \
+    --model-path /mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/checkpoints/llava_mistral_new_clip_a100_version1_5_11 \
     --result-folder ./result/experiments/Ex_A100/2025_3_1/v1/ \
     --image-folder "/mnt/nlp-ali/usr/huangwenxuan/home/zijie_ali/libangyan/dataset/" \
     --dataset "covid-cxr2" \

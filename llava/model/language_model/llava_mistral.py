@@ -124,7 +124,7 @@ class LlavaMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         # 将相似度矩阵转换为概率分布 
         similarity_probs = similarity_matrix.softmax(dim=-1)
       
-        return similarity_probs
+        return similarity_probs,global_image_embedding
     
 
     @torch.no_grad()
