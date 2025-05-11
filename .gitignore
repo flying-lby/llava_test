@@ -10,3 +10,9 @@ llava/run/data/chest_xray/
 llava/run/data/eval/
 llava/run/wandb/
 llava/run/gpt_eval/
+llava/run/outputs_api_classify/
+llava/run/label_rsna.csv
+llava/run/llava_med_rsna.csv
+llava/run/new_label_rsna.csv
+llava/run/new_llava_med_rsna.csv
+llava/run/new_llava_rsna.csv
