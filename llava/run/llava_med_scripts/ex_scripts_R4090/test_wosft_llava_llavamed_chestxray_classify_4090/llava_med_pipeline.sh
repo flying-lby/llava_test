@@ -27,7 +27,7 @@ deepspeed train/train_mem.py \
     --group_by_modality_length True \
     --bf16 True \
     --mis_mlp_lr 5e-5 \
-    --output_dir /srv/lby/llava_med/checkpoints/llava-med-lora-sft-v2 \
+    --output_dir /srv/lby/llava_med/checkpoints/llava-med-lora-sft-v1 \
     --num_train_epochs 1 \
     --per_device_train_batch_size 8 \
     --per_device_eval_batch_size 8 \

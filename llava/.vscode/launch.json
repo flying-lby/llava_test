@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run RSNA Classification",
+      "type": "python",
+      "request": "launch",
+      "program": "/home/lby/llava_med/LLaVA-Med/llava/run/gpt_eval/api_rsna_classification.py",
+      "args": [
+        "--input_file", "/home/lby/llava_med/LLaVA-Med/llava/run/data/COVIDx_CXR/COVIDx_CXR_llava_origin_val.jsonl",
+        "--output_file", "/home/lby/llava_med/LLaVA-Med/llava/run/outputs_api_classify/claude/COVIDx_CXR_llava_origin_val.jsonl",
+        "--output_csv_path", "/home/lby/llava_med/LLaVA-Med/llava/run/outputs_api_classify/claude/COVIDx_CXR_metric_1.csv",
+        "--num_threads", "4",
+        "--model_class", "claude",
+        "--api_key", "sk-bROicwjPWvRkia4R0MB87jKTsqMF8mRkm7vJj4eIMqZz9MVa"
+      ],
+      "env": {
+        "claude": "sk-bROicwjPWvRkia4R0MB87jKTsqMF8mRkm7vJj4eIMqZz9MVa"  // 或设置为空，从系统环境读取
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
+    }
+  ]
+}

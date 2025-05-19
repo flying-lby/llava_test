@@ -5,28 +5,28 @@
  # @Description: 
 ### 
 
-# python -m llava.run.eval.eval_classify \
-#     --model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v9 \
-#     --result-folder ./result/R4090/llava-mistral_new_clip_v9/ \
-#     --image-folder "/srv/lby/" \
-#     --dataset "chestxray" \
-#     --conv-mode vicuna_v1 \
-#     --Imgcls_count 4 \
-#     --Txtcls_count 8 \
-#     --hidden_dim 1024 \
-#     --output_dim 4096 \
-#     --img_mlp_type 0 \
-#     --txt_mlp_type 0 \
-#     --knowledge_mlp_type 0 \
-#     --loss_threshold 0.5 \
-#     --temperature 0.05 \
-#     --use_local_loss True \
-#     --feature_layer 2 \
-#     --special_tokens_mlp_type 1 \
-#     --use_ca_loss False \
-#     --use_cat True \
-#     --Book_choice 0
-    
+python3 -m llava.run.eval.eval_classify \
+    --model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v9 \
+    --result-folder ./result/R4090/llava-mistral_new_clip_v9/result.json \
+    --image-folder "/srv/lby/" \
+    --dataset "chestxray" \
+    --conv-mode vicuna_v1 \
+    --Imgcls_count 4 \
+    --Txtcls_count 8 \
+    --hidden_dim 1024 \
+    --output_dim 4096 \
+    --img_mlp_type 0 \
+    --txt_mlp_type 0 \
+    --knowledge_mlp_type 0 \
+    --loss_threshold 0.5 \
+    --temperature 0.05 \
+    --use_local_loss True \
+    --feature_layer 2 \
+    --special_tokens_mlp_type 1 \
+    --use_ca_loss False \
+    --use_cat True \
+    --Book_choice 0
+
 # python -m llava.run.eval.eval_classify \
 #     --model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v9 \
 #     --result-folder ./result/R4090/llava-mistral_new_clip_v9/ \
@@ -93,27 +93,27 @@
 #     --use_cat True \
 #     --Book_choice 1
 
-python -m llava.run.eval.eval_classify \
-    --model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v9 \
-    --result-folder ./result/R4090/llava-mistral_new_clip_v9/ \
-    --image-folder "/srv/lby/" \
-    --dataset "rsna" \
-    --conv-mode vicuna_v1 \
-    --Imgcls_count 4 \
-    --Txtcls_count 8 \
-    --hidden_dim 1024 \
-    --output_dim 4096 \
-    --img_mlp_type 0 \
-    --txt_mlp_type 0 \
-    --knowledge_mlp_type 0 \
-    --loss_threshold 0.5 \
-    --temperature 0.05 \
-    --use_local_loss True \
-    --feature_layer 2 \
-    --special_tokens_mlp_type 1 \
-    --use_ca_loss False \
-    --use_cat True \
-    --Book_choice 0
+# python -m llava.run.eval.eval_classify \
+#     --model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v9 \
+#     --result-folder ./result/R4090/llava-mistral_new_clip_v9/ \
+#     --image-folder "/srv/lby/" \
+#     --dataset "rsna" \
+#     --conv-mode vicuna_v1 \
+#     --Imgcls_count 4 \
+#     --Txtcls_count 8 \
+#     --hidden_dim 1024 \
+#     --output_dim 4096 \
+#     --img_mlp_type 0 \
+#     --txt_mlp_type 0 \
+#     --knowledge_mlp_type 0 \
+#     --loss_threshold 0.5 \
+#     --temperature 0.05 \
+#     --use_local_loss True \
+#     --feature_layer 2 \
+#     --special_tokens_mlp_type 1 \
+#     --use_ca_loss False \
+#     --use_cat True \
+#     --Book_choice 0
 
 # python -m llava.run.eval.eval_classify \
 #     --model-path /srv/lby/llava_med/checkpoints/llava-mistral_new_clip_v9 \

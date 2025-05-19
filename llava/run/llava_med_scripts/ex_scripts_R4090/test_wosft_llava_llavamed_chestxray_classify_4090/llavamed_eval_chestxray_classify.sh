@@ -14,14 +14,14 @@
 #     --use-cot 1 \
 #     --conv-mode vicuna_v1 
 
-# python -m llava.run.eval.origin_eval_classify \
-#     --model-path /srv/lby/llava_med/llava-med-v1.5-mistral-7b \
-#     --output-path ./data/chest_xray/llava7b/Chest-X-ray_llava_origin_val_ans.jsonl \
-#     --dataset "chestxray" \
-#     --result-file ./result/experiments/Ex_R4090/llava7b/Chest_Xray_classify_origin.txt \
-#     --inference origin \
-#     --image-folder "/srv/lby/" \
-#     --conv-mode vicuna_v1 
+python -m llava.run.eval.origin_eval_classify \
+    --model-path /srv/lby/llava_med/llava-med-v1.5-mistral-7b \
+    --output-path ./data/chest_xray/llava7b/Chest-X-ray_llava_origin_val_ans.jsonl \
+    --dataset "chestxray" \
+    --result-file ./result/experiments/Ex_R4090/llava7b/Chest_Xray_classify_origin.txt \
+    --inference origin \
+    --image-folder "/srv/lby/" \
+    --conv-mode vicuna_v1 
 
 # python -m llava.run.eval.origin_eval_classify \
 #     --model-path /srv/lby/llava_med/llava-med-v1.5-mistral-7b \
@@ -43,15 +43,15 @@
 #     --image-folder "/srv/lby/" \
 #     --conv-mode vicuna_v1 
 
- python -m llava.run.eval.origin_eval_classify \
-    --model-path /srv/lby/llava_mistral_7b_official \
-    --output-path ./data/rsna/llava7b/rsna_llava_origin_val_ans.jsonl \
-    --dataset "rsna" \
-    --chexpert-subset "False" \
-    --result-file ./result/experiments/Ex_R4090/llava7b/rsna_classify_origin.txt \
-    --inference clip \
-    --image-folder "/srv/lby/" \
-    --conv-mode vicuna_v1 
+#  python -m llava.run.eval.origin_eval_classify \
+#     --model-path /srv/lby/llava_mistral_7b_official \
+#     --output-path ./data/rsna/llava7b/rsna_llava_origin_val_ans.jsonl \
+#     --dataset "rsna" \
+#     --chexpert-subset "False" \
+#     --result-file ./result/experiments/Ex_R4090/llava7b/rsna_classify_origin.txt \
+#     --inference clip \
+#     --image-folder "/srv/lby/" \
+#     --conv-mode vicuna_v1 
 
 
 # python -m llava.run.eval.origin_eval_classify_chestxray \

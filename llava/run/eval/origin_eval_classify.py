@@ -36,6 +36,9 @@ from sklearn.metrics import roc_auc_score, f1_score
 from typing import List
 import pydicom
 from skimage import exposure
+from fvcore.nn import FlopCountAnalysis
+import time
+import torch.nn as nn
 
 def split_list(lst, n):
     """Split a list into n (roughly) equal-sized chunks"""
@@ -195,6 +198,146 @@ def eval_model(args, classes,question_file):
                                    "metadata": {}}) + "\n")
         ans_file.flush()
     ans_file.close()
+
+
+# def eval_model(args, classes, question_file):
+#     # 1. 模型加载
+#     disable_torch_init()
+#     model_path = os.path.expanduser(args.model_path)
+#     model_name = get_model_name_from_path(model_path)
+#     tokenizer, model, image_processor, context_len = load_pretrained_model(
+#         model_path, args.model_base, model_name, device_map='cuda:0'
+#     )
+#     model.eval()
+
+#     # 2. 读取所有问题并切分
+#     questions = [json.loads(line) for line in open(os.path.expanduser(question_file), "r")]
+#     questions = get_chunk(questions, args.num_chunks, args.chunk_idx)
+
+#     # 3. 用第一条样本估算一次 FLOPs（单次 generate）
+#     sample = questions[0]
+#     # 构造 sample prompt
+#     qs0 = sample["text"].replace('<image>', '').strip()
+#     if model.config.mm_use_im_start_end:
+#         qs0 = DEFAULT_IM_START_TOKEN + DEFAULT_IMAGE_TOKEN + DEFAULT_IM_END_TOKEN + "\n" + qs0
+#     else:
+#         qs0 = DEFAULT_IMAGE_TOKEN + "\n" + qs0
+#     if args.use_cot:
+#         qs0 += " Let's think step by step."
+#     conv0 = conv_templates[args.conv_mode].copy()
+#     conv0.append_message(conv0.roles[0], qs0)
+#     conv0.append_message(conv0.roles[1], None)
+#     prompt0 = conv0.get_prompt()
+#     input_ids0 = tokenizer_image_token(prompt0, tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt") \
+#                     .unsqueeze(0).cuda(0)
+
+#     # 读取并预处理同一条 sample 的图像
+#     img_path0 = os.path.join(args.image_folder, sample["image"])
+#     image0 = Image.open(img_path0).convert("RGB")
+#     image_tensor0 = process_images([image0], image_processor, model.config)[0] \
+#                         .unsqueeze(0).half().cuda(0)
+
+#     class ModelForFlops(nn.Module):
+#         def __init__(self, base_model, seq_len):
+#             super().__init__()
+#             self.base = base_model
+#             self.seq_len = seq_len
+
+#         def forward(self, input_ids, images):
+#             # 生成全 1 的 attention_mask，shape: [batch, seq_len]
+#             attention_mask = torch.ones(input_ids.shape, dtype=torch.long, device=input_ids.device)
+#             # 调用底层模型
+#             return self.base(input_ids=input_ids,
+#                             attention_mask=attention_mask,
+#                             images=images)
+
+#     # 序列长度
+#     seq_len = input_ids0.shape[-1]
+#     wrapper = ModelForFlops(model, seq_len)
+
+#     # 现在传 positional args： (input_ids0, image_tensor0)
+#     flops = FlopCountAnalysis(wrapper, (input_ids0, image_tensor0))
+#     total_flops = flops.total()
+#     print(f"[FLOPs Estimation] ~{total_flops/1e9:.2f} GFLOPs per generate() call")
+
+#     # 4. 推理并测时延（只取前 100 条）
+#     answers_file = os.path.expanduser(args.output_path)
+#     os.makedirs(os.path.dirname(answers_file), exist_ok=True)
+#     latencies = []
+#     max_samples = 100
+
+#     with open(answers_file, "w") as ans_f:
+#         for i, line in enumerate(tqdm(questions, desc="Inference"), start=1):
+#             if i > max_samples:
+#                 break
+
+#             # —— 构造 prompt & input_ids —— 
+#             qs = line["text"].replace('<image>', '').strip()
+#             if model.config.mm_use_im_start_end:
+#                 qs = DEFAULT_IM_START_TOKEN + DEFAULT_IMAGE_TOKEN + DEFAULT_IM_END_TOKEN + "\n" + qs
+#             else:
+#                 qs = DEFAULT_IMAGE_TOKEN + "\n" + qs
+#             if args.use_cot:
+#                 qs += " Let's think step by step."
+#             conv = conv_templates[args.conv_mode].copy()
+#             conv.append_message(conv.roles[0], qs)
+#             conv.append_message(conv.roles[1], None)
+#             prompt = conv.get_prompt()
+#             input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt") \
+#                             .unsqueeze(0).cuda(0)
+
+#             # —— 读取 & 预处理图像 —— 
+#             img_fp = os.path.join(args.image_folder, line["image"])
+#             try:
+#                 if args.dataset == "rsna":
+#                     dicom = pydicom.dcmread(img_fp).pixel_array
+#                     dicom = (dicom.astype(float) / 255.0)
+#                     dicom = exposure.equalize_hist(dicom)
+#                     img = (255 * dicom).astype(np.uint8)
+#                     img = Image.fromarray(img).convert("RGB")
+#                 else:
+#                     img = Image.open(img_fp).convert("RGB")
+#                 image_tensor = process_images([img], image_processor, model.config)[0] \
+#                                    .unsqueeze(0).half().cuda(0)
+#             except Exception as e:
+#                 print(f"Warning: skip image {img_fp} due to {e}")
+#                 continue
+
+#             # —— 测量 generate() 时延 —— 
+#             torch.cuda.synchronize()
+#             t0 = time.time()
+#             output_ids = model.generate(
+#                 input_ids,
+#                 images=image_tensor,
+#                 do_sample=(args.temperature > 0),
+#                 temperature=args.temperature,
+#                 max_new_tokens=1024,
+#                 use_cache=True,
+#             )
+#             torch.cuda.synchronize()
+#             t1 = time.time()
+#             latency = t1 - t0
+#             latencies.append(latency)
+#             print(f"[{i}] sample_id={line['label']} latency: {latency*1000:.1f} ms")
+
+#             # —— 解码并写出答案 —— 
+#             outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
+#             ans = {
+#                 "question_id": line["label"],
+#                 "prompt": "<image>\n" + line["text"].replace("<image>", "").strip(),
+#                 "text": outputs,
+#                 "answer_id": shortuuid.uuid(),
+#                 "model_id": model_name,
+#                 "metadata": {}
+#             }
+#             ans_f.write(json.dumps(ans, ensure_ascii=False) + "\n")
+#             ans_f.flush()
+
+#     # 5. 时延统计汇总
+#     if latencies:
+#         avg, mx, mn = np.mean(latencies), np.max(latencies), np.min(latencies)
+#         print(f"\n[Latency Summary over {len(latencies)} samples]")
+#         print(f"  avg: {avg*1000:.1f} ms  |  max: {mx*1000:.1f} ms  |  min: {mn*1000:.1f} ms")
     
 def clip_eval_model(args,classes,question_file):
     # Model

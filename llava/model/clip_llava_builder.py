@@ -176,7 +176,7 @@ def load_pretrained_model(model_path, model_base, model_name, add_sparse=None, l
                 tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
                 # model = LlavaMptForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
             elif 'mistral' in model_name.lower():
-                tokenizer = AutoTokenizer.from_pretrained(model_path)
+                tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
                 # 生成 Imgcls 和 Txtcls token
                 Imgcls_tokens = [f"<Imgcls{i}>" for i in range(add_sparse.Imgcls_count)]
                 Txtcls_tokens = [f"<Txtcls{i}>" for i in range(add_sparse.Txtcls_count)]
